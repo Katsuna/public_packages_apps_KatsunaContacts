@@ -1,37 +1,39 @@
 package gr.crystalogic.oldmen.domain;
 
+import java.util.Collection;
+
 public class Contact {
 
-    private String name;
-    private String surname;
-    private String number;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
+    private String id;
+    private Name name;
+    private Collection<Phone> phones;
 
     @Override
     public String toString() {
-        return "Contact: " + name + " " + surname + " " + number;
+        return "Contact: " + id + " " + name + " " + phones;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public void setName(Name name) {
+        this.name = name;
+    }
+
+    public Collection<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(Collection<Phone> phones) {
+        this.phones = phones;
     }
 }
