@@ -1,5 +1,9 @@
 package gr.crystalogic.oldmen;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,5 +29,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static boolean isDefaultSmsApp(Context context) {
+        Telephony.Sms.getDefaultSmsPackage(context);
+
+        return context.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(context));
+    }
+
 
 }
