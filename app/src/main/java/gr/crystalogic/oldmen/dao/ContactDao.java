@@ -1,5 +1,6 @@
 package gr.crystalogic.oldmen.dao;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +17,8 @@ import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
 
 public class ContactDao implements IContactDao {
+
+    private static final String TAG = "ContactDao";
 
     private final ContentResolver cr;
 
@@ -38,28 +41,31 @@ public class ContactDao implements IContactDao {
         String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        cursor.moveToFirst();
-        do {
-            Contact contact = new Contact();
 
-            contact.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));
-            //Log.e("DAO", cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)));
-            contact.setName(getName(contact.getId()));
-            contact.setPhones(getPhones(contact.getId()));
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                Contact contact = new Contact();
 
-            Log.e("DAO", contact.toString());
+                contact.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));
+                //Log.e("DAO", cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)));
+                contact.setName(getName(contact.getId()));
+                contact.setPhones(getPhones(contact.getId()));
 
-            contacts.add(contact);
+                Log.e("DAO", contact.toString());
 
-        } while (cursor.moveToNext());
+                contacts.add(contact);
 
-        cursor.close();
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
 
         return contacts;
     }
 
     @Override
-    public Collection<Phone> getPhones(String contactId) {
+    public List<Phone> getPhones(String contactId) {
         List<Phone> phones = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -70,15 +76,17 @@ public class ContactDao implements IContactDao {
         String selection = ContactsContract.Data.CONTACT_ID + "=" + contactId;
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, null);
-        cursor.moveToFirst();
-        do {
-            Phone phone = new Phone();
-            phone.setNumber(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-            phone.setType(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
-            phones.add(phone);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do {
+                Phone phone = new Phone();
+                phone.setNumber(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                phone.setType(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+                phones.add(phone);
 
-        } while (cursor.moveToNext());
-        cursor.close();
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
 
         return phones;
     }
@@ -99,14 +107,46 @@ public class ContactDao implements IContactDao {
 
         Cursor cursor = cr.query(baseUri, projection, selection, selectionParameters, null);
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             name = new Name();
             name.setName(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME)));
             name.setSurname(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME)));
+
+            cursor.close();
         }
-        cursor.close();
 
         return name;
+    }
+
+    @Override
+    public void addContact(Contact contact) {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+        ops.add(ContentProviderOperation.newInsert(
+                ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build());
+
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName().getName())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, contact.getName().getSurname())
+                .build());
+
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhone().getNumber())
+                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                .build());
+
+
+        try {
+            cr.applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
 }

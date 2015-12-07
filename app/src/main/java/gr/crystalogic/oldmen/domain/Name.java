@@ -4,6 +4,13 @@ public class Name {
     private String name;
     private String surname;
 
+    public Name() {}
+
+    public Name(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
     public String getName() {
         return name;
     }

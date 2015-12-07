@@ -1,12 +1,21 @@
 package gr.crystalogic.oldmen.domain;
 
-import java.util.Collection;
+import java.util.List;
 
 public class Contact {
 
     private String id;
     private Name name;
-    private Collection<Phone> phones;
+    private Phone phone;
+    private List<Phone> phones;
+
+    public Contact() {
+    }
+
+    public Contact(String name, String surname, String number) {
+        this.name = new Name(name, surname);
+        this.phone = new Phone(number);
+    }
 
     @Override
     public String toString() {
@@ -29,11 +38,19 @@ public class Contact {
         this.name = name;
     }
 
-    public Collection<Phone> getPhones() {
+    public List<Phone> getPhones() {
         return phones;
     }
 
-    public void setPhones(Collection<Phone> phones) {
+    public void setPhones(List<Phone> phones) {
         this.phones = phones;
+    }
+
+    public Phone getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = phone;
     }
 }

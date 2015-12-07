@@ -11,6 +11,8 @@ import android.widget.Button;
 
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Name;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 IContactDao dao = new ContactDao(MainActivity.this);
                 dao.getContacts();
+
+                Contact c = new Contact("Gazokiller3", "Robbien3", "582077776");
+                dao.addContact(c);
             }
         });
 
