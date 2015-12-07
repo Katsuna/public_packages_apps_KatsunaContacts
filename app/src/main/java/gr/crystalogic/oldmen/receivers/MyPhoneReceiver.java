@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import gr.crystalogic.oldmen.MainActivity;
+import gr.crystalogic.oldmen.activities.MainActivity;
 
 public class MyPhoneReceiver extends BroadcastReceiver {
 
@@ -29,7 +29,7 @@ public class MyPhoneReceiver extends BroadcastReceiver {
 
                 context.startActivity(i);
                 Log.w("MY_DEBUG_TAG", "end of start act");
-/*                i.setClassName("gr.crystalogic.oldmen", "gr.crystalogic.oldmen.MainActivity");
+/*                i.setClassName("gr.crystalogic.oldmen", "gr.crystalogic.oldmen.activities.MainActivity");
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);*/
             }

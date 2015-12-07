@@ -1,19 +1,27 @@
-package gr.crystalogic.oldmen;
+package gr.crystalogic.oldmen.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.fragments.ActionsFragment;
+import gr.crystalogic.oldmen.fragments.ContactsFragment;
+import gr.crystalogic.oldmen.fragments.dummy.DummyContent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactsFragment.OnListFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
+
+    private final static String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,4 +50,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.e(TAG, item.toString());
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.e(TAG, uri.toString());
+    }
 }
