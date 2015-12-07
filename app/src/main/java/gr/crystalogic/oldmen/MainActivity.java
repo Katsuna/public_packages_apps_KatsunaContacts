@@ -12,7 +12,6 @@ import android.widget.Button;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
-import gr.crystalogic.oldmen.domain.Name;
 
 public class MainActivity extends AppCompatActivity {
 
