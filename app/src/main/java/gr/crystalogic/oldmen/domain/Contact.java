@@ -1,8 +1,10 @@
 package gr.crystalogic.oldmen.domain;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
-public class Contact {
+public class Contact implements Comparable<Contact> {
 
     private String id;
     private Name name;
@@ -52,5 +54,10 @@ public class Contact {
 
     public void setPhone(Phone phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public int compareTo(@NonNull Contact another) {
+        return name.getSurname().compareTo(another.getName().getSurname());
     }
 }

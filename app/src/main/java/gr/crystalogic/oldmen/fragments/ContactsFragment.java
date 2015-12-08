@@ -17,6 +17,7 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.utils.ContactArranger;
 
 /**
  * A fragment representing a list of Items.
@@ -97,7 +98,7 @@ public class ContactsFragment extends Fragment {
                 contactList = customList;
             }
 
-            recyclerView.setAdapter(new MyContactsRecyclerViewAdapter(contactList, mListener));
+            recyclerView.setAdapter(new MyContactsRecyclerViewAdapter(ContactArranger.sortContactsBySurname(contactList), mListener));
         }
         return view;
     }

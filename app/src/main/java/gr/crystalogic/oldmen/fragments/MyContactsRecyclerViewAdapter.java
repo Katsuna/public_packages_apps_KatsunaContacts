@@ -40,7 +40,12 @@ public class MyContactsRecyclerViewAdapter extends RecyclerView.Adapter<MyContac
 
         Contact c = mValues.get(position);
 
-        holder.mContentView.setText(c.getName().getFullName() + " " + c.getPhones().get(0).getNumber());
+        String cInfo = c.getName().getFullName();
+        if (c.getPhones() != null && c.getPhones().size() > 0) {
+            cInfo += " " + c.getPhones().get(0).getNumber();
+        }
+
+        holder.mContentView.setText(cInfo);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
