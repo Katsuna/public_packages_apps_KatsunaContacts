@@ -4,11 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +24,9 @@ import gr.crystalogic.oldmen.R;
  * create an instance of this fragment.
  */
 public class ActionsFragment extends Fragment {
+
+    private static final String TAG = "ActionsFragment";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,7 +73,29 @@ public class ActionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_actions, container, false);
+        View view = inflater.inflate(R.layout.fragment_actions, container, false);
+
+        Button button = (Button) view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IContactDao dao = new ContactDao(getActivity());
+                dao.getContacts();
+
+                Contact c = new Contact("Gazokiller3", "Robbien3", "582077776");
+                dao.addContact(c);
+            }
+        });
+
+        Button buttonTest = (Button) view.findViewById(R.id.buttonTest);
+        buttonTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "I was here.");
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
