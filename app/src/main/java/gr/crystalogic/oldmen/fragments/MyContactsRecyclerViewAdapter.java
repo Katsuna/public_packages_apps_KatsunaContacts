@@ -6,22 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.fragments.dummy.DummyContent.DummyItem;
-
 import java.util.List;
 
+import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.domain.Contact;
+
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Contact} and makes a call to the
  * specified {@link ContactsFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyContactsRecyclerViewAdapter extends RecyclerView.Adapter<MyContactsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Contact> mValues;
     private final ContactsFragment.OnListFragmentInteractionListener mListener;
 
-    public MyContactsRecyclerViewAdapter(List<DummyItem> items, ContactsFragment.OnListFragmentInteractionListener listener) {
+    public MyContactsRecyclerViewAdapter(List<Contact> items, ContactsFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +36,8 @@ public class MyContactsRecyclerViewAdapter extends RecyclerView.Adapter<MyContac
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getId());
+        holder.mContentView.setText(mValues.get(position).getName().getFullName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public class MyContactsRecyclerViewAdapter extends RecyclerView.Adapter<MyContac
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Contact mItem;
 
         public ViewHolder(View view) {
             super(view);

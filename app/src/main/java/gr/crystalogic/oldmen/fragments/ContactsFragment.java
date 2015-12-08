@@ -10,8 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.fragments.dummy.DummyContent;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
 
 /**
  * A fragment representing a list of Items.
@@ -67,7 +72,32 @@ public class ContactsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyContactsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            IContactDao dao = new ContactDao(getActivity());
+            List<Contact> contactList = dao.getContacts();
+
+            if (contactList.size() == 0) {
+                List<Contact> customList = new ArrayList<>();
+                customList.add(new Contact("Thomas", "Walker", "07985677916"));
+                customList.add(new Contact("Gianna", "Wizz", "07985677916"));
+                customList.add(new Contact("John", "Wocker", "07985677916"));
+                customList.add(new Contact("Dietrich", "Wonn", "07985677916"));
+                customList.add(new Contact("Johannes", "Wyrting", "07985677916"));
+                customList.add(new Contact("Thomas", "Xalker", "07985677916"));
+                customList.add(new Contact("John", "Xocker", "07985677916"));
+                customList.add(new Contact("Dietrich", "Xonn", "07985677916"));
+                customList.add(new Contact("Johnannes", "Xyrting", "07985677916"));
+                customList.add(new Contact("Gianna", "Yizz", "07985677916"));
+                customList.add(new Contact("John", "Yocker", "07985677916"));
+
+                for(Contact c : customList) {
+                    dao.addContact(c);
+                }
+
+                contactList = customList;
+            }
+
+            recyclerView.setAdapter(new MyContactsRecyclerViewAdapter(contactList, mListener));
         }
         return view;
     }
@@ -103,7 +133,7 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyContent.DummyItem item);
+        void onListFragmentInteraction(Contact item);
     }
 
 }

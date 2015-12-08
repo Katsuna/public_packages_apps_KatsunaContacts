@@ -6,19 +6,19 @@
     tools:context="gr.crystalogic.oldmen.fragments.ActionsFragment">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_search"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:text="New Button" />
+        android:layout_margin="5dp"
+        android:text="@string/search_contacts" />
 
     <Button
-        android:id="@+id/buttonTest"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_new_contact"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:text="Test" />
+        android:layout_margin="5dp"
+        android:text="@string/add_new_contact" />
 
 </LinearLayout>

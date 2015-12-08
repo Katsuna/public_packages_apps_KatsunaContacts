@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Old men</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_contacts">search contacts</string>
+    <string name="add_new_contact">add new number</string>
 </resources>

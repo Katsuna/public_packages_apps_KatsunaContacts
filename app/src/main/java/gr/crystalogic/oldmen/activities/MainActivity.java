@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.fragments.ActionsFragment;
 import gr.crystalogic.oldmen.fragments.ContactsFragment;
-import gr.crystalogic.oldmen.fragments.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity implements ContactsFragment.OnListFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
 
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button buttonTest = (Button) findViewById(R.id.buttonTest);
-        buttonTest.setOnClickListener(new View.OnClickListener() {
+        Button searchButton = (Button) findViewById(R.id.btn_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -40,9 +40,19 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
 
                 setFragmentWeight(R.id.actions_fragment, 0f);
 
-                Log.e(TAG, "I was here.");
+                Log.e(TAG, "Search button pressed.");
             }
         });
+
+        Button button = (Button) findViewById(R.id.btn_new_contact);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "Add new contact pressed.");
+            }
+        });
+
+
     }
 
     private void setFragmentWeight(int id, float weight) {
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Contact item) {
         Log.e(TAG, item.toString());
     }
 

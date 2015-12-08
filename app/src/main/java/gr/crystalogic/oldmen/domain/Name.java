@@ -27,6 +27,10 @@ public class Name {
         this.surname = surname;
     }
 
+    public String getFullName() {
+        return name + " " + surname;
+    }
+
     @Override
     public String toString() {
         return " Name: " + name + " " + surname;

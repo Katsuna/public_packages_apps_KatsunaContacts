@@ -9,7 +9,6 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import gr.crystalogic.oldmen.domain.Contact;
@@ -27,8 +26,8 @@ public class ContactDao implements IContactDao {
     }
 
     @Override
-    public Collection<Contact> getContacts() {
-        Collection<Contact> contacts = new ArrayList<>();
+    public List<Contact> getContacts() {
+        List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
         String[] projection = {
