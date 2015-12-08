@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,14 +83,6 @@ public class ActionsFragment extends Fragment {
 
                 Contact c = new Contact("Gazokiller3", "Robbien3", "582077776");
                 dao.addContact(c);
-            }
-        });
-
-        Button buttonTest = (Button) view.findViewById(R.id.buttonTest);
-        buttonTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "I was here.");
             }
         });
 

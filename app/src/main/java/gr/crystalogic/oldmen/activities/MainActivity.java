@@ -1,20 +1,14 @@
 package gr.crystalogic.oldmen.activities;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.dao.ContactDao;
-import gr.crystalogic.oldmen.dao.IContactDao;
-import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.fragments.ActionsFragment;
 import gr.crystalogic.oldmen.fragments.ContactsFragment;
 import gr.crystalogic.oldmen.fragments.dummy.DummyContent;
@@ -23,19 +17,49 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
 
     private final static String TAG = MainActivity.class.getName();
 
+    private Step currentStep = Step.START;
+
+    private enum Step {
+        START,
+        ZOOM1,
+        ZOOM2,
+        DETAIL
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button buttonTest = (Button) findViewById(R.id.buttonTest);
+        buttonTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                currentStep = Step.ZOOM1;
+
+                setFragmentWeight(R.id.actions_fragment, 0f);
+
+                Log.e(TAG, "I was here.");
+            }
+        });
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static boolean isDefaultSmsApp(Context context) {
-        Telephony.Sms.getDefaultSmsPackage(context);
-
-        return context.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(context));
+    private void setFragmentWeight(int id, float weight) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+        params.weight = weight;
+        findViewById(id).setLayoutParams(params);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentStep == Step.START) {
+            super.onBackPressed();
+        } else {
+            currentStep = Step.START;
+            setFragmentWeight(R.id.actions_fragment, 1f);
+        }
+    }
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
