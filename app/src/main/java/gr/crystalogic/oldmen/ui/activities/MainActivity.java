@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.fragments.ActionsFragment;
 import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
 
@@ -18,13 +18,6 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
     private final static String TAG = MainActivity.class.getName();
 
     private Step currentStep = Step.START;
-
-    private enum Step {
-        START,
-        ZOOM1,
-        ZOOM2,
-        DETAIL
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +65,24 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
     }
 
     @Override
-    public void onListFragmentInteraction(Contact item) {
-        Log.e(TAG, item.toString());
+    public void onListFragmentInteraction(ContactListItemModel item) {
+        if (item.getSeparator() == null) {
+            Log.e(TAG, item.getContact().toString());
+        } else {
+            Log.e(TAG, item.getSeparator().toString());
+        }
+
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.e(TAG, uri.toString());
+    }
+
+    private enum Step {
+        START,
+        ZOOM1,
+        ZOOM2,
+        DETAIL
     }
 }

@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 import gr.crystalogic.oldmen.domain.Contact;
-import gr.crystalogic.oldmen.domain.Name;
+import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 
 public class ContactArranger {
 
-    public static List<Contact> sortContactsBySurname(List<Contact> contacts) {
+    public static List<ContactListItemModel> sortContactsBySurname(List<Contact> contacts) {
         Collections.sort(contacts);
 
-        List<Contact> output = new ArrayList<>();
+        List<ContactListItemModel> output = new ArrayList<>();
 
         String s = "-";
 
@@ -20,12 +20,15 @@ public class ContactArranger {
             String surname = c.getName().getSurname();
 
             if (!surname.startsWith(s)) {
-                s = surname.subSequence(0,1).toString();
-                Contact headContact = new Contact();
-                headContact.setName(new Name("", s));
-                output.add(headContact);
+                s = surname.subSequence(0, 1).toString();
+                ContactListItemModel separatorModel = new ContactListItemModel();
+                separatorModel.setSeparator(s);
+                output.add(separatorModel);
             }
-            output.add(c);
+            ContactListItemModel model = new ContactListItemModel();
+            model.setContact(c);
+
+            output.add(model);
         }
 
         return output;

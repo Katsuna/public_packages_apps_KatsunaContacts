@@ -18,6 +18,7 @@ import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
+import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.utils.ContactArranger;
 
 /**
@@ -135,7 +136,7 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Contact item);
+        void onListFragmentInteraction(ContactListItemModel item);
     }
 
 }

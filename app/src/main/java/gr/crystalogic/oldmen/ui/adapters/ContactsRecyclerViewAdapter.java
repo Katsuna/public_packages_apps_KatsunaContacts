@@ -9,6 +9,7 @@ import java.util.List;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.adapters.viewholders.ContactListItemViewHolder;
 import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
 
@@ -19,10 +20,10 @@ import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
  */
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactListItemViewHolder> {
 
-    private final List<Contact> mValues;
+    private final List<ContactListItemModel> mValues;
     private final ContactsFragment.OnListFragmentInteractionListener mListener;
 
-    public ContactsRecyclerViewAdapter(List<Contact> items, ContactsFragment.OnListFragmentInteractionListener listener) {
+    public ContactsRecyclerViewAdapter(List<ContactListItemModel> items, ContactsFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -31,33 +32,13 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     public ContactListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_contacts, parent, false);
-        return new ContactListItemViewHolder(view);
+        return new ContactListItemViewHolder(view, mListener);
     }
 
     @Override
     public void onBindViewHolder(final ContactListItemViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
-
-        Contact c = mValues.get(position);
-
-        String cInfo = c.getName().getFullName();
-        if (c.getPhones() != null && c.getPhones().size() > 0) {
-            cInfo += " " + c.getPhones().get(0).getNumber();
-        }
-
-        holder.mContentView.setText(cInfo);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        final ContactListItemModel model = mValues.get(position);
+        holder.bind(model);
     }
 
     @Override
