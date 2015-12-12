@@ -35,9 +35,11 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
             }
 
             mContentView.setText(cInfo);
-
+            //TODO check is dp is used or pixels
+            mContentView.setTextSize(15);
         } else {
             mContentView.setText(model.getSeparator());
+            mContentView.setTextSize(35);
         }
 
         mView.setOnClickListener(new View.OnClickListener() {
