@@ -2,6 +2,7 @@ package gr.crystalogic.oldmen.domain;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Contact implements Comparable<Contact> {
@@ -17,6 +18,25 @@ public class Contact implements Comparable<Contact> {
     public Contact(String name, String surname, String number) {
         this.name = new Name(name, surname);
         this.phone = new Phone(number);
+    }
+
+    public Contact(Contact contact) {
+        id = contact.getId();
+
+        if (contact.getName() != null) {
+            name = new Name(contact.getName());
+        }
+
+        if (contact.getPhone() != null) {
+            phone = new Phone(contact.getPhone());
+        }
+
+        if (contact.getPhones() != null) {
+            phones = new ArrayList<>();
+            for(Phone p : contact.getPhones()) {
+                phones.add(new Phone(p));
+            }
+        }
     }
 
     @Override

@@ -11,6 +11,11 @@ public class Phone {
         this.number = number;
     }
 
+    public Phone(Phone phone) {
+        this.number = phone.getNumber();
+        this.type = phone.getType();
+    }
+
     public String getNumber() {
         return number;
     }

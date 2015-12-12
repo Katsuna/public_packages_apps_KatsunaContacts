@@ -12,12 +12,14 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.fragments.ActionsFragment;
 import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
+import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 
-public class MainActivity extends AppCompatActivity implements ContactsFragment.OnListFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
 
     private Step currentStep = Step.START;
+    private ContactsFragment contactsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
             }
         });
 
-
+        contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.contacts_fragment);
     }
 
     private void setFragmentWeight(int id, float weight) {
@@ -58,9 +60,12 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
     public void onBackPressed() {
         if (currentStep == Step.START) {
             super.onBackPressed();
-        } else {
+        } else if (currentStep == Step.ZOOM1) {
             currentStep = Step.START;
             setFragmentWeight(R.id.actions_fragment, 1f);
+        } else if (currentStep == Step.ZOOM2) {
+            currentStep = Step.ZOOM1;
+            contactsFragment.resetContacts();
         }
     }
 
@@ -69,9 +74,14 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
         if (item.getSeparator() == null) {
             Log.e(TAG, item.getContact().toString());
         } else {
-            Log.e(TAG, item.getSeparator().toString());
-        }
+            Log.e(TAG, item.getSeparator());
 
+            if (currentStep == Step.START) {
+                setFragmentWeight(R.id.actions_fragment, 0f);
+            }
+            contactsFragment.filterBySurnameStartLetter(item.getSeparator());
+            currentStep = Step.ZOOM2;
+        }
     }
 
     @Override

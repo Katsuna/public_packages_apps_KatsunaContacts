@@ -19,37 +19,33 @@ import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
+import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 import gr.crystalogic.oldmen.utils.ContactArranger;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link IContactsFragmentInteractionListener}
  * interface.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements IContactsFragmentInteractionListener {
+
+    private static String TAG = "ContactsFragment";
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private IContactsFragmentInteractionListener mListener;
+    private RecyclerView mRecyclerView;
+    private List<ContactListItemModel> mModels;
+    private ContactsRecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public ContactsFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static ContactsFragment newInstance(int columnCount) {
-        ContactsFragment fragment = new ContactsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -65,52 +61,70 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-
-            IContactDao dao = new ContactDao(getActivity());
-            List<Contact> contactList = dao.getContacts();
-
-            if (contactList.size() == 0) {
-                List<Contact> customList = new ArrayList<>();
-                customList.add(new Contact("Thomas", "Walker", "07985677916"));
-                customList.add(new Contact("Gianna", "Wizz", "07985677916"));
-                customList.add(new Contact("John", "Wocker", "07985677916"));
-                customList.add(new Contact("Dietrich", "Wonn", "07985677916"));
-                customList.add(new Contact("Johannes", "Wyrting", "07985677916"));
-                customList.add(new Contact("Thomas", "Xalker", "07985677916"));
-                customList.add(new Contact("John", "Xocker", "07985677916"));
-                customList.add(new Contact("Dietrich", "Xonn", "07985677916"));
-                customList.add(new Contact("Johnannes", "Xyrting", "07985677916"));
-                customList.add(new Contact("Gianna", "Yizz", "07985677916"));
-                customList.add(new Contact("John", "Yocker", "07985677916"));
-
-                for (Contact c : customList) {
-                    dao.addContact(c);
-                }
-
-                contactList = customList;
-            }
-
-            recyclerView.setAdapter(new ContactsRecyclerViewAdapter(ContactArranger.sortContactsBySurname(contactList), mListener));
-        }
+        mRecyclerView = (RecyclerView) view;
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Context context = view.getContext();
+
+        if (mColumnCount <= 1) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+
+        //get contacts from device
+        IContactDao dao = new ContactDao(getActivity());
+        List<Contact> contactList = dao.getContacts();
+
+        //create some contacts for demo - test
+        //TODO remove this before production
+        if (contactList.size() == 0) {
+            List<Contact> customList = new ArrayList<>();
+            customList.add(new Contact("Thomas", "Walker", "07985677916"));
+            customList.add(new Contact("Gianna", "Wizz", "07985677916"));
+            customList.add(new Contact("John", "Wocker", "07985677916"));
+            customList.add(new Contact("Dietrich", "Wonn", "07985677916"));
+            customList.add(new Contact("Johannes", "Wyrting", "07985677916"));
+            customList.add(new Contact("Thomas", "Xalker", "07985677916"));
+            customList.add(new Contact("John", "Xocker", "07985677916"));
+            customList.add(new Contact("Dietrich", "Xonn", "07985677916"));
+            customList.add(new Contact("Johnannes", "Xyrting", "07985677916"));
+            customList.add(new Contact("Gianna", "Yizz", "07985677916"));
+            customList.add(new Contact("John", "Yocker", "07985677916"));
+
+            for (Contact c : customList) {
+                dao.addContact(c);
+            }
+
+            contactList = customList;
+        }
+
+        mModels = ContactArranger.sortContactsBySurname(contactList);
+
+        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this);
+
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private List<ContactListItemModel> getDeepCopy() {
+        //deep copy to keep initil list
+        List<ContactListItemModel> mModelsCopy = new ArrayList<>();
+        for(ContactListItemModel m: mModels) {
+            mModelsCopy.add(new ContactListItemModel(m));
+        }
+        return mModelsCopy;
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof IContactsFragmentInteractionListener) {
+            mListener = (IContactsFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -123,20 +137,21 @@ public class ContactsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onListFragmentInteraction(ContactListItemModel item) {
+        // let parent know
+        mListener.onListFragmentInteraction(item);
+    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(ContactListItemModel item);
+    public void filterBySurnameStartLetter(String query) {
+        List<ContactListItemModel> filteredModels = ContactArranger.queryContactsByFirstLetter(getDeepCopy(), query);
+        mAdapter.animateTo(filteredModels);
+        mRecyclerView.scrollToPosition(0);
+    }
+
+    public void resetContacts() {
+        mAdapter.animateTo(getDeepCopy());
+        mRecyclerView.scrollToPosition(0);
     }
 
 }

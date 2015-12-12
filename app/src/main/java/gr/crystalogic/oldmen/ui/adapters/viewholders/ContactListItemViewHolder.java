@@ -7,15 +7,15 @@ import android.widget.TextView;
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
-import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
+import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mIdView;
     public final TextView mContentView;
-    private final ContactsFragment.OnListFragmentInteractionListener mListener;
+    private final IContactsFragmentInteractionListener mListener;
 
-    public ContactListItemViewHolder(View view, ContactsFragment.OnListFragmentInteractionListener listener) {
+    public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
         super(view);
         mView = view;
         mIdView = (TextView) view.findViewById(R.id.id);

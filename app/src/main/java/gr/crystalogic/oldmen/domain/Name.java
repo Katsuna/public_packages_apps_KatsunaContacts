@@ -11,6 +11,11 @@ public class Name {
         this.surname = surname;
     }
 
+    public Name(Name name) {
+        this.name = name.getName();
+        this.surname = name.getSurname();
+    }
+
     public String getName() {
         return name;
     }

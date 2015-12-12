@@ -34,5 +34,23 @@ public class ContactArranger {
         return output;
     }
 
+    public static List<ContactListItemModel> queryContactsByFirstLetter(List<ContactListItemModel> models, String query) {
+        List<ContactListItemModel> output = new ArrayList<>();
+
+        //add matching models
+        for (ContactListItemModel model : models) {
+            if (model.getSeparator() == null) {
+                if (model.getContact().getName().getSurname().startsWith(query)) {
+                    output.add(model);
+                }
+            } else {
+                if (model.getSeparator().startsWith(query)) {
+                    output.add(model);
+                }
+            }
+        }
+
+        return output;
+    }
 
 }

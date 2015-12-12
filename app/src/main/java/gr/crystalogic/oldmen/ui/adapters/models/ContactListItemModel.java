@@ -22,4 +22,13 @@ public class ContactListItemModel {
     public void setSeparator(String separator) {
         this.separator = separator;
     }
+
+    public ContactListItemModel() {}
+
+    public ContactListItemModel(ContactListItemModel model) {
+        separator = model.getSeparator();
+        if (model.getContact() != null) {
+            contact = new Contact(model.getContact());
+        }
+    }
 }
