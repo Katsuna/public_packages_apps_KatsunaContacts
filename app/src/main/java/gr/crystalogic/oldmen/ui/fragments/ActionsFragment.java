@@ -1,4 +1,4 @@
-package gr.crystalogic.oldmen.fragments;
+package gr.crystalogic.oldmen.ui.fragments;
 
 import android.content.Context;
 import android.net.Uri;

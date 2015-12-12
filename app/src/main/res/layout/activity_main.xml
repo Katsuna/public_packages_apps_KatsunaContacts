@@ -6,14 +6,14 @@
 
     <fragment
         android:id="@+id/contacts_fragment"
-        android:name="gr.crystalogic.oldmen.fragments.ContactsFragment"
+        android:name="gr.crystalogic.oldmen.ui.fragments.ContactsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3" />
 
     <fragment
         android:id="@+id/actions_fragment"
-        android:name="gr.crystalogic.oldmen.fragments.ActionsFragment"
+        android:name="gr.crystalogic.oldmen.ui.fragments.ActionsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

@@ -1,4 +1,4 @@
-package gr.crystalogic.oldmen.activities;
+package gr.crystalogic.oldmen.ui.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.domain.Contact;
-import gr.crystalogic.oldmen.fragments.ActionsFragment;
-import gr.crystalogic.oldmen.fragments.ContactsFragment;
+import gr.crystalogic.oldmen.ui.fragments.ActionsFragment;
+import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
 
 public class MainActivity extends AppCompatActivity implements ContactsFragment.OnListFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
 

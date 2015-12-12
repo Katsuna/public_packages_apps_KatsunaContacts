@@ -1,4 +1,4 @@
-package gr.crystalogic.oldmen.fragments;
+package gr.crystalogic.oldmen.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.utils.ContactArranger;
 
 /**
@@ -91,14 +92,14 @@ public class ContactsFragment extends Fragment {
                 customList.add(new Contact("Gianna", "Yizz", "07985677916"));
                 customList.add(new Contact("John", "Yocker", "07985677916"));
 
-                for(Contact c : customList) {
+                for (Contact c : customList) {
                     dao.addContact(c);
                 }
 
                 contactList = customList;
             }
 
-            recyclerView.setAdapter(new MyContactsRecyclerViewAdapter(ContactArranger.sortContactsBySurname(contactList), mListener));
+            recyclerView.setAdapter(new ContactsRecyclerViewAdapter(ContactArranger.sortContactsBySurname(contactList), mListener));
         }
         return view;
     }
