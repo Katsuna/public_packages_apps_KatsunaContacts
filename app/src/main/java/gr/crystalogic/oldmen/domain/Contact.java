@@ -2,10 +2,13 @@ package gr.crystalogic.oldmen.domain;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contact implements Comparable<Contact> {
+public class Contact implements Comparable<Contact>, Serializable {
+
+    private static final long serialVersionUID = 4439301448809751895L;
 
     private String id;
     private Name name;
@@ -33,7 +36,7 @@ public class Contact implements Comparable<Contact> {
 
         if (contact.getPhones() != null) {
             phones = new ArrayList<>();
-            for(Phone p : contact.getPhones()) {
+            for (Phone p : contact.getPhones()) {
                 phones.add(new Phone(p));
             }
         }

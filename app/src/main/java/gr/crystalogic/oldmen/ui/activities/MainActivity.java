@@ -1,5 +1,6 @@
 package gr.crystalogic.oldmen.ui.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             super.onBackPressed();
         } else if (currentStep == Step.ZOOM1) {
             currentStep = Step.START;
-            setFragmentWeight(R.id.actions_fragment, 1f);
+            setFragmentWeight(R.id.actions_fragment, 2f);
         } else if (currentStep == Step.ZOOM2) {
             currentStep = Step.ZOOM1;
             contactsFragment.resetContacts();
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     public void onListFragmentInteraction(ContactListItemModel item) {
         if (item.getSeparator() == null) {
             Log.e(TAG, item.getContact().toString());
+            Intent i = new Intent(this, ContactActivity.class);
+            i.putExtra("contact", item.getContact());
+            startActivity(i);
         } else {
             Log.e(TAG, item.getSeparator());
 
@@ -92,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     private enum Step {
         START,
         ZOOM1,
-        ZOOM2,
-        DETAIL
+        ZOOM2
     }
 }

@@ -2,4 +2,6 @@
     <string name="app_name">Old men</string>
     <string name="search_contacts">search contacts</string>
     <string name="add_new_contact">add new number</string>
+    <string name="make_call">make call</string>
+    <string name="send_message">send message</string>
 </resources>

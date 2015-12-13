@@ -1,6 +1,11 @@
 package gr.crystalogic.oldmen.domain;
 
-public class Name {
+import java.io.Serializable;
+
+public class Name implements Serializable {
+
+    private static final long serialVersionUID = -2664278639090496331L;
+
     private String name;
     private String surname;
 

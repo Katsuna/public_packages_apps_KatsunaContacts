@@ -1,11 +1,16 @@
 package gr.crystalogic.oldmen.domain;
 
-public class Phone {
+import java.io.Serializable;
+
+public class Phone implements Serializable {
+
+    private static final long serialVersionUID = 8522263950995573452L;
 
     private String number;
     private String type;
 
-    public Phone() {}
+    public Phone() {
+    }
 
     public Phone(String number) {
         this.number = number;
