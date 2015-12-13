@@ -1,7 +1,6 @@
 .gradle
 /local.properties
 /.idea
-/app/app.impl
 .DS_Store
 /build
 /captures
