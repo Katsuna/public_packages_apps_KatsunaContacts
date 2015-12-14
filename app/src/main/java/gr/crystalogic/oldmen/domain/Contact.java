@@ -83,7 +83,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     @Override
     public int compareTo(@NonNull Contact another) {
 
-        Log.e("Contact-comparison", this.toString() + " - " + another.toString());
+        //Log.e("Contact-comparison", this.toString() + " - " + another.toString());
 
         int output = 0;
 

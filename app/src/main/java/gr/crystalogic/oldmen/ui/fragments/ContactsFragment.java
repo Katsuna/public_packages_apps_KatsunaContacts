@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,9 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
 
         //get contacts from device
         IContactDao dao = new ContactDao(getActivity());
+        Log.e(TAG, "-1-");
         List<Contact> contactList = dao.getContacts();
+        Log.e(TAG, "-2-");
 
         //create some contacts for demo - test
         //TODO remove this before production
@@ -105,8 +108,10 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
         }
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
+        Log.e(TAG, "-3-");
 
         mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this);
+        Log.e(TAG, "-4-");
 
         mRecyclerView.setAdapter(mAdapter);
     }
