@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:text="@string/search_contacts" />
+        android:text="@string/search_contacts"
+        android:textAppearance="@style/BoldText" />
 
     <Button
         android:id="@+id/btn_new_contact"
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:text="@string/add_new_contact" />
+        android:text="@string/add_new_contact"
+        android:textAppearance="@style/BoldText" />
 
 </LinearLayout>
