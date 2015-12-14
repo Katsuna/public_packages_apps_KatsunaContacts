@@ -1,6 +1,7 @@
 package gr.crystalogic.oldmen.domain;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -81,6 +82,21 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     @Override
     public int compareTo(@NonNull Contact another) {
-        return name.getSurname().compareTo(another.getName().getSurname());
+
+        Log.e("Contact-comparison", this.toString() + " - " + another.toString());
+
+        int output = 0;
+
+        if (name.getSurname() != null && another.getName().getSurname() != null) {
+            output = name.getSurname().compareTo(another.getName().getSurname());
+        } else if (name.getSurname() == null && another.getName().getSurname() != null) {
+            output = 1;
+        } else if (name.getSurname() != null && another.getName().getSurname() == null) {
+            output = -1;
+        } else {
+            output = 0;
+        }
+
+        return output;
     }
 }

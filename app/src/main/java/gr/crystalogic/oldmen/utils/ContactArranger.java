@@ -19,12 +19,15 @@ public class ContactArranger {
         for (Contact c : contacts) {
             String surname = c.getName().getSurname();
 
-            if (!surname.startsWith(s)) {
-                s = surname.subSequence(0, 1).toString();
-                ContactListItemModel separatorModel = new ContactListItemModel();
-                separatorModel.setSeparator(s);
-                output.add(separatorModel);
+            if (surname != null) {
+                if (!surname.startsWith(s)) {
+                    s = surname.subSequence(0, 1).toString();
+                    ContactListItemModel separatorModel = new ContactListItemModel();
+                    separatorModel.setSeparator(s);
+                    output.add(separatorModel);
+                }
             }
+
             ContactListItemModel model = new ContactListItemModel();
             model.setContact(c);
 

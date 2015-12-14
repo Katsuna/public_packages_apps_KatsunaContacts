@@ -1,8 +1,10 @@
 package gr.crystalogic.oldmen.ui.activities;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 
 public class ContactActivity extends AppCompatActivity {
@@ -23,6 +28,7 @@ public class ContactActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 123;
 
     private Contact contact;
+    private ImageView photo;
     private TextView number;
     private TextView name;
     private TextView surname;
@@ -34,6 +40,15 @@ public class ContactActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         contact = (Contact) intent.getExtras().getSerializable("contact");
+
+        photo = (ImageView) findViewById(R.id.contact_photo);
+
+        // RETRIEVE THE CONTACT PHOTO AS A BITMAP
+        IContactDao dao = new ContactDao(this);
+        Bitmap image = dao.getImage(contact.getId());
+        // SET IT HERE IN THE IMAGEVIEW
+        photo.setImageBitmap(image);
+
 
         number = (TextView) findViewById(R.id.contact_number);
         name = (TextView) findViewById(R.id.contact_name);

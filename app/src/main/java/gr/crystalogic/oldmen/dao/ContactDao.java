@@ -4,10 +4,13 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,14 +50,10 @@ public class ContactDao implements IContactDao {
                 Contact contact = new Contact();
 
                 contact.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));
-                //Log.e("DAO", cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)));
                 contact.setName(getName(contact.getId()));
                 contact.setPhones(getPhones(contact.getId()));
 
-                Log.e("DAO", contact.toString());
-
                 contacts.add(contact);
-
             } while (cursor.moveToNext());
 
             cursor.close();
@@ -115,6 +114,18 @@ public class ContactDao implements IContactDao {
         }
 
         return name;
+    }
+
+    @Override
+    public Bitmap getImage(String contactId) {
+        Bitmap output = null;
+
+        Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId);
+        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri, false);
+        if (inputStream != null) {
+            output = BitmapFactory.decodeStream(inputStream);
+        }
+        return output;
     }
 
     @Override

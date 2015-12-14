@@ -1,5 +1,7 @@
 package gr.crystalogic.oldmen.dao;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 import gr.crystalogic.oldmen.domain.Contact;
@@ -13,6 +15,8 @@ public interface IContactDao {
     List<Phone> getPhones(String contactId);
 
     Name getName(String contactId);
+
+    Bitmap getImage(String contactId);
 
     void addContact(Contact contact);
 
