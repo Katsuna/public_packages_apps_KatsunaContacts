@@ -30,7 +30,6 @@ public class ContactActivity extends AppCompatActivity {
     private ImageView photo;
     private TextView number;
     private TextView name;
-    private TextView surname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +38,10 @@ public class ContactActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         contact = (Contact) intent.getExtras().getSerializable("contact");
-
         photo = (ImageView) findViewById(R.id.contact_photo);
-
-        // RETRIEVE THE CONTACT PHOTO AS A BITMAP
-        IContactDao dao = new ContactDao(this);
-        Bitmap image = dao.getImage(contact.getId());
-        // SET IT HERE IN THE IMAGEVIEW
-        photo.setImageBitmap(image);
-
 
         number = (TextView) findViewById(R.id.contact_number);
         name = (TextView) findViewById(R.id.contact_name);
-        surname = (TextView) findViewById(R.id.contact_surname);
 
         Button callButton = (Button) findViewById(R.id.btn_call);
         callButton.setOnClickListener(new View.OnClickListener() {
@@ -101,12 +91,19 @@ public class ContactActivity extends AppCompatActivity {
     private void showContactInfo() {
         if (contact != null) {
             name.setText(contact.getDisplayName());
-            //surname.setText(contact.getName().getSurname());
-
             number.setText(contact.getNumber());
+            loadImage();
         }
     }
 
+    private void loadImage() {
+        IContactDao dao = new ContactDao(this);
+        Bitmap image = dao.getImage(contact.getId());
+        if (image != null) {
+            photo.setVisibility(View.VISIBLE);
+            photo.setImageBitmap(image);
+        }
+    }
 
     private void callContact() {
         Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getNumber()));
@@ -114,7 +111,7 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void sendSMS() {
-        String number = contact.getNumber();  // The number on which you want to send SMS
+        String number = contact.getNumber();
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
     }
 }

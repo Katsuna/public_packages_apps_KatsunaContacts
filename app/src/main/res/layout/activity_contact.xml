@@ -14,8 +14,10 @@
 
         <ImageView
             android:id="@+id/contact_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/contact_number"
@@ -26,13 +28,6 @@
 
         <TextView
             android:id="@+id/contact_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textAppearance="@style/BoldText" />
-
-        <TextView
-            android:id="@+id/contact_surname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

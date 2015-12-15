@@ -28,6 +28,7 @@ public class ContactDao implements IContactDao {
         cr = context.getContentResolver();
     }
 
+    //TODO consider deletion
     public List<Contact> getContactsSlow() {
         List<Contact> contacts = new ArrayList<>();
 
@@ -78,7 +79,7 @@ public class ContactDao implements IContactDao {
         Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 
         String[] projection = {
-                ContactsContract.CommonDataKinds.Phone._ID,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE
         };
@@ -89,11 +90,11 @@ public class ContactDao implements IContactDao {
             cursor.moveToFirst();
             do {
                 Contact contact = new Contact();
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
                 String displayNameAlternative = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE));
                 String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                contact.setId(id);
+                contact.setId(contactId);
                 contact.setDisplayName(displayNameAlternative);
                 contact.setNumber(number);
 
@@ -166,7 +167,7 @@ public class ContactDao implements IContactDao {
         Bitmap output = null;
 
         Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId);
-        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri, false);
+        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri, true);
         if (inputStream != null) {
             output = BitmapFactory.decodeStream(inputStream);
         }
