@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -37,10 +38,9 @@ import gr.crystalogic.oldmen.utils.ContactArranger;
 public class ContactsFragment extends Fragment implements IContactsFragmentInteractionListener {
 
     private static final int REQUEST_CODE_READ_CONTACTS = 123;
-    private static String TAG = "ContactsFragment";
-
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static String TAG = "ContactsFragment";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private IContactsFragmentInteractionListener mListener;
@@ -68,6 +68,14 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts_list, container, false);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mListener.onTouchEvent();
+                return false;
+            }
+        });
+
         mRecyclerView = (RecyclerView) view;
         return view;
     }
@@ -153,7 +161,7 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
     private List<ContactListItemModel> getDeepCopy() {
         //deep copy to keep initil list
         List<ContactListItemModel> mModelsCopy = new ArrayList<>();
-        for(ContactListItemModel m: mModels) {
+        for (ContactListItemModel m : mModels) {
             mModelsCopy.add(new ContactListItemModel(m));
         }
         return mModelsCopy;
@@ -180,6 +188,12 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
     public void onListFragmentInteraction(ContactListItemModel item) {
         // let parent know
         mListener.onListFragmentInteraction(item);
+    }
+
+    @Override
+    public void onTouchEvent() {
+        //let parent know
+        mListener.onTouchEvent();
     }
 
     public void filterBySurnameStartLetter(String query) {

@@ -3,6 +3,7 @@ package gr.crystalogic.oldmen.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,10 +33,14 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             @Override
             public void onClick(View v) {
 
-                currentStep = Step.ZOOM1;
+                if (currentStep == Step.ZOOM2) {
+                    currentStep = Step.ZOOM1;
+                    contactsFragment.resetContacts();
+                } else {
+                    currentStep = Step.ZOOM1;
+                }
 
-                setFragmentWeight(R.id.actions_fragment, 0f);
-
+                onTouchEvent();
                 Log.e(TAG, "Search button pressed.");
             }
         });
@@ -58,19 +63,6 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     }
 
     @Override
-    public void onBackPressed() {
-        if (currentStep == Step.START) {
-            super.onBackPressed();
-        } else if (currentStep == Step.ZOOM1) {
-            currentStep = Step.START;
-            setFragmentWeight(R.id.actions_fragment, 2f);
-        } else if (currentStep == Step.ZOOM2) {
-            currentStep = Step.ZOOM1;
-            contactsFragment.resetContacts();
-        }
-    }
-
-    @Override
     public void onListFragmentInteraction(ContactListItemModel item) {
         if (item.getSeparator() == null) {
             Log.e(TAG, item.getContact().toString());
@@ -80,12 +72,37 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         } else {
             Log.e(TAG, item.getSeparator());
 
-            if (currentStep == Step.START) {
-                setFragmentWeight(R.id.actions_fragment, 0f);
-            }
             contactsFragment.filterBySurnameStartLetter(item.getSeparator());
             currentStep = Step.ZOOM2;
+
+            onTouchEvent();
         }
+    }
+
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
+        public void run() {
+            setActionsVisible(true);
+        }
+    };
+
+    private void setActionsVisible(boolean show) {
+        if (show) {
+            setFragmentWeight(R.id.actions_fragment, 2f);
+        } else {
+            setFragmentWeight(R.id.actions_fragment, 0f);
+        }
+    }
+
+    @Override
+    public void onTouchEvent() {
+        setActionsVisible(false);
+        if (currentStep == Step.START) {
+            currentStep = Step.ZOOM1;
+        }
+        //start timer to show again
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, 2000);
     }
 
     @Override
