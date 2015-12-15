@@ -16,7 +16,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     public Contact(String name, String surname, String number) {
-        this.displayName = surname + " " + name;
+        this.displayName = name + " " + surname;
         this.number = number;
     }
 
