@@ -38,7 +38,7 @@ public class Name implements Serializable {
     }
 
     public String getFullName() {
-        return name + " " + surname;
+        return surname + " " + name;
     }
 
     @Override

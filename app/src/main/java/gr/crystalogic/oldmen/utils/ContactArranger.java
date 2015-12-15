@@ -17,11 +17,11 @@ public class ContactArranger {
         String s = "-";
 
         for (Contact c : contacts) {
-            String surname = c.getName().getSurname();
+            String displayName = c.getDisplayName();
 
-            if (surname != null) {
-                if (!surname.startsWith(s)) {
-                    s = surname.subSequence(0, 1).toString();
+            if (displayName != null) {
+                if (!displayName.startsWith(s)) {
+                    s = displayName.subSequence(0, 1).toString();
                     ContactListItemModel separatorModel = new ContactListItemModel();
                     separatorModel.setSeparator(s);
                     output.add(separatorModel);
@@ -43,7 +43,7 @@ public class ContactArranger {
         //add matching models
         for (ContactListItemModel model : models) {
             if (model.getSeparator() == null) {
-                if (model.getContact().getName().getSurname().startsWith(query)) {
+                if (model.getContact().getDisplayName().startsWith(query)) {
                     output.add(model);
                 }
             } else {

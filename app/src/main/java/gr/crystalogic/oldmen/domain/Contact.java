@@ -1,51 +1,34 @@
 package gr.crystalogic.oldmen.domain;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Contact implements Comparable<Contact>, Serializable {
 
     private static final long serialVersionUID = 4439301448809751895L;
 
     private String id;
-    private Name name;
-    private Phone phone;
-    private List<Phone> phones;
+    private String displayName;
+    private String number;
 
     public Contact() {
     }
 
     public Contact(String name, String surname, String number) {
-        this.name = new Name(name, surname);
-        this.phone = new Phone(number);
+        this.displayName = surname + " " + name;
+        this.number = number;
     }
 
     public Contact(Contact contact) {
         id = contact.getId();
-
-        if (contact.getName() != null) {
-            name = new Name(contact.getName());
-        }
-
-        if (contact.getPhone() != null) {
-            phone = new Phone(contact.getPhone());
-        }
-
-        if (contact.getPhones() != null) {
-            phones = new ArrayList<>();
-            for (Phone p : contact.getPhones()) {
-                phones.add(new Phone(p));
-            }
-        }
+        displayName = contact.getDisplayName();
+        number = contact.getNumber();
     }
 
     @Override
     public String toString() {
-        return "Contact: " + id + " " + name + " " + phones;
+        return "Contact: " + id + " " + displayName + " " + number;
     }
 
     public String getId() {
@@ -56,47 +39,24 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.id = id;
     }
 
-    public Name getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(Name name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public List<Phone> getPhones() {
-        return phones;
+    public String getNumber() {
+        return number;
     }
 
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Phone phone) {
-        this.phone = phone;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     @Override
     public int compareTo(@NonNull Contact another) {
-
-        //Log.e("Contact-comparison", this.toString() + " - " + another.toString());
-
-        int output = 0;
-
-        if (name.getSurname() != null && another.getName().getSurname() != null) {
-            output = name.getSurname().compareTo(another.getName().getSurname());
-        } else if (name.getSurname() == null && another.getName().getSurname() != null) {
-            output = 1;
-        } else if (name.getSurname() != null && another.getName().getSurname() == null) {
-            output = -1;
-        } else {
-            output = 0;
-        }
-
-        return output;
+        return displayName.compareTo(another.displayName);
     }
 }

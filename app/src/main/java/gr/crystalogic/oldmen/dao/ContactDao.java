@@ -28,8 +28,7 @@ public class ContactDao implements IContactDao {
         cr = context.getContentResolver();
     }
 
-    @Override
-    public List<Contact> getContacts() {
+    public List<Contact> getContactsSlow() {
         List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
@@ -37,7 +36,7 @@ public class ContactDao implements IContactDao {
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.LOOKUP_KEY,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
+                ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE
         };
         String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
         String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
@@ -47,11 +46,21 @@ public class ContactDao implements IContactDao {
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
+                String id = cursor.getString(cursor.getColumnIndex(
+                        ContactsContract.Contacts._ID));
+                String displayNameAlternative = cursor.getString(cursor.getColumnIndex(
+                        ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE));
+
                 Contact contact = new Contact();
 
-                contact.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));
-                contact.setName(getName(contact.getId()));
-                contact.setPhones(getPhones(contact.getId()));
+                contact.setId(id);
+                contact.setDisplayName(displayNameAlternative);
+
+                //this is slow....
+                List<Phone> phones = getPhones(contact.getId());
+                contact.setNumber(phones.get(0).getNumber());
+
+                //contact.setPhones(getPhones(contact.getId()));
 
                 contacts.add(contact);
             } while (cursor.moveToNext());
@@ -61,6 +70,42 @@ public class ContactDao implements IContactDao {
 
         return contacts;
     }
+
+    @Override
+    public List<Contact> getContacts() {
+        List<Contact> contacts = new ArrayList<>();
+
+        Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
+        String[] projection = {
+                ContactsContract.CommonDataKinds.Phone._ID,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE
+        };
+
+        Cursor cursor = cr.query(baseUri, projection, null, null, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                Contact contact = new Contact();
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                String displayNameAlternative = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE));
+                String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                contact.setId(id);
+                contact.setDisplayName(displayNameAlternative);
+                contact.setNumber(number);
+
+                contacts.add(contact);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return contacts;
+    }
+
 
     @Override
     public List<Phone> getPhones(String contactId) {
@@ -140,14 +185,13 @@ public class ContactDao implements IContactDao {
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName().getName())
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, contact.getName().getSurname())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getDisplayName())
                 .build());
 
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhone().getNumber())
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getNumber())
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
                 .build());
 

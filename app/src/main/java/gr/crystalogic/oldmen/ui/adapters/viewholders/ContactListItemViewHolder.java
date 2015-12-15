@@ -29,10 +29,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
 
             mIdView.setText(contact.getId());
 
-            String cInfo = contact.getName().getFullName();
-            if (contact.getPhones() != null && contact.getPhones().size() > 0) {
-                cInfo += " " + contact.getPhones().get(0).getNumber();
-            }
+            String cInfo = contact.getDisplayName() + " " +  contact.getNumber();
 
             mContentView.setText(cInfo);
             //TODO check is dp is used or pixels

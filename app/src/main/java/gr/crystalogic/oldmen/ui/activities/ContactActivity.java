@@ -1,7 +1,6 @@
 package gr.crystalogic.oldmen.ui.activities;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -101,26 +100,21 @@ public class ContactActivity extends AppCompatActivity {
 
     private void showContactInfo() {
         if (contact != null) {
-            if (contact.getName() != null) {
-                name.setText(contact.getName().getName());
-                surname.setText(contact.getName().getSurname());
-            }
+            name.setText(contact.getDisplayName());
+            //surname.setText(contact.getName().getSurname());
 
-            if (contact.getPhones() != null && contact.getPhones().size() > 0) {
-                number.setText(contact.getPhones().get(0).getNumber());
-            }
+            number.setText(contact.getNumber());
         }
     }
 
 
     private void callContact() {
-        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhones().get(0).getNumber()));
+        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getNumber()));
         startActivity(i);
     }
 
-    private void sendSMS()
-    {
-        String number = contact.getPhones().get(0).getNumber();  // The number on which you want to send SMS
+    private void sendSMS() {
+        String number = contact.getNumber();  // The number on which you want to send SMS
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
     }
 }
