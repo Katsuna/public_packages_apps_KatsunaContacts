@@ -9,6 +9,6 @@ public final class Constants {
     // An identifier for the loader
     public final static int QUERY_ID = 1;
     public final static long ACTIONS_DIALOG_OFF_TIMEOUT = 2000;
-    public final static long PRESSURE_SENSITIVITY_TIMEOUT = 500;
+    public final static long PRESSURE_SENSITIVITY_TIMEOUT = 300;
 
 }
