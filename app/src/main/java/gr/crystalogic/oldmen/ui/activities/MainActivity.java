@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,9 +20,13 @@ import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
+    private final static long ACTIONS_DIALOG_OFF_TIMEOUT = 2000;
+    private final static long PRESSURE_SENSITIVITY_TIMEOUT = 500;
 
     private Step currentStep = Step.START;
     private ContactsFragment contactsFragment;
+
+    private boolean mBooleanIsPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +34,23 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         setContentView(R.layout.activity_main);
 
         Button searchButton = (Button) findViewById(R.id.btn_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (currentStep == Step.ZOOM2) {
-                    currentStep = Step.ZOOM1;
-                    contactsFragment.resetContacts();
-                } else {
-                    currentStep = Step.ZOOM1;
+        searchButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    pressureHandler.postDelayed(pressureRunnable, PRESSURE_SENSITIVITY_TIMEOUT);
+                    mBooleanIsPressed = true;
                 }
 
-                onTouchEvent();
-                Log.e(TAG, "Search button pressed.");
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(mBooleanIsPressed) {
+                        mBooleanIsPressed = false;
+                        pressureHandler.removeCallbacks(pressureRunnable);
+                    }
+                }
+
+                return false;
             }
         });
 
@@ -102,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         }
         //start timer to show again
         handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable, 2000);
+        handler.postDelayed(runnable, ACTIONS_DIALOG_OFF_TIMEOUT);
     }
 
     @Override
@@ -114,5 +123,24 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         START,
         ZOOM1,
         ZOOM2
+    }
+
+    private final Handler pressureHandler = new Handler();
+    private final Runnable pressureRunnable = new Runnable() {
+        public void run() {
+            search();
+        }
+    };
+
+    private void search() {
+        if (currentStep == Step.ZOOM2) {
+            currentStep = Step.ZOOM1;
+            contactsFragment.resetContacts();
+        } else {
+            currentStep = Step.ZOOM1;
+        }
+
+        onTouchEvent();
+        Log.e(TAG, "Search button pressed.");
     }
 }
