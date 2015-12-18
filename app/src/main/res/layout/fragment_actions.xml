@@ -5,7 +5,7 @@
     android:orientation="vertical"
     tools:context=".ui.fragments.ActionsFragment">
 
-    <Button
+    <gr.crystalogic.oldmen.ui.controls.PressureButton
         android:id="@+id/btn_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
