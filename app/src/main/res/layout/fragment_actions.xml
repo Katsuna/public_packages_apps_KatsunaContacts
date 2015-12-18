@@ -14,7 +14,7 @@
         android:text="@string/search_contacts"
         android:textAppearance="@style/BoldText" />
 
-    <Button
+    <gr.crystalogic.oldmen.ui.controls.PressureButton
         android:id="@+id/btn_new_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

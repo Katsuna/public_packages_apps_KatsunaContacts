@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
@@ -41,11 +39,12 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             }
         });
 
-        Button button = (Button) findViewById(R.id.btn_new_contact);
-        button.setOnClickListener(new View.OnClickListener() {
+        PressureButton button = (PressureButton) findViewById(R.id.btn_new_contact);
+        button.setRunnable(new Runnable() {
             @Override
-            public void onClick(View v) {
-                Log.e(TAG, "Add new contact pressed.");
+            public void run() {
+                Intent i = new Intent(MainActivity.this, EditContactActivity.class);
+                startActivity(i);
             }
         });
 
