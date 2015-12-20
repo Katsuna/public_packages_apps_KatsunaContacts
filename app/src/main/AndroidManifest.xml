@@ -24,11 +24,21 @@
         <activity
             android:name=".ui.activities.ContactActivity"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
+
         <activity
             android:name=".ui.activities.EditContactActivity"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>
