@@ -92,15 +92,16 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
             mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
+        loadContacts();
+    }
+
+    private void loadContacts() {
+
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
             return;
         }
 
-        loadContacts();
-    }
-
-    private void loadContacts() {
         //get contacts from device
         IContactDao dao = new ContactDao(getActivity());
         Log.e(TAG, "-1-");

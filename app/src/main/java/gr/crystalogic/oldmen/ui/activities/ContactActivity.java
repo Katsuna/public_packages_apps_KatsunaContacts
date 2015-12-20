@@ -47,13 +47,6 @@ public class ContactActivity extends AppCompatActivity {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(ContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_ASK_CALL_PERMISSION);
-                    return;
-                }
-
-                Log.e(TAG, "call immediately");
-
                 callContact();
             }
         });
@@ -106,6 +99,11 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void callContact() {
+        if (ActivityCompat.checkSelfPermission(ContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_ASK_CALL_PERMISSION);
+            return;
+        }
+
         Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getNumber()));
         startActivity(i);
     }
