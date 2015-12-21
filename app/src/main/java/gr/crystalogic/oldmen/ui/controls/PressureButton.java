@@ -11,7 +11,7 @@ import gr.crystalogic.oldmen.utils.Constants;
 
 public class PressureButton extends Button {
 
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private boolean mBooleanIsPressed;
 
     public void setRunnable(final Runnable runnable) {

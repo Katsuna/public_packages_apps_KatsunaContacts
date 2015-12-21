@@ -79,18 +79,17 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
         }
     }
 
-    public ContactListItemModel removeItem(int position) {
-        final ContactListItemModel model = mModels.remove(position);
+    private void removeItem(int position) {
+        mModels.remove(position);
         notifyItemRemoved(position);
-        return model;
     }
 
-    public void addItem(int position, ContactListItemModel model) {
+    private void addItem(int position, ContactListItemModel model) {
         mModels.add(position, model);
         notifyItemInserted(position);
     }
 
-    public void moveItem(int fromPosition, int toPosition) {
+    private void moveItem(int fromPosition, int toPosition) {
         final ContactListItemModel model = mModels.remove(fromPosition);
         mModels.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);

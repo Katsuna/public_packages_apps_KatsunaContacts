@@ -10,9 +10,9 @@ import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
-    public final View mView;
-    public final TextView mIdView;
-    public final TextView mContentView;
+    private final View mView;
+    private final TextView mIdView;
+    private final TextView mContentView;
     private final IContactsFragmentInteractionListener mListener;
 
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {

@@ -40,7 +40,7 @@ public class ContactsFragment extends Fragment implements IContactsFragmentInter
     private static final int REQUEST_CODE_READ_CONTACTS = 123;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private static String TAG = "ContactsFragment";
+    private static final String TAG = "ContactsFragment";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private IContactsFragmentInteractionListener mListener;
