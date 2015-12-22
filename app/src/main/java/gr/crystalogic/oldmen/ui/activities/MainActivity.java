@@ -1,22 +1,24 @@
 package gr.crystalogic.oldmen.ui.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.LinearLayout;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
-import gr.crystalogic.oldmen.ui.controls.PressureButton;
 import gr.crystalogic.oldmen.ui.fragments.ActionsFragment;
 import gr.crystalogic.oldmen.ui.fragments.ContactsFragment;
+import gr.crystalogic.oldmen.ui.listeners.IActionsFragmentInteractionListener;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 import gr.crystalogic.oldmen.utils.Constants;
 
-public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener, ActionsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener, IActionsFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
 
@@ -24,31 +26,25 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     private Step currentStep = Step.START;
     private ContactsFragment contactsFragment;
 
-    private boolean mBooleanIsPressed;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PressureButton searchButton = (PressureButton) findViewById(R.id.btn_search);
-        searchButton.setRunnable(new Runnable() {
-            @Override
-            public void run() {
-                search();
-            }
-        });
-
-        PressureButton button = (PressureButton) findViewById(R.id.btn_new_contact);
-        button.setRunnable(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(MainActivity.this, EditContactActivity.class);
-                startActivity(i);
-            }
-        });
-
+        addActionsFragment();
         contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.contacts_fragment);
+    }
+
+    private void addActionsFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment actionsFragment = new ActionsFragment();
+
+        fragmentTransaction.replace(R.id.bottom_container, actionsFragment);
+
+        // Commit the transaction
+        fragmentTransaction.commit();
     }
 
     private void setFragmentWeight(int id, float weight) {
@@ -83,9 +79,9 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
     private void setActionsVisible(boolean show) {
         if (show) {
-            setFragmentWeight(R.id.actions_fragment, 2f);
+            setFragmentWeight(R.id.bottom_container, 2f);
         } else {
-            setFragmentWeight(R.id.actions_fragment, 0f);
+            setFragmentWeight(R.id.bottom_container, 0f);
         }
     }
 
@@ -100,18 +96,14 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         handler.postDelayed(runnable, Constants.ACTIONS_DIALOG_OFF_TIMEOUT);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.e(TAG, uri.toString());
-    }
-
     private enum Step {
         START,
         ZOOM1,
         ZOOM2
     }
 
-    private void search() {
+    @Override
+    public void search() {
         if (currentStep == Step.ZOOM2) {
             currentStep = Step.ZOOM1;
             contactsFragment.resetContacts();
@@ -121,5 +113,11 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
         onTouchEvent();
         Log.e(TAG, "Search button pressed.");
+    }
+
+    @Override
+    public void addNewContact() {
+        Intent i = new Intent(MainActivity.this, EditContactActivity.class);
+        startActivity(i);
     }
 }

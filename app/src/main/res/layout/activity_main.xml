@@ -4,19 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/contacts_fragment"
-        android:name="gr.crystalogic.oldmen.ui.fragments.ContactsFragment"
+    <LinearLayout
+        android:id="@+id/top_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5" />
+        android:layout_weight="5"
+        android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/actions_fragment"
-        android:name="gr.crystalogic.oldmen.ui.fragments.ActionsFragment"
+        <fragment
+            android:id="@+id/contacts_fragment"
+            android:name="gr.crystalogic.oldmen.ui.fragments.ContactsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
 
 </LinearLayout>
 
