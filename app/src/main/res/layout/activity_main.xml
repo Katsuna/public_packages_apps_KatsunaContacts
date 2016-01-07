@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
             tools:context=".ui.fragments.ContactsFragment"
-            tools:listitem="@layout/contacts" />
+            tools:listitem="@layout/contact" />
 
         <LinearLayout
             android:layout_width="wrap_content"
