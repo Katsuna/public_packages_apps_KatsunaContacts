@@ -11,33 +11,25 @@ import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
-    private final TextView mIdView;
+    private final TextView mSeparatorView;
     private final TextView mContentView;
     private final IContactsFragmentInteractionListener mListener;
 
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
         super(view);
         mView = view;
-        mIdView = (TextView) view.findViewById(R.id.id);
+        mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mContentView = (TextView) view.findViewById(R.id.content);
         mListener = listener;
     }
 
     public void bind(final ContactListItemModel model) {
-        if (model.getSeparator() == null) {
-            Contact contact = model.getContact();
+        Contact contact = model.getContact();
 
-            mIdView.setText(contact.getId());
-
-            String cInfo = contact.getDisplayName() + " " +  contact.getNumber();
-
-            mContentView.setText(cInfo);
-            //TODO check is dp is used or pixels
-            mContentView.setTextSize(15);
-        } else {
-            mContentView.setText(model.getSeparator());
-            mContentView.setTextSize(35);
+        if (model.isSeparator()) {
+            mSeparatorView.setText(contact.getDisplayName().substring(0, 1));
         }
+        mContentView.setText(contact.getDisplayName());
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override

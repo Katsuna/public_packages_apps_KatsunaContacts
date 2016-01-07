@@ -5,7 +5,7 @@ import gr.crystalogic.oldmen.domain.Contact;
 public class ContactListItemModel {
 
     private Contact contact;
-    private String separator;
+    private boolean separator;
 
     public Contact getContact() {
         return contact;
@@ -15,18 +15,18 @@ public class ContactListItemModel {
         this.contact = contact;
     }
 
-    public String getSeparator() {
+    public boolean isSeparator() {
         return separator;
     }
 
-    public void setSeparator(String separator) {
+    public void setSeparator(boolean separator) {
         this.separator = separator;
     }
 
     public ContactListItemModel() {}
 
     public ContactListItemModel(ContactListItemModel model) {
-        separator = model.getSeparator();
+        setSeparator(model.isSeparator());
         if (model.getContact() != null) {
             contact = new Contact(model.getContact());
         }

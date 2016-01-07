@@ -19,41 +19,22 @@ public class ContactArranger {
         for (Contact c : contacts) {
             String displayName = c.getDisplayName();
 
+            //check if contact is separator
+            boolean separator = false;
             if (displayName != null) {
                 if (!displayName.startsWith(s)) {
                     s = displayName.subSequence(0, 1).toString();
-                    ContactListItemModel separatorModel = new ContactListItemModel();
-                    separatorModel.setSeparator(s);
-                    output.add(separatorModel);
+                    separator = true;
                 }
             }
 
             ContactListItemModel model = new ContactListItemModel();
             model.setContact(c);
+            model.setSeparator(separator);
 
             output.add(model);
         }
 
         return output;
     }
-
-    public static List<ContactListItemModel> queryContactsByFirstLetter(List<ContactListItemModel> models, String query) {
-        List<ContactListItemModel> output = new ArrayList<>();
-
-        //add matching models
-        for (ContactListItemModel model : models) {
-            if (model.getSeparator() == null) {
-                if (model.getContact().getDisplayName().startsWith(query)) {
-                    output.add(model);
-                }
-            } else {
-                if (model.getSeparator().startsWith(query)) {
-                    output.add(model);
-                }
-            }
-        }
-
-        return output;
-    }
-
 }
