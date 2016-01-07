@@ -1,8 +1,21 @@
 package gr.crystalogic.oldmen.ui.adapters.viewholders;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.InputStream;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.domain.Contact;
@@ -13,6 +26,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
     private final TextView mSeparatorView;
     private final TextView mContentView;
+    private final ImageView mPhoto;
     private final IContactsFragmentInteractionListener mListener;
 
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
@@ -20,6 +34,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mView = view;
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mContentView = (TextView) view.findViewById(R.id.content);
+        mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
     }
 
@@ -41,5 +56,53 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
+
+        Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contact.getId());
+        InputStream inputStream;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
+                    contactUri, false);
+        else
+            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
+                    contactUri);
+
+        if (inputStream != null) {
+
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            int drawable = R.drawable.shape_circle;
+            Bitmap testBitmap = getMaskedBitmap(mView.getContext().getResources(), bmp, drawable);
+            mPhoto.setImageBitmap(testBitmap);
+        }
+
+    }
+
+    private static Bitmap getMaskedBitmap(Resources res, Bitmap source, int maskResId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            options.inMutable = true;
+        }
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        //Bitmap source = BitmapFactory.decodeResource(res, sourceResId, options);
+        Bitmap bitmap;
+        if (source.isMutable()) {
+            bitmap = source;
+        } else {
+            bitmap = source.copy(Bitmap.Config.ARGB_8888, true);
+            source.recycle();
+        }
+        bitmap.setHasAlpha(true);
+
+        Bitmap mask = BitmapFactory.decodeResource(res, maskResId);
+        bitmap = Bitmap.createScaledBitmap(bitmap, mask.getWidth(), mask.getHeight(), false);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Paint paint = new Paint();
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        canvas.drawBitmap(mask, 0, 0, paint);
+        mask.recycle();
+        return bitmap;
     }
 }
