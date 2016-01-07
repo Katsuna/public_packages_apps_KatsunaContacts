@@ -12,11 +12,6 @@ import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.adapters.viewholders.ContactListItemViewHolder;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link ContactListItemModel} and makes a call to the
- * specified {@link IContactsFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactListItemViewHolder> {
 
     private final List<ContactListItemModel> mModels;
@@ -30,7 +25,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     @Override
     public ContactListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_contacts, parent, false);
+                .inflate(R.layout.contacts, parent, false);
         return new ContactListItemViewHolder(view, mListener);
     }
 

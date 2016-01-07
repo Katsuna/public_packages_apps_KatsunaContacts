@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,11 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
-            android:id="@+id/contacts_fragment"
-            android:name="gr.crystalogic.oldmen.ui.fragments.ContactsFragment"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts_list"
+            android:name="gr.crystalogic.oldmen.fragments.ContactsFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".ui.fragments.ContactsFragment"
+            tools:listitem="@layout/contacts" />
 
         <LinearLayout
             android:layout_width="wrap_content"
