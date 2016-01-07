@@ -28,8 +28,8 @@ public class ContactDao implements IContactDao {
         cr = context.getContentResolver();
     }
 
-    //TODO consider deletion
-    public List<Contact> getContactsSlow() {
+    @Override
+    public List<Contact> getContacts() {
         List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
@@ -58,8 +58,8 @@ public class ContactDao implements IContactDao {
                 contact.setDisplayName(displayNameAlternative);
 
                 //this is slow....
-                List<Phone> phones = getPhones(contact.getId());
-                contact.setNumber(phones.get(0).getNumber());
+                //List<Phone> phones = getPhones(contact.getId());
+                //contact.setNumber(phones.get(0).getNumber());
 
                 //contact.setPhones(getPhones(contact.getId()));
 
@@ -72,8 +72,9 @@ public class ContactDao implements IContactDao {
         return contacts;
     }
 
-    @Override
-    public List<Contact> getContacts() {
+    //TODO consider deletion
+    //@Override
+    public List<Contact> getContactsFast() {
         List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;

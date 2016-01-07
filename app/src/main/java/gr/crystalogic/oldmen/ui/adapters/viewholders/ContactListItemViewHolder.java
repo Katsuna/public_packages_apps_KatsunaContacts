@@ -42,7 +42,9 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         Contact contact = model.getContact();
 
         if (model.isSeparator()) {
-            mSeparatorView.setText(contact.getDisplayName().substring(0, 1));
+            mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+        } else {
+            mSeparatorView.setText("");
         }
         mContentView.setText(contact.getDisplayName());
 
@@ -58,40 +60,32 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         });
 
 
-        Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contact.getId());
-        InputStream inputStream;
+        Bitmap photo = null;
+        if (contact.isPhotoChecked()) {
+            photo = contact.getPhoto();
+        } else {
+            contact.setPhotoChecked(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
+            Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contact.getId());
+            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
                     contactUri, false);
-        else
-            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
-                    contactUri);
 
-        if (inputStream != null) {
-
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            int drawable = R.drawable.shape_circle;
-            Bitmap testBitmap = getMaskedBitmap(mView.getContext().getResources(), bmp, drawable);
-            mPhoto.setImageBitmap(testBitmap);
+            if (inputStream != null) {
+                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                int drawable = R.drawable.shape_circle;
+                photo = getMaskedBitmap(mView.getContext().getResources(), bmp, drawable);
+                contact.setPhoto(photo);
+            }
         }
-
+        mPhoto.setImageBitmap(photo);
     }
 
     private static Bitmap getMaskedBitmap(Resources res, Bitmap source, int maskResId) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            options.inMutable = true;
-        }
+        options.inMutable = true;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        //Bitmap source = BitmapFactory.decodeResource(res, sourceResId, options);
-        Bitmap bitmap;
-        if (source.isMutable()) {
-            bitmap = source;
-        } else {
-            bitmap = source.copy(Bitmap.Config.ARGB_8888, true);
-            source.recycle();
-        }
+
+        Bitmap bitmap = source;
         bitmap.setHasAlpha(true);
 
         Bitmap mask = BitmapFactory.decodeResource(res, maskResId);

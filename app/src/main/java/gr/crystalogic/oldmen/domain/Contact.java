@@ -1,5 +1,6 @@
 package gr.crystalogic.oldmen.domain;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -11,6 +12,8 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String id;
     private String displayName;
     private String number;
+    private boolean photoChecked;
+    private Bitmap photo;
 
     public Contact() {
     }
@@ -58,5 +61,21 @@ public class Contact implements Comparable<Contact>, Serializable {
     @Override
     public int compareTo(@NonNull Contact another) {
         return displayName.compareTo(another.displayName);
+    }
+
+    public boolean isPhotoChecked() {
+        return photoChecked;
+    }
+
+    public void setPhotoChecked(boolean photoChecked) {
+        this.photoChecked = photoChecked;
+    }
+
+    public Bitmap getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 }
