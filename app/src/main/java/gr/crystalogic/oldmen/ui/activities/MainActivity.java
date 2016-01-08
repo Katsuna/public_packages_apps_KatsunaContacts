@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 123;
 
-    private FloatingActionButton searchFab;
-    private FloatingActionButton newContactFab;
+    private FloatingActionButton mSearchFab;
+    private FloatingActionButton mNewContactFab;
     private List<ContactListItemModel> mModels;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -54,20 +54,21 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     }
 
     private void setupFabs() {
-        searchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        searchFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.indigo_blue)));
-        searchFab.setOnClickListener(new View.OnClickListener() {
+        mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
+        mSearchFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.indigo_blue)));
+        mSearchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mStep = Step.S2;
+                mSearchFab.setVisibility(View.GONE);
                 mAdapter.goToStep(mStep);
             }
         });
 
-        newContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        newContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
+        mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
 
-        newContactFab.setOnClickListener(new View.OnClickListener() {
+        mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, EditContactActivity.class);
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     public void onBackPressed() {
         if (mStep == Step.S2) {
             mStep = Step.S1;
+            mSearchFab.setVisibility(View.VISIBLE);
             mAdapter.goToStep(mStep);
         } else {
             super.onBackPressed();
