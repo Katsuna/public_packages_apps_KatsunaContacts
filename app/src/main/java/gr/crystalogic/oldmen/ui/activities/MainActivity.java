@@ -29,7 +29,7 @@ import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 import gr.crystalogic.oldmen.utils.ContactArranger;
 import gr.crystalogic.oldmen.utils.Step;
 
-public class MainActivity extends AppCompatActivity  implements IContactsFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 123;
@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
         mSearchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStep = Step.S2;
-                mSearchFab.setVisibility(View.GONE);
-                mAdapter.goToStep(mStep);
+                goToStep(Step.S2);
             }
         });
 
@@ -158,6 +156,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
 
     @Override
     public void onSeparatorClick(int position) {
+        goToStep(Step.S1);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
@@ -169,11 +168,23 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     @Override
     public void onBackPressed() {
         if (mStep == Step.S2) {
-            mStep = Step.S1;
-            mSearchFab.setVisibility(View.VISIBLE);
-            mAdapter.goToStep(mStep);
+            goToStep(Step.S1);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void goToStep(Step step) {
+        mStep = step;
+        switch (step) {
+            case S1:
+                mSearchFab.setVisibility(View.VISIBLE);
+                mAdapter.goToStep(mStep);
+                break;
+            case S2:
+                mSearchFab.setVisibility(View.GONE);
+                mAdapter.goToStep(mStep);
+                break;
         }
     }
 }
