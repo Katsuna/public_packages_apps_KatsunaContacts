@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.adapters.viewholders.ContactListItemViewHolder;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
@@ -18,6 +19,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     private final List<ContactListItemModel> mModels;
     private final IContactsFragmentInteractionListener mListener;
     private Step mStep;
+    private Contact mContact;
 
     public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactsFragmentInteractionListener listener, Step step) {
         mModels = models;
@@ -35,7 +37,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     @Override
     public void onBindViewHolder(final ContactListItemViewHolder holder, int position) {
         final ContactListItemModel model = mModels.get(position);
-        holder.bind(model, mStep, position);
+        holder.bind(model, mStep, position, mContact);
     }
 
     @Override
@@ -45,6 +47,12 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
 
     public void goToStep(Step step) {
         mStep = step;
+        notifyDataSetChanged();
+    }
+
+    public void goToStepWithContactSelection(Step step, Contact contact) {
+        mStep = step;
+        mContact = contact;
         notifyDataSetChanged();
     }
 

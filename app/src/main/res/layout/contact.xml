@@ -18,6 +18,7 @@
         android:visibility="gone" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contact_basic_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -57,6 +58,24 @@
             android:layout_marginTop="@dimen/text_margin_top_bottom"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/contact_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Call" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sms" />
+
     </LinearLayout>
 
 </LinearLayout>

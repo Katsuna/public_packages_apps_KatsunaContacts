@@ -155,6 +155,12 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     }
 
     @Override
+    public void onContactSelected(int position, Contact contact) {
+        goToStep(Step.S5, contact);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 60);
+    }
+
+    @Override
     public void onSeparatorClick(int position) {
         goToStep(Step.S1);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
@@ -169,21 +175,34 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     public void onBackPressed() {
         if (mStep == Step.S2) {
             goToStep(Step.S1);
-        } else {
+        } else if (mStep == Step.S5) {
+            goToStep(Step.S1);
+        }
+        else {
             super.onBackPressed();
         }
     }
 
     private void goToStep(Step step) {
+        goToStep(step, null);
+    }
+
+    private void goToStep(Step step, Contact contact) {
         mStep = step;
         switch (step) {
             case S1:
                 mSearchFab.setVisibility(View.VISIBLE);
+                mNewContactFab.setVisibility(View.VISIBLE);
                 mAdapter.goToStep(mStep);
                 break;
             case S2:
                 mSearchFab.setVisibility(View.GONE);
                 mAdapter.goToStep(mStep);
+                break;
+            case S5:
+                mSearchFab.setVisibility(View.GONE);
+                mNewContactFab.setVisibility(View.GONE);
+                mAdapter.goToStepWithContactSelection(mStep, contact);
                 break;
         }
     }
