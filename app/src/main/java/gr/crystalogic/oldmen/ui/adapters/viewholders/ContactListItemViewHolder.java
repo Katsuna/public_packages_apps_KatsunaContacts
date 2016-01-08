@@ -40,7 +40,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mListener = listener;
     }
 
-    public void bind(final ContactListItemModel model, Step step) {
+    public void bind(final ContactListItemModel model, Step step, final int position) {
         Contact contact = model.getContact();
 
         mLargeSeparatorView.setText("");
@@ -63,19 +63,27 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
             if (model.isSeparator()) {
                 mLargeSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
                 mLargeSeparatorView.setVisibility(View.VISIBLE);
+                mLargeSeparatorView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.onSeparatorClick(position);
+                        }
+                    }
+                });
             }
         }
 
-        mView.setOnClickListener(new View.OnClickListener() {
+/*        mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
+                if (mListener != null) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(model);
                 }
             }
-        });
+        });*/
 
 
         Bitmap photo = null;

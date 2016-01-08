@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
 
         setupFabs();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mStep = Step.S1;
         loadContacts();
@@ -152,6 +154,11 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     @Override
     public void onListFragmentInteraction(ContactListItemModel item) {
         Log.e(TAG, item.toString());
+    }
+
+    @Override
+    public void onSeparatorClick(int position) {
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override

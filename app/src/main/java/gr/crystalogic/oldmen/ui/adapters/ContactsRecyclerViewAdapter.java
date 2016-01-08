@@ -35,7 +35,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     @Override
     public void onBindViewHolder(final ContactListItemViewHolder holder, int position) {
         final ContactListItemModel model = mModels.get(position);
-        holder.bind(model, mStep);
+        holder.bind(model, mStep, position);
     }
 
     @Override
