@@ -11,15 +11,18 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.adapters.viewholders.ContactListItemViewHolder;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
+import gr.crystalogic.oldmen.utils.Step;
 
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactListItemViewHolder> {
 
     private final List<ContactListItemModel> mModels;
     private final IContactsFragmentInteractionListener mListener;
+    private Step mStep;
 
-    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactsFragmentInteractionListener listener) {
+    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactsFragmentInteractionListener listener, Step step) {
         mModels = models;
         mListener = listener;
+        mStep = step;
     }
 
     @Override
@@ -32,12 +35,17 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactLis
     @Override
     public void onBindViewHolder(final ContactListItemViewHolder holder, int position) {
         final ContactListItemModel model = mModels.get(position);
-        holder.bind(model);
+        holder.bind(model, mStep);
     }
 
     @Override
     public int getItemCount() {
         return mModels.size();
+    }
+
+    public void goToStep(Step step) {
+        mStep = step;
+        notifyDataSetChanged();
     }
 
     public void animateTo(List<ContactListItemModel> models) {

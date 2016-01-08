@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,9 +20,11 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
+import gr.crystalogic.oldmen.utils.Step;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
+    private final TextView mLargeSeparatorView;
     private final TextView mSeparatorView;
     private final TextView mContentView;
     private final ImageView mPhoto;
@@ -32,21 +33,38 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
         super(view);
         mView = view;
+        mLargeSeparatorView = (TextView) view.findViewById(R.id.largeSeparator);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mContentView = (TextView) view.findViewById(R.id.content);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
     }
 
-    public void bind(final ContactListItemModel model) {
+    public void bind(final ContactListItemModel model, Step step) {
         Contact contact = model.getContact();
 
-        if (model.isSeparator()) {
-            mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-        } else {
-            mSeparatorView.setText("");
-        }
+        mLargeSeparatorView.setText("");
+        mLargeSeparatorView.setVisibility(View.GONE);
+        mSeparatorView.setText("");
         mContentView.setText(contact.getDisplayName());
+
+        if (step == Step.S1) {
+            mSeparatorView.setTextSize(20);
+            mContentView.setTextSize(20);
+            mPhoto.getLayoutParams().width = 40;
+
+            if (model.isSeparator()) {
+                mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+            }
+        } else if (step == Step.S2) {
+            mSeparatorView.setTextSize(12);
+            mContentView.setTextSize(12);
+            mPhoto.getLayoutParams().width = 25;
+            if (model.isSeparator()) {
+                mLargeSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                mLargeSeparatorView.setVisibility(View.VISIBLE);
+            }
+        }
 
         mView.setOnClickListener(new View.OnClickListener() {
             @Override

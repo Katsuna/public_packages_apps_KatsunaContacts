@@ -26,6 +26,7 @@ import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 import gr.crystalogic.oldmen.utils.ContactArranger;
+import gr.crystalogic.oldmen.utils.Step;
 
 public class MainActivity extends AppCompatActivity  implements IContactsFragmentInteractionListener {
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
+    private Step mStep;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
         setupFabs();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
 
+        mStep = Step.S1;
         loadContacts();
     }
 
@@ -55,7 +59,8 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
         searchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mStep = Step.S2;
+                mAdapter.goToStep(mStep);
             }
         });
 
@@ -110,7 +115,7 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
         mModels = ContactArranger.sortContactsBySurname(contactList);
         Log.e(TAG, "-3-");
 
-        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this);
+        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this, mStep);
         Log.e(TAG, "-4-");
 
         mRecyclerView.setAdapter(mAdapter);
@@ -151,5 +156,15 @@ public class MainActivity extends AppCompatActivity  implements IContactsFragmen
     @Override
     public void onTouchEvent() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mStep == Step.S2) {
+            mStep = Step.S1;
+            mAdapter.goToStep(mStep);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
