@@ -60,7 +60,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
             case S1:
                 mSeparatorView.setTextSize(20);
                 mContentView.setTextSize(20);
-                mPhoto.getLayoutParams().width = 40;
+                mPhoto.getLayoutParams().width = 50;
+                mPhoto.getLayoutParams().height = 50;
 
                 if (model.isSeparator()) {
                     mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
@@ -95,7 +96,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mContactDetails.setVisibility(View.VISIBLE);
                     mSeparatorView.setTextSize(20);
                     mContentView.setTextSize(20);
-                    mPhoto.getLayoutParams().width = 40;
+                    mPhoto.getLayoutParams().width = 50;
+                    mPhoto.getLayoutParams().height = 50;
                 } else {
                     if (model.isSeparator()) {
                         mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
@@ -103,6 +105,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mSeparatorView.setTextSize(12);
                     mContentView.setTextSize(12);
                     mPhoto.getLayoutParams().width = 25;
+                    mPhoto.getLayoutParams().height = 25;
                 }
                 break;
         }
