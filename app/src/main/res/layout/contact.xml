@@ -12,10 +12,10 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/separator"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="35sp"
-        android:background="@drawable/separator"
         android:visibility="gone" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,7 +59,16 @@
             android:layout_marginTop="@dimen/text_margin_top_bottom"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_edit_black_18dp"
+            android:layout_gravity="center|end"
+            android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/contact_details"
         android:layout_width="match_parent"

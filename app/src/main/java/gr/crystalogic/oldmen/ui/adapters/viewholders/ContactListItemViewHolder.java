@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final LinearLayout mContactDetails;
     private final TextView mSeparatorView;
     private final TextView mContentView;
+    private final ImageButton mEditButton;
+
     private final ImageView mPhoto;
     private final IContactsFragmentInteractionListener mListener;
 
@@ -42,6 +45,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mContentView = (TextView) view.findViewById(R.id.content);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
+        mEditButton = (ImageButton) view.findViewById(R.id.edit_button);
         mListener = listener;
     }
 
@@ -53,6 +57,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mContactBasicContainer.setOnClickListener(null);
         mContactDetails.setVisibility(View.GONE);
         mLargeSeparatorView.setVisibility(View.GONE);
+        mEditButton.setVisibility(View.GONE);
         mSeparatorView.setText("");
         mContentView.setText(contact.getDisplayName());
 
@@ -98,6 +103,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mContentView.setTextSize(20);
                     mPhoto.getLayoutParams().width = 50;
                     mPhoto.getLayoutParams().height = 50;
+                    mEditButton.setVisibility(View.VISIBLE);
                 } else {
                     if (model.isSeparator()) {
                         mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
