@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +33,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView mSeparatorView;
     private final TextView mContentView;
     private final ImageButton mEditButton;
+    private final Button mCallButton;
+    private final Button mMessageButton;
 
     private final ImageView mPhoto;
     private final IContactsFragmentInteractionListener mListener;
@@ -46,6 +49,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mContentView = (TextView) view.findViewById(R.id.content);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mEditButton = (ImageButton) view.findViewById(R.id.edit_button);
+        mCallButton = (Button) view.findViewById(R.id.call_button);
+        mMessageButton = (Button) view.findViewById(R.id.message_button);
         mListener = listener;
     }
 
@@ -60,6 +65,9 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mEditButton.setVisibility(View.GONE);
         mSeparatorView.setText("");
         mContentView.setText(contact.getDisplayName());
+        mContactBasicContainer.setOnClickListener(null);
+        mCallButton.setOnClickListener(null);
+        mMessageButton.setOnClickListener(null);
 
         switch (step){
             case S1:
@@ -104,6 +112,18 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mPhoto.getLayoutParams().width = 50;
                     mPhoto.getLayoutParams().height = 50;
                     mEditButton.setVisibility(View.VISIBLE);
+                    mCallButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.callContact(contact);
+                        }
+                    });
+                    mMessageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.sendSMS(contact);
+                        }
+                    });
                 } else {
                     if (model.isSeparator()) {
                         mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
@@ -112,6 +132,12 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mContentView.setTextSize(12);
                     mPhoto.getLayoutParams().width = 25;
                     mPhoto.getLayoutParams().height = 25;
+                    mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.onLostFocusContactClick();
+                        }
+                    });
                 }
                 break;
         }

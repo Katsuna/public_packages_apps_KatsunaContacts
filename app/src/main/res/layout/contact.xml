@@ -64,8 +64,8 @@
             android:id="@+id/edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_edit_black_18dp"
             android:layout_gravity="center|end"
+            android:background="@drawable/ic_edit_black_18dp"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -77,14 +77,16 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/call_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Call" />
+            android:text="@string/call" />
 
         <Button
+            android:id="@+id/message_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sms" />
+            android:text="@string/message" />
 
     </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
@@ -32,7 +33,8 @@ import gr.crystalogic.oldmen.utils.Step;
 public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
-    private static final int REQUEST_CODE_READ_CONTACTS = 123;
+    private static final int REQUEST_CODE_READ_CONTACTS = 1;
+    private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
 
     private FloatingActionButton mSearchFab;
     private FloatingActionButton mNewContactFab;
@@ -128,11 +130,15 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             case REQUEST_CODE_READ_CONTACTS:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    Log.e(TAG, "permission granted");
+                    Log.e(TAG, "read contacts permission granted");
                     loadContacts();
-                } else {
-                    // Permission Denied
-                    Toast.makeText(this, "Contact access denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CODE_ASK_CALL_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Log.e(TAG, "call contact permission granted");
+                    callContact(mSelectedContact);
                 }
                 break;
             default:
@@ -150,25 +156,20 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     }
 
     @Override
-    public void onListFragmentInteraction(ContactListItemModel item) {
-        Log.e(TAG, item.toString());
-    }
-
-    @Override
     public void onContactSelected(int position, Contact contact) {
         goToStep(Step.S5, contact);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 60);
     }
 
     @Override
-    public void onSeparatorClick(int position) {
+    public void onLostFocusContactClick() {
         goToStep(Step.S1);
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override
-    public void onTouchEvent() {
-
+    public void onSeparatorClick(int position) {
+        goToStep(Step.S1);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override
@@ -206,4 +207,29 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
                 break;
         }
     }
+
+    private Contact mSelectedContact;
+
+    @Override
+    public void callContact(Contact contact) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            mSelectedContact = contact;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_ASK_CALL_PERMISSION);
+            return;
+        }
+
+        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getContactPhone(contact)));
+        startActivity(i);
+    }
+
+    private String getContactPhone(Contact contact) {
+        List<Phone> phones = new ContactDao(this).getPhones(contact.getId());
+        return phones.get(0).getNumber();
+    }
+
+    @Override
+    public void sendSMS(Contact contact) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", getContactPhone(contact), null)));
+    }
+
 }
