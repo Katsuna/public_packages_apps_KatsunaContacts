@@ -109,8 +109,13 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     mContactDetails.setVisibility(View.VISIBLE);
                     mSeparatorView.setTextSize(20);
                     mContentView.setTextSize(20);
-                    mPhoto.getLayoutParams().width = 50;
-                    mPhoto.getLayoutParams().height = 50;
+                    if (contact.getPhoto() == null) {
+                        mPhoto.getLayoutParams().width = 25;
+                        mPhoto.getLayoutParams().height = 25;
+                    } else {
+                        mPhoto.getLayoutParams().width = 50;
+                        mPhoto.getLayoutParams().height = 50;
+                    }
                     mEditButton.setVisibility(View.VISIBLE);
                     mCallButton.setOnClickListener(new View.OnClickListener() {
                         @Override
