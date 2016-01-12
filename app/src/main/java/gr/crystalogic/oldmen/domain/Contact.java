@@ -14,6 +14,9 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String number;
     private boolean photoChecked;
     private Bitmap photo;
+    private int timesContacted;
+    private long lastTimeContacted;
+    private boolean starred;
 
     public Contact() {
     }
@@ -27,6 +30,9 @@ public class Contact implements Comparable<Contact>, Serializable {
         id = contact.getId();
         displayName = contact.getDisplayName();
         number = contact.getNumber();
+        timesContacted = contact.getTimesContacted();
+        lastTimeContacted = contact.getLastTimeContacted();
+        starred = contact.isStarred();
     }
 
     @Override
@@ -77,5 +83,29 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     public void setPhoto(Bitmap photo) {
         this.photo = photo;
+    }
+
+    public int getTimesContacted() {
+        return timesContacted;
+    }
+
+    public void setTimesContacted(int timesContacted) {
+        this.timesContacted = timesContacted;
+    }
+
+    public long getLastTimeContacted() {
+        return lastTimeContacted;
+    }
+
+    public void setLastTimeContacted(long lastTimeContacted) {
+        this.lastTimeContacted = lastTimeContacted;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
     }
 }

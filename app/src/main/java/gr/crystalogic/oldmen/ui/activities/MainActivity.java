@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     private void loadContacts() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
             return;
         }
 
@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
             contactList = customList;
         }
+
+        Contact[] latestContacted =  ContactArranger.getLatestContacted(contactList);
+        Contact[] frequentContacted =  ContactArranger.getFrequentContacted(contactList);
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
         Log.e(TAG, "-3-");
