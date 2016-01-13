@@ -106,7 +106,29 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             customList.add(new Contact("Dietrich", "Xonn", "07985677918"));
             customList.add(new Contact("Johnannes", "Xyrting", "07985677919"));
             customList.add(new Contact("Gianna", "Yizz", "07985677926"));
-            customList.add(new Contact("John", "Yocker", "07985677916"));
+            customList.add(new Contact("John", "Pocker", "07985677916"));
+            customList.add(new Contact("Thomas", "Salker", "07985677911"));
+            customList.add(new Contact("Gianna", "Sizz", "07985677912"));
+            customList.add(new Contact("John", "Socker", "07985677913"));
+            customList.add(new Contact("Dietrich", "Sonn", "07985677914"));
+            customList.add(new Contact("Johannes", "Syrting", "07985677915"));
+            customList.add(new Contact("Thomas", "Talker", "07985677916"));
+            customList.add(new Contact("John", "Tocker", "07985677917"));
+            customList.add(new Contact("Dietrich", "Tonn", "07985677918"));
+            customList.add(new Contact("Johnannes", "Tyrting", "07985677919"));
+            customList.add(new Contact("Gianna", "Tizz", "07985677926"));
+            customList.add(new Contact("John", "Kocker", "07985677916"));
+            customList.add(new Contact("Thomas", "Kalker", "07985677911"));
+            customList.add(new Contact("Gianna", "Kizz", "07985677912"));
+            customList.add(new Contact("John", "Kocker", "07985677913"));
+            customList.add(new Contact("Dietrich", "Lonn", "07985677914"));
+            customList.add(new Contact("Johannes", "Ryrting", "07985677915"));
+            customList.add(new Contact("Thomas", "Ralker", "07985677916"));
+            customList.add(new Contact("John", "Rocker", "07985677917"));
+            customList.add(new Contact("Dietrich", "Ronn", "07985677918"));
+            customList.add(new Contact("Johnannes", "Hyrting", "07985677919"));
+            customList.add(new Contact("Gianna", "Hizz", "07985677926"));
+            customList.add(new Contact("John", "Hocker", "07985677916"));
 
             for (Contact c : customList) {
                 dao.addContact(c);
