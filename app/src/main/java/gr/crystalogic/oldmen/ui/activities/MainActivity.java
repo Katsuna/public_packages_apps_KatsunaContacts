@@ -137,10 +137,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             contactList = customList;
         }
 
-        Contact[] latestContacted =  ContactArranger.getLatestContacted(contactList);
-        Contact[] frequentContacted =  ContactArranger.getFrequentContacted(contactList);
-
-        mModels = ContactArranger.sortContactsBySurname(contactList);
+        mModels = ContactArranger.getContactsProcessed(contactList);
         Log.e(TAG, "-3-");
 
         mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this, mStep);

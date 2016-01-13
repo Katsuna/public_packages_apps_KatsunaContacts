@@ -2,14 +2,16 @@ package gr.crystalogic.oldmen.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 
 public class ContactArranger {
 
-    public static List<ContactListItemModel> sortContactsBySurname(List<Contact> contacts) {
+    private static List<ContactListItemModel> sortContactsBySurname(List<Contact> contacts) {
         Collections.sort(contacts);
 
         List<ContactListItemModel> output = new ArrayList<>();
@@ -20,11 +22,11 @@ public class ContactArranger {
             String displayName = c.getDisplayName();
 
             //check if contact is separator
-            boolean separator = false;
+            Separator separator = Separator.NONE;
             if (displayName != null) {
                 if (!displayName.startsWith(s)) {
                     s = displayName.subSequence(0, 1).toString();
-                    separator = true;
+                    separator = Separator.FIRST_LETTER;
                 }
             }
 
@@ -38,15 +40,93 @@ public class ContactArranger {
         return output;
     }
 
-    public static Contact[] getLatestContacted(List<Contact> contacts) {
+    public static List<ContactListItemModel> getContactsProcessed(List<Contact> contacts) {
+        List<ContactListItemModel> topContacts = getTopContacts(contacts);
+
+        //sort contacts
+        List<ContactListItemModel> contactsSorted = sortContactsBySurname(contacts);
+
+        List<ContactListItemModel> output = new ArrayList<>();
+        output.addAll(topContacts);
+        output.addAll(contactsSorted);
+
+        return output;
+    }
+
+    private static List<ContactListItemModel> getTopContacts(List<Contact> contacts) {
+        //select top contacts
+        Contact[] frequentContacted = getFrequentContacted(contacts);
+        Contact[] latestContacted = getLatestContacted(contacts);
+        List<Contact> starredContacts = getStarredContacts(contacts);
+
+        //add 3 most frequent
+        LinkedHashMap<String, Contact> map = new LinkedHashMap <>();
+        int i = 0;
+        for (Contact c : frequentContacted) {
+            map.put(c.getId(), c);
+            i++;
+            if (i == 3) {
+                break;
+            }
+        }
+
+        //add 2 latest
+        i = 0;
+        for (Contact c : latestContacted) {
+            if (!map.containsKey(c.getId())) {
+                map.put(c.getId(), c);
+                i++;
+                if (i == 2) {
+                    break;
+                }
+            }
+        }
+
+        //add starred
+        for (Contact c : starredContacts) {
+            if (!map.containsKey(c.getId())) {
+                map.put(c.getId(), c);
+            }
+        }
+
+        //get topContacts
+        List<ContactListItemModel> topContacts = new ArrayList<>();
+        boolean firstItemSet = false;
+        for (Map.Entry<String, Contact> entry : map.entrySet())
+        {
+            ContactListItemModel model = new ContactListItemModel();
+            model.setContact(entry.getValue());
+            if (!firstItemSet) {
+                model.setSeparator(Separator.STARRED);
+                firstItemSet = true;
+            }
+            topContacts.add(model);
+        }
+
+        return topContacts;
+    }
+
+    private static Contact[] getLatestContacted(List<Contact> contacts) {
         Contact[] output = getDeepCopy(contacts);
         bubbleSort4LatestContacted(output);
         return output;
     }
 
-    public static Contact[] getFrequentContacted(List<Contact> contacts) {
+    private static Contact[] getFrequentContacted(List<Contact> contacts) {
         Contact[] output = getDeepCopy(contacts);
         bubbleSort4FrequentContacted(output);
+        return output;
+    }
+
+    private static List<Contact> getStarredContacts(List<Contact> contacts) {
+        List<Contact> output = new ArrayList<>();
+
+        for (Contact c : contacts) {
+            if (c.isStarred()) {
+                output.add(new Contact(c));
+            }
+        }
+
         return output;
     }
 
@@ -84,13 +164,13 @@ public class ContactArranger {
         int n = contacts.length;
         Contact temp = null;
 
-        for(int i=0; i < n; i++){
-            for(int j=1; j < (n-i); j++){
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < (n - i); j++) {
 
-                if(contacts[j-1].getLastTimeContacted() < contacts[j].getLastTimeContacted()){
+                if (contacts[j - 1].getLastTimeContacted() < contacts[j].getLastTimeContacted()) {
                     //swap the elements!
-                    temp = contacts[j-1];
-                    contacts[j-1] = contacts[j];
+                    temp = contacts[j - 1];
+                    contacts[j - 1] = contacts[j];
                     contacts[j] = temp;
                 }
 

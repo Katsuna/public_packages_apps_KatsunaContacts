@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final Button mMessageButton;
 
     private final ImageView mPhoto;
+    private final ImageView mSeparatorImage;
     private final IContactsFragmentInteractionListener mListener;
 
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
@@ -46,6 +48,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
         mContactDetails = (LinearLayout) view.findViewById(R.id.contact_details);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
+        mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
         mContentView = (TextView) view.findViewById(R.id.content);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mEditButton = (ImageButton) view.findViewById(R.id.edit_button);
@@ -63,7 +66,9 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mContactDetails.setVisibility(View.GONE);
         mLargeSeparatorView.setVisibility(View.GONE);
         mEditButton.setVisibility(View.GONE);
+        mSeparatorView.setVisibility(View.VISIBLE);
         mSeparatorView.setText("");
+        mSeparatorImage.setVisibility(View.GONE);
         mContentView.setText(contact.getDisplayName());
         mContactBasicContainer.setOnClickListener(null);
         mCallButton.setOnClickListener(null);
@@ -76,8 +81,16 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 mPhoto.getLayoutParams().width = 50;
                 mPhoto.getLayoutParams().height = 50;
 
-                if (model.isSeparator()) {
-                    mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                switch (model.getSeparator()) {
+                    case FIRST_LETTER:
+                        mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                        mSeparatorView.setVisibility(View.VISIBLE);
+                        break;
+                    case STARRED:
+                        mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
+                        mSeparatorImage.setVisibility(View.VISIBLE);
+                        mSeparatorView.setVisibility(View.GONE);
+                        break;
                 }
 
                 mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
@@ -91,17 +104,24 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 mSeparatorView.setTextSize(12);
                 mContentView.setTextSize(12);
                 mPhoto.getLayoutParams().width = 25;
-                if (model.isSeparator()) {
-                    mLargeSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-                    mLargeSeparatorView.setVisibility(View.VISIBLE);
-                    mLargeSeparatorView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                mListener.onSeparatorClick(position);
+                switch (model.getSeparator()) {
+                    case FIRST_LETTER:
+                        mLargeSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                        mLargeSeparatorView.setVisibility(View.VISIBLE);
+                        mLargeSeparatorView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mListener != null) {
+                                    mListener.onSeparatorClick(position);
+                                }
                             }
-                        }
-                    });
+                        });
+                        break;
+                    case STARRED:
+                        mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
+                        mSeparatorImage.setVisibility(View.VISIBLE);
+                        mSeparatorView.setVisibility(View.GONE);
+                        break;
                 }
                 break;
             case S5:
@@ -130,8 +150,16 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                         }
                     });
                 } else {
-                    if (model.isSeparator()) {
-                        mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                    switch (model.getSeparator()) {
+                        case FIRST_LETTER:
+                            mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                            mSeparatorView.setVisibility(View.VISIBLE);
+                            break;
+                        case STARRED:
+                            mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
+                            mSeparatorImage.setVisibility(View.VISIBLE);
+                            mSeparatorView.setVisibility(View.GONE);
+                            break;
                     }
                     mSeparatorView.setTextSize(12);
                     mContentView.setTextSize(12);

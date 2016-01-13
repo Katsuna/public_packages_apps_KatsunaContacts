@@ -1,11 +1,12 @@
 package gr.crystalogic.oldmen.ui.adapters.models;
 
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.utils.Separator;
 
 public class ContactListItemModel {
 
     private Contact contact;
-    private boolean separator;
+    private Separator separator = Separator.NONE;
 
     public Contact getContact() {
         return contact;
@@ -15,18 +16,18 @@ public class ContactListItemModel {
         this.contact = contact;
     }
 
-    public boolean isSeparator() {
+    public Separator getSeparator() {
         return separator;
     }
 
-    public void setSeparator(boolean separator) {
+    public void setSeparator(Separator separator) {
         this.separator = separator;
     }
 
     public ContactListItemModel() {}
 
     public ContactListItemModel(ContactListItemModel model) {
-        setSeparator(model.isSeparator());
+        setSeparator(model.getSeparator());
         if (model.getContact() != null) {
             contact = new Contact(model.getContact());
         }
