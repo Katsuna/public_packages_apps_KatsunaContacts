@@ -16,7 +16,7 @@ public interface IContactDao {
 
     Name getName(String contactId);
 
-    Bitmap getImage(String contactId);
+    Bitmap getImage(String contactId, boolean preferHighres);
 
     void addContact(Contact contact);
 

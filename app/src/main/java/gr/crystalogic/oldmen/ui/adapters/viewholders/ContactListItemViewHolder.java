@@ -1,14 +1,8 @@
 package gr.crystalogic.oldmen.ui.adapters.viewholders;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.net.Uri;
-import android.provider.ContactsContract;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.InputStream;
-
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
+import gr.crystalogic.oldmen.utils.ImageHelper;
 import gr.crystalogic.oldmen.utils.Step;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
@@ -73,8 +68,9 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mContactBasicContainer.setOnClickListener(null);
         mCallButton.setOnClickListener(null);
         mMessageButton.setOnClickListener(null);
+        mPhoto.setImageBitmap(null);
 
-        switch (step){
+        switch (step) {
             case S1:
                 mSeparatorView.setTextSize(20);
                 mContentView.setTextSize(20);
@@ -125,7 +121,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 }
                 break;
             case S5:
-                if (contact.getId() == selectedContact.getId()) {
+                if (contact.getId().equals(selectedContact.getId())) {
                     mContactDetails.setVisibility(View.VISIBLE);
                     mSeparatorView.setTextSize(20);
                     mContentView.setTextSize(20);
@@ -175,43 +171,44 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 break;
         }
 
-        Bitmap photo = null;
-        if (contact.isPhotoChecked()) {
-            photo = contact.getPhoto();
-        } else {
-            contact.setPhotoChecked(true);
+        new ImageLoader(mView.getContext()).execute(contact);
+    }
 
-            Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contact.getId());
-            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mView.getContext().getContentResolver(),
-                    contactUri, false);
+    private class ImageLoader extends AsyncTask<Contact, Void, Bitmap> {
 
-            if (inputStream != null) {
-                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-                int drawable = R.drawable.shape_circle;
-                photo = getMaskedBitmap(mView.getContext().getResources(), bmp, drawable);
-                contact.setPhoto(photo);
-            }
+        private final Context context;
+
+        public ImageLoader(Context context) {
+            this.context = context;
         }
-        mPhoto.setImageBitmap(photo);
+
+        @Override
+        protected Bitmap doInBackground(Contact... params) {
+            Contact contact = params[0];
+
+            Bitmap output = null;
+            if (contact.isPhotoChecked()) {
+                output = contact.getPhoto();
+            } else {
+                IContactDao contactDao = new ContactDao(context);
+                Bitmap image = contactDao.getImage(contact.getId(), false);
+
+                if (image != null) {
+                    int drawable = R.drawable.shape_circle;
+                    output = ImageHelper.getMaskedBitmap(context.getResources(), image, drawable);
+                    //cache for reuse
+                    contact.setPhoto(output);
+                }
+                contact.setPhotoChecked(true);
+            }
+
+            return output;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            mPhoto.setImageBitmap(result);
+        }
     }
 
-    private static Bitmap getMaskedBitmap(Resources res, Bitmap source, int maskResId) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
-        Bitmap bitmap = source;
-        bitmap.setHasAlpha(true);
-
-        Bitmap mask = BitmapFactory.decodeResource(res, maskResId);
-        bitmap = Bitmap.createScaledBitmap(bitmap, mask.getWidth(), mask.getHeight(), false);
-
-        Canvas canvas = new Canvas(bitmap);
-
-        Paint paint = new Paint();
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        canvas.drawBitmap(mask, 0, 0, paint);
-        mask.recycle();
-        return bitmap;
-    }
 }

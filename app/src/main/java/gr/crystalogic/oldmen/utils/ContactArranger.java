@@ -162,7 +162,7 @@ public class ContactArranger {
          */
 
         int n = contacts.length;
-        Contact temp = null;
+        Contact temp;
 
         for (int i = 0; i < n; i++) {
             for (int j = 1; j < (n - i); j++) {
@@ -181,7 +181,7 @@ public class ContactArranger {
     private static void bubbleSort4FrequentContacted(Contact[] contacts) {
 
         int n = contacts.length;
-        Contact temp = null;
+        Contact temp;
 
         for (int i = 0; i < n; i++) {
             for (int j = 1; j < (n - i); j++) {

@@ -91,7 +91,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private void loadImage() {
         IContactDao dao = new ContactDao(this);
-        Bitmap image = dao.getImage(contact.getId());
+        Bitmap image = dao.getImage(contact.getId(), true);
         if (image != null) {
             photo.setVisibility(View.VISIBLE);
             photo.setImageBitmap(image);

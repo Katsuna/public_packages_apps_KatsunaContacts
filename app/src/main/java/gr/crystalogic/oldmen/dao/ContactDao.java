@@ -173,11 +173,11 @@ public class ContactDao implements IContactDao {
     }
 
     @Override
-    public Bitmap getImage(String contactId) {
+    public Bitmap getImage(String contactId, boolean preferHighres) {
         Bitmap output = null;
 
         Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId);
-        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri, true);
+        InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(cr, contactUri, preferHighres);
         if (inputStream != null) {
             output = BitmapFactory.decodeStream(inputStream);
         }
