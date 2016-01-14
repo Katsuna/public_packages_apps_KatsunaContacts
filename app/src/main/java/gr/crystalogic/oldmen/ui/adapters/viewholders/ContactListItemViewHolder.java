@@ -52,7 +52,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mListener = listener;
     }
 
-    public void bind(final ContactListItemModel model, Step step, final int position, Contact selectedContact) {
+    public void bind(final ContactListItemModel model, Step step, final int position, int selectedContactPosition) {
         final Contact contact = model.getContact();
 
         //initialize
@@ -92,7 +92,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.onContactSelected(position, contact);
+                        mListener.onContactSelected(position);
                     }
                 });
                 break;
@@ -121,7 +121,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 }
                 break;
             case S5:
-                if (contact.getId().equals(selectedContact.getId())) {
+                if (position == selectedContactPosition) {
                     mContactDetails.setVisibility(View.VISIBLE);
                     mSeparatorView.setTextSize(20);
                     mContentView.setTextSize(20);

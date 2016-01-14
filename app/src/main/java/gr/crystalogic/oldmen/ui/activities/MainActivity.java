@@ -178,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     }
 
     @Override
-    public void onContactSelected(int position, Contact contact) {
-        goToStep(Step.S5, contact);
+    public void onContactSelected(int position) {
+        goToStep(Step.S5, position);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 60);
     }
 
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         goToStep(step, null);
     }
 
-    private void goToStep(Step step, Contact contact) {
+    private void goToStep(Step step, Integer position) {
         mStep = step;
         switch (step) {
             case S1:
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             case S5:
                 mSearchFab.setVisibility(View.GONE);
                 mNewContactFab.setVisibility(View.GONE);
-                mAdapter.goToStepWithContactSelection(mStep, contact);
+                mAdapter.goToStepWithContactSelection(mStep, position);
                 break;
         }
     }
