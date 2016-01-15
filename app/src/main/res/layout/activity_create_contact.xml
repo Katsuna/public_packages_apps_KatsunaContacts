@@ -11,10 +11,12 @@
     tools:context=".ui.activities.CreateContactActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/photo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_circle" />
+        android:background="@drawable/avatar"
+        android:scaleType="center" />
 
     <EditText
         android:id="@+id/name"
