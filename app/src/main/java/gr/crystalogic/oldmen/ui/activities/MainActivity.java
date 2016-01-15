@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, EditContactActivity.class);
+                Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
                 startActivity(i);
             }
         });
