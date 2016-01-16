@@ -2,6 +2,7 @@ package gr.crystalogic.oldmen.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -101,11 +102,22 @@ public class CreateContactActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Bitmap centerCropped = ImageHelper.centerCrop(imageBitmap);
-            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), centerCropped, R.drawable.avatar);
-            //mPhoto.setImageBitmap(imageBitmap);
-            mPhoto.setImageBitmap(maskedBitmap);
+            Bitmap bitmap = (Bitmap) extras.get("data");
+            new AsyncImageLoader().execute(bitmap);
+        }
+    }
+
+    private class AsyncImageLoader extends AsyncTask<Bitmap, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Bitmap... params) {
+            Bitmap bitmap = params[0];
+            Bitmap centerCropped = ImageHelper.centerCrop(bitmap);
+            return ImageHelper.getMaskedBitmap(getResources(), centerCropped, R.drawable.avatar);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            mPhoto.setImageBitmap(bitmap);
         }
     }
 }
