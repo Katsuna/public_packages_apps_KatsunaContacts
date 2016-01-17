@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class CreateContactActivity extends AppCompatActivity {
@@ -24,6 +26,7 @@ public class CreateContactActivity extends AppCompatActivity {
     private EditText mName;
     private EditText mSurname;
     private EditText mTelephone;
+    private Bitmap mBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +85,38 @@ public class CreateContactActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (inputIsValid()) {
+                        Contact c = new Contact();
+                        c.setDisplayName(mName.getText() + " " + mSurname.getText());
+                        c.setNumber(mTelephone.getText().toString());
+                        c.setPhoto(mBitmap);
 
-                    //validate and save
+                        ContactDao contactDao = new ContactDao(CreateContactActivity.this);
+                        contactDao.addContact(c);
 
+                        finish();
+                    }
                 }
                 return false;
             }
         });
+    }
+
+    private boolean inputIsValid() {
+        boolean output = true;
+        if (mName.getText().length() == 0) {
+            mName.setError(getResources().getString(R.string.name_validation));
+            output = false;
+        }
+        if (mSurname.getText().length() == 0) {
+            mSurname.setError(getResources().getString(R.string.surname_validation));
+            output = false;
+        }
+        if (mTelephone.getText().length() == 0) {
+            mTelephone.setError(getResources().getString(R.string.number_validation));
+            output = false;
+        }
+        return output;
     }
 
     private void dispatchTakePictureIntent() {
@@ -103,21 +131,11 @@ public class CreateContactActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap bitmap = (Bitmap) extras.get("data");
-            new AsyncImageLoader().execute(bitmap);
+            Bitmap centeredBitmap = ImageHelper.centerCrop(bitmap);
+            mBitmap = centeredBitmap;
+            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), centeredBitmap, R.drawable.avatar);
+            mPhoto.setImageBitmap(maskedBitmap);
         }
     }
 
-    private class AsyncImageLoader extends AsyncTask<Bitmap, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(Bitmap... params) {
-            Bitmap bitmap = params[0];
-            Bitmap centerCropped = ImageHelper.centerCrop(bitmap);
-            return ImageHelper.getMaskedBitmap(getResources(), centerCropped, R.drawable.avatar);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            mPhoto.setImageBitmap(bitmap);
-        }
-    }
 }

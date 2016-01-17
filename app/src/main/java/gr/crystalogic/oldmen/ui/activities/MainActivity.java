@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
     private FloatingActionButton mSearchFab;
     private FloatingActionButton mNewContactFab;
-    private List<ContactListItemModel> mModels;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
     private Step mStep;
+    private Contact mSelectedContact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,15 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         setupFabs();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //always resume on S1
         mStep = Step.S1;
+        showButtons(mStep);
         loadContacts();
     }
 
@@ -137,10 +144,10 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             contactList = customList;
         }
 
-        mModels = ContactArranger.getContactsProcessed(contactList);
+        List<ContactListItemModel> models = ContactArranger.getContactsProcessed(contactList);
         Log.e(TAG, "-3-");
 
-        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(), this, mStep);
+        mAdapter = new ContactsRecyclerViewAdapter(models, this, mStep);
         Log.e(TAG, "-4-");
 
         mRecyclerView.setAdapter(mAdapter);
@@ -168,13 +175,13 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         }
     }
 
-    private List<ContactListItemModel> getDeepCopy() {
-        //deep copy to keep initil list
-        List<ContactListItemModel> mModelsCopy = new ArrayList<>();
-        for (ContactListItemModel m : mModels) {
-            mModelsCopy.add(new ContactListItemModel(m));
+    private List<ContactListItemModel> getDeepCopy(List<ContactListItemModel> models) {
+        //deep copy to keep initial list
+        List<ContactListItemModel> output = new ArrayList<>();
+        for (ContactListItemModel m : models) {
+            output.add(new ContactListItemModel(m));
         }
-        return mModelsCopy;
+        return output;
     }
 
     @Override
@@ -200,8 +207,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
             goToStep(Step.S1);
         } else if (mStep == Step.S5) {
             goToStep(Step.S1);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -212,25 +218,35 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
     private void goToStep(Step step, Integer position) {
         mStep = step;
+        showButtons(step);
         switch (step) {
             case S1:
-                mSearchFab.setVisibility(View.VISIBLE);
-                mNewContactFab.setVisibility(View.VISIBLE);
                 mAdapter.goToStep(mStep);
                 break;
             case S2:
-                mSearchFab.setVisibility(View.GONE);
                 mAdapter.goToStep(mStep);
                 break;
             case S5:
-                mSearchFab.setVisibility(View.GONE);
-                mNewContactFab.setVisibility(View.GONE);
                 mAdapter.goToStepWithContactSelection(mStep, position);
                 break;
         }
     }
 
-    private Contact mSelectedContact;
+    private void showButtons(Step step) {
+        switch (step) {
+            case S1:
+                mSearchFab.setVisibility(View.VISIBLE);
+                mNewContactFab.setVisibility(View.VISIBLE);
+                break;
+            case S2:
+                mSearchFab.setVisibility(View.GONE);
+                break;
+            case S5:
+                mSearchFab.setVisibility(View.GONE);
+                mNewContactFab.setVisibility(View.GONE);
+                break;
+        }
+    }
 
     @Override
     public void callContact(Contact contact) {

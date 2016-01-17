@@ -17,6 +17,7 @@ import java.util.List;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
+import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class ContactDao implements IContactDao {
 
@@ -206,6 +207,15 @@ public class ContactDao implements IContactDao {
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
                 .build());
 
+        if (contact.getPhoto() != null) {
+            byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());
+
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+                    .build());
+        }
 
         try {
             cr.applyBatch(ContactsContract.AUTHORITY, ops);
