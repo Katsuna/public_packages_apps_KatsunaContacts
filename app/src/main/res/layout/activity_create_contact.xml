@@ -28,8 +28,7 @@
         android:imeOptions="actionNext"
         android:singleLine="true"
         android:textColor="@color/pink"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/surname"
