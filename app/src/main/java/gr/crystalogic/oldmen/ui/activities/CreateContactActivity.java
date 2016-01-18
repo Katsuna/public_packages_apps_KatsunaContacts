@@ -2,7 +2,6 @@ package gr.crystalogic.oldmen.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -88,7 +87,7 @@ public class CreateContactActivity extends AppCompatActivity {
                     if (inputIsValid()) {
                         Contact c = new Contact();
                         c.setDisplayName(mName.getText() + " " + mSurname.getText());
-                        c.setNumber(mTelephone.getText().toString());
+                        c.setPrimaryTelephone(mTelephone.getText().toString());
                         c.setPhoto(mBitmap);
 
                         ContactDao contactDao = new ContactDao(CreateContactActivity.this);

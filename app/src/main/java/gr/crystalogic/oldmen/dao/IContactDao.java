@@ -12,6 +12,8 @@ public interface IContactDao {
 
     List<Contact> getContacts();
 
+    Contact getContact(String contactId);
+
     List<Phone> getPhones(String contactId);
 
     Name getName(String contactId);

@@ -11,7 +11,10 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     private String id;
     private String displayName;
-    private String number;
+    private Name name;
+    private String primaryTelephone;
+    private String secondaryTelephone;
+    private String tertiaryTelephone;
     private boolean photoChecked;
     private Bitmap photo;
     private int timesContacted;
@@ -21,15 +24,15 @@ public class Contact implements Comparable<Contact>, Serializable {
     public Contact() {
     }
 
-    public Contact(String name, String surname, String number) {
+    public Contact(String name, String surname, String primaryTelephone) {
         this.displayName = name + " " + surname;
-        this.number = number;
+        this.primaryTelephone = primaryTelephone;
     }
 
     public Contact(Contact contact) {
         id = contact.getId();
         displayName = contact.getDisplayName();
-        number = contact.getNumber();
+        primaryTelephone = contact.getPrimaryTelephone();
         timesContacted = contact.getTimesContacted();
         lastTimeContacted = contact.getLastTimeContacted();
         starred = contact.isStarred();
@@ -37,7 +40,7 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     @Override
     public String toString() {
-        return "Contact: " + id + " " + displayName + " " + number;
+        return "Contact: " + id + " " + displayName + " " + primaryTelephone;
     }
 
     public String getId() {
@@ -56,12 +59,12 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.displayName = displayName;
     }
 
-    public String getNumber() {
-        return number;
+    public String getPrimaryTelephone() {
+        return primaryTelephone;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPrimaryTelephone(String primaryTelephone) {
+        this.primaryTelephone = primaryTelephone;
     }
 
     @Override
@@ -107,5 +110,29 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     public void setStarred(boolean starred) {
         this.starred = starred;
+    }
+
+    public String getSecondaryTelephone() {
+        return secondaryTelephone;
+    }
+
+    public void setSecondaryTelephone(String secondaryTelephone) {
+        this.secondaryTelephone = secondaryTelephone;
+    }
+
+    public String getTertiaryTelephone() {
+        return tertiaryTelephone;
+    }
+
+    public void setTertiaryTelephone(String tertiaryTelephone) {
+        this.tertiaryTelephone = tertiaryTelephone;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public void setName(Name name) {
+        this.name = name;
     }
 }

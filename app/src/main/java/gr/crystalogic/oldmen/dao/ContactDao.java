@@ -69,7 +69,7 @@ public class ContactDao implements IContactDao {
 
                 //this is slow....
                 //List<Phone> phones = getPhones(contact.getId());
-                //contact.setNumber(phones.get(0).getNumber());
+                //contact.setPrimaryTelephone(phones.get(0).getPrimaryTelephone());
 
                 //contact.setPhones(getPhones(contact.getId()));
 
@@ -82,40 +82,35 @@ public class ContactDao implements IContactDao {
         return contacts;
     }
 
-    //TODO consider deletion
-    //@Override
-    public List<Contact> getContactsFast() {
-        List<Contact> contacts = new ArrayList<>();
+    @Override
+    public Contact getContact(String contactId) {
+        Contact contact = new Contact();
 
-        Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        contact.setId(contactId);
 
-        String[] projection = {
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE
-        };
+        //get name
+        contact.setName(getName(contactId));
 
-        Cursor cursor = cr.query(baseUri, projection, null, null, null);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            do {
-                Contact contact = new Contact();
-                String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                String displayNameAlternative = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_ALTERNATIVE));
-                String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                contact.setId(contactId);
-                contact.setDisplayName(displayNameAlternative);
-                contact.setNumber(number);
-
-                contacts.add(contact);
-            } while (cursor.moveToNext());
-
-            cursor.close();
+        //get phones
+        List<Phone> phones = getPhones(contact.getId());
+        for(int i = 0; i<phones.size(); i++) {
+            switch (i) {
+                case 0:
+                    contact.setPrimaryTelephone(phones.get(i).getNumber());
+                    break;
+                case 1:
+                    contact.setPrimaryTelephone(phones.get(i).getNumber());
+                    break;
+                case 2:
+                    contact.setTertiaryTelephone(phones.get(i).getNumber());
+                    break;
+            }
+            if (i == 3) {
+                break;
+            }
         }
 
-        return contacts;
+        return contact;
     }
 
 
@@ -129,8 +124,9 @@ public class ContactDao implements IContactDao {
                 ContactsContract.CommonDataKinds.Phone.TYPE
         };
         String selection = ContactsContract.Data.CONTACT_ID + "=" + contactId;
+        String orderBy = ContactsContract.CommonDataKinds.Phone.IS_PRIMARY + " DESC";
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, null);
+        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
         if (cursor != null) {
             cursor.moveToFirst();
             do {
@@ -203,7 +199,7 @@ public class ContactDao implements IContactDao {
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getNumber())
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPrimaryTelephone())
                 .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
                 .build());
 
