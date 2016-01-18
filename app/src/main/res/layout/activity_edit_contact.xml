@@ -1,114 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="left"
-            android:background="@drawable/avatar"
-            android:scaleType="center" />
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="left"
+                    android:background="@drawable/avatar"
+                    android:scaleType="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/name" />
+
+                    <EditText
+                        android:id="@+id/name"
+                        style="@style/editContactField"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/surname" />
+
+                    <EditText
+                        android:id="@+id/surname"
+                        style="@style/editContactField"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/telephone1" />
+
+                    <EditText
+                        android:id="@+id/telephone1"
+                        style="@style/editContactField"
+                        android:inputType="phone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/telephone2" />
+
+                    <EditText
+                        android:id="@+id/telephone2"
+                        style="@style/editContactField"
+                        android:inputType="phone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/telephone3" />
+
+                    <EditText
+                        android:id="@+id/telephone3"
+                        style="@style/editContactField"
+                        android:inputType="phone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/email" />
+
+                    <EditText
+                        android:id="@+id/email"
+                        style="@style/editContactField"
+                        android:inputType="textEmailAddress" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/editContactLabel"
+                        android:text="@string/address" />
+
+                    <EditText
+                        android:id="@+id/address"
+                        style="@style/editContactField"
+                        android:inputType="textPostalAddress" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/editContactLabel"
-                android:text="@string/name" />
-
-            <EditText
-                android:id="@+id/name"
-                style="@style/editContactField"
-                android:singleLine="true" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/editContactLabel"
-                android:text="@string/surname" />
-
-            <EditText
-                android:id="@+id/surname"
-                style="@style/editContactField"
-                android:singleLine="true" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/editContactLabel"
-                android:text="@string/telephone1" />
-
-            <EditText
-                android:id="@+id/telephone1"
-                style="@style/editContactField"
-                android:inputType="phone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/editContactLabel"
-                android:text="@string/telephone2" />
-
-            <EditText
-                android:id="@+id/telephone2"
-                style="@style/editContactField"
-                android:inputType="phone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/editContactLabel"
-                android:text="@string/telephone3" />
-
-            <EditText
-                android:id="@+id/telephone3"
-                style="@style/editContactField"
-                android:inputType="phone" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:background="@drawable/done" />
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/edit_contact_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/done" />
 
-</ScrollView>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</LinearLayout>
+

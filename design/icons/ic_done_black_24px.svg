@@ -7,14 +7,17 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="40"
-   viewBox="0 0 40 40"
-   width="40"
+   height="24"
+   viewBox="0 0 24 24"
+   width="24"
    id="svg4136"
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="ic_done_black_24px.svg"
-   style="fill:#000000">
+   style="fill:#000000"
+   inkscape:export-filename="K:\Oldmen\app\src\main\res\drawable-mdpi\done.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <metadata
      id="metadata4146">
     <rdf:RDF>
@@ -44,33 +47,16 @@
      showgrid="false"
      inkscape:zoom="16.479167"
      inkscape:cx="8.6729661"
-     inkscape:cy="18.208261"
+     inkscape:cy="13.353647"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4136" />
   <path
-     d="M 8,8 32,8 32,32 8,32 Z"
-     id="path4138"
-     inkscape:connector-curvature="0"
-     style="fill:none"
-     inkscape:export-filename="K:\Oldmen\app\src\main\res\drawable-xxxhdpi\done.png"
-     inkscape:export-xdpi="618.12"
-     inkscape:export-ydpi="618.12" />
-  <circle
-     style="opacity:1;fill:#3cbbae;fill-opacity:1;stroke:none;stroke-width:0.69999999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:28.46294785;stroke-opacity:1"
-     id="path4148"
-     cx="20"
-     cy="20"
-     r="17.472326"
-     inkscape:export-filename="K:\Oldmen\app\src\main\res\drawable-xxxhdpi\done.png"
-     inkscape:export-xdpi="618.12"
-     inkscape:export-ydpi="618.12" />
-  <path
-     d="m 16.424871,24.323873 -4.692357,-4.656479 -1.56412,1.55216 6.256477,6.208638 13.406735,-13.304225 -1.56412,-1.552159 -11.842615,11.752065 z"
+     d="M 7.6363641,17.206942 1.9090919,11.599466 0,13.468625 7.6363641,20.945259 24,4.923899 22.090908,3.054741 7.6363641,17.206942 Z"
      id="path4140"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1"
+     style="fill:#ffffff;fill-opacity:1;opacity:0.99"
      inkscape:export-filename="K:\Oldmen\app\src\main\res\drawable-xxxhdpi\done.png"
      inkscape:export-xdpi="618.12"
      inkscape:export-ydpi="618.12" />

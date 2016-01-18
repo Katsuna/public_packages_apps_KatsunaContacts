@@ -1,8 +1,12 @@
 package gr.crystalogic.oldmen.ui.activities;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -19,7 +23,7 @@ public class EditContactActivity extends AppCompatActivity {
     private EditText mName;
     private EditText mSurname;
     private EditText mTelephone;
-
+    private FloatingActionButton mEditContactFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,5 +48,18 @@ public class EditContactActivity extends AppCompatActivity {
             mPhoto.setImageBitmap(photo);
         }
 
+        setupFab();
     }
+
+    private void setupFab() {
+        mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
+        mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
+        mEditContactFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+            }
+        });
+    }
+
 }
