@@ -6,6 +6,9 @@
     <string name="call">Call</string>
     <string name="message">Message</string>
     <string name="telephone">Telephone</string>
+    <string name="telephone1">Telephone 1</string>
+    <string name="telephone2">Telephone 2</string>
+    <string name="telephone3">Telephone 3</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="name_validation">Name is required</string>

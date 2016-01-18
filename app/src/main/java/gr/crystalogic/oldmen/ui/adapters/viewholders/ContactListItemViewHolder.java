@@ -1,6 +1,7 @@
 package gr.crystalogic.oldmen.ui.adapters.viewholders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.ui.activities.EditContactActivity;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
 import gr.crystalogic.oldmen.utils.ImageHelper;
@@ -133,6 +135,15 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                         mPhoto.getLayoutParams().height = 50;
                     }
                     mEditButton.setVisibility(View.VISIBLE);
+                    mEditButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(mView.getContext(), EditContactActivity.class);
+                            i.putExtra("contactId", contact.getId());
+                            mView.getContext().startActivity(i);
+                        }
+                    });
+
                     mCallButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

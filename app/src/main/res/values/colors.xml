@@ -10,4 +10,6 @@
     <color name="indigo_blue">#448AFF</color>
     <color name="pink">#FF4081</color>
     <color name="green">#1b9b8d</color>
+    <color name="greyLight">#9ea1a2</color>
+    <color name="grey">#48484a</color>
 </resources>
