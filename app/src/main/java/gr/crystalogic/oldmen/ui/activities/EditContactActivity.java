@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class EditContactActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class EditContactActivity extends AppCompatActivity {
     private EditText mAddress;
     private ImageView mPhoto;
     private Bitmap mBitmap;
+    private String mContactId;
 
     private FloatingActionButton mEditContactFab;
 
@@ -62,10 +64,10 @@ public class EditContactActivity extends AppCompatActivity {
     }
 
     private void loadContact() {
-        String contactId = getIntent().getStringExtra("contactId");
+        mContactId = getIntent().getStringExtra("contactId");
         ContactDao contactDao = new ContactDao(this);
 
-        Contact contact = contactDao.getContact(contactId);
+        Contact contact = contactDao.getContact(mContactId);
 
         //set data on fields
         mName.setText(contact.getName().getName());
@@ -90,7 +92,12 @@ public class EditContactActivity extends AppCompatActivity {
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                Contact contact = new Contact();
+                contact.setId(mContactId);
+                contact.setName(new Name(mName.getText().toString(), mSurname.getText().toString()));
+                ContactDao contactDao = new ContactDao(EditContactActivity.this);
+                contactDao.updateContact(contact);
+                finish();
             }
         });
     }
