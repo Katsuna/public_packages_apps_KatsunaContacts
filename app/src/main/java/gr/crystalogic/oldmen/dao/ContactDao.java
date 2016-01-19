@@ -66,13 +66,6 @@ public class ContactDao implements IContactDao {
                 contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
                 int starred = cursor.getInt(starredIndex);
                 contact.setStarred(starred == 1);
-
-                //this is slow....
-                //List<Phone> phones = getPhones(contact.getId());
-                //contact.setPrimaryTelephone(phones.get(0).getPrimaryTelephone());
-
-                //contact.setPhones(getPhones(contact.getId()));
-
                 contacts.add(contact);
             } while (cursor.moveToNext());
 
@@ -91,15 +84,15 @@ public class ContactDao implements IContactDao {
         //get name
         contact.setName(getName(contactId));
 
-        //get phones
-        List<Phone> phones = getPhones(contact.getId());
-        for(int i = 0; i<phones.size(); i++) {
+        //get phones order by default flag or first three if no default flag is set
+        List<Phone> phones = getPhones(contactId);
+        for (int i = 0; i < phones.size(); i++) {
             switch (i) {
                 case 0:
                     contact.setPrimaryTelephone(phones.get(i).getNumber());
                     break;
                 case 1:
-                    contact.setPrimaryTelephone(phones.get(i).getNumber());
+                    contact.setSecondaryTelephone(phones.get(i).getNumber());
                     break;
                 case 2:
                     contact.setTertiaryTelephone(phones.get(i).getNumber());
@@ -108,6 +101,21 @@ public class ContactDao implements IContactDao {
             if (i == 3) {
                 break;
             }
+        }
+
+        //get photo
+        contact.setPhoto(getImage(contactId, true));
+
+        //use default email or first found
+        List<String> emails = getEmails(contactId);
+        if (emails.size() > 0) {
+            contact.setEmail(emails.get(0));
+        }
+
+        //use default address or first found
+        List<String> addresses = getAddresses(contactId);
+        if (addresses.size() > 0) {
+            contact.setAddress(addresses.get(0));
         }
 
         return contact;
@@ -127,19 +135,65 @@ public class ContactDao implements IContactDao {
         String orderBy = ContactsContract.CommonDataKinds.Phone.IS_PRIMARY + " DESC";
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor != null) {
-            cursor.moveToFirst();
+        if (cursor != null && cursor.moveToFirst()) {
+            int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int typeIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
             do {
                 Phone phone = new Phone();
-                phone.setNumber(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                phone.setType(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+                phone.setNumber(cursor.getString(numberIndex));
+                phone.setType(cursor.getString(typeIndex));
                 phones.add(phone);
-
             } while (cursor.moveToNext());
             cursor.close();
         }
 
         return phones;
+    }
+
+    private List<String> getEmails(String contactId) {
+        List<String> emails = new ArrayList<>();
+
+        Uri baseUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+        String[] projection = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS
+        };
+        String selection = ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contactId;
+        String orderBy = ContactsContract.CommonDataKinds.Email.IS_PRIMARY + " DESC";
+
+        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
+        if (cursor != null && cursor.moveToFirst()) {
+            int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            do {
+                String email = cursor.getString(emailIndex);
+                emails.add(email);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return emails;
+    }
+
+    private List<String> getAddresses(String contactId) {
+        List<String> addresses = new ArrayList<>();
+
+        Uri baseUri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
+        String[] projection = {
+                ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
+        };
+        String selection = ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + "=" + contactId;
+        String orderBy = ContactsContract.CommonDataKinds.StructuredPostal.IS_PRIMARY + " DESC";
+
+        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
+        if (cursor != null && cursor.moveToFirst()) {
+            int addressIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS);
+            do {
+                String address = cursor.getString(addressIndex);
+                addresses.add(address);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return addresses;
     }
 
     @Override
