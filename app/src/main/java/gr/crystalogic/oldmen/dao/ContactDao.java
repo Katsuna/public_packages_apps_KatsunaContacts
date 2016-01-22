@@ -84,24 +84,9 @@ public class ContactDao implements IContactDao {
         //get name
         contact.setName(getName(contactId));
 
-        //get phones order by default flag or first three if no default flag is set
+        //get phones order by default flag
         List<Phone> phones = getPhones(contactId);
-        for (int i = 0; i < phones.size(); i++) {
-            switch (i) {
-                case 0:
-                    contact.setPrimaryTelephone(phones.get(i).getNumber());
-                    break;
-                case 1:
-                    contact.setSecondaryTelephone(phones.get(i).getNumber());
-                    break;
-                case 2:
-                    contact.setTertiaryTelephone(phones.get(i).getNumber());
-                    break;
-            }
-            if (i == 3) {
-                break;
-            }
-        }
+        contact.setPhones(phones);
 
         //get photo
         contact.setPhoto(getImage(contactId, true));
@@ -128,6 +113,7 @@ public class ContactDao implements IContactDao {
 
         Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection = {
+                ContactsContract.CommonDataKinds.Phone._ID,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
                 ContactsContract.CommonDataKinds.Phone.TYPE
         };
@@ -135,11 +121,13 @@ public class ContactDao implements IContactDao {
         String orderBy = ContactsContract.CommonDataKinds.Phone.IS_PRIMARY + " DESC";
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
+            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
             int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             int typeIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
             do {
                 Phone phone = new Phone();
+                phone.setId(cursor.getString(idIndex));
                 phone.setNumber(cursor.getString(numberIndex));
                 phone.setType(cursor.getString(typeIndex));
                 phones.add(phone);
@@ -253,8 +241,8 @@ public class ContactDao implements IContactDao {
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPrimaryTelephone())
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME)
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhones().get(0))
+                .withValue(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY, 1)
                 .build());
 
         if (contact.getPhoto() != null) {
@@ -278,24 +266,58 @@ public class ContactDao implements IContactDao {
     public void updateContact(Contact contact) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
-        String nameWhere = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE  + " = ? ";
-        String[] nameParams = new String[]{contact.getId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+        //update name
+        String where = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+        String[] params = new String[]{contact.getId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
 
         ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                .withSelection(nameWhere, nameParams)
+                .withSelection(where, params)
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName().getName())
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, contact.getName().getSurname())
                 .build());
 
- /*       String phoneWhere = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE  + " = ? ";
-        String[] phoneParams = new String[]{contact.getId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+        // Get first available raw_contact_id for creations
+        String[] projection = new String[]{ContactsContract.RawContacts._ID};
+        String selection = ContactsContract.RawContacts.CONTACT_ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(contact.getId())};
 
-        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPrimaryTelephone())
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.)
-                .build());*/
+        Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, selectionArgs, null);
+        int rawContactId = 0;
+        if (c.moveToFirst()) {
+            rawContactId = c.getInt(c.getColumnIndex(ContactsContract.RawContacts._ID));
+        }
+        c.close();
+
+        //process phones
+        for (Phone phone : contact.getPhones()) {
+
+            switch (phone.getDataAction()) {
+                case CREATE:
+                    ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+                            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone.getNumber())
+                            .withValue(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY, phone.isPrimary() ? 1 : 0)
+                            .build());
+                    break;
+                case UPDATE:
+                    where = ContactsContract.Data._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{phone.getId(), ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone.getNumber())
+                            .withValue(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY, phone.isPrimary() ? 1 : 0)
+                            .build());
+                    break;
+                case DELETE:
+                    where = ContactsContract.CommonDataKinds.Phone._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{phone.getId(), ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .build());
+                    break;
+            }
+        }
 
 /*        if (contact.getPhoto() != null) {
             byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());

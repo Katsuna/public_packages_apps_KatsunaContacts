@@ -12,9 +12,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class CreateContactActivity extends AppCompatActivity {
@@ -87,7 +91,11 @@ public class CreateContactActivity extends AppCompatActivity {
                     if (inputIsValid()) {
                         Contact c = new Contact();
                         c.setDisplayName(mName.getText() + " " + mSurname.getText());
-                        c.setPrimaryTelephone(mTelephone.getText().toString());
+
+                        List<Phone> phones = new ArrayList<>();
+                        phones.add(new Phone(mTelephone.getText().toString()));
+                        c.setPhones(phones);
+
                         c.setPhoto(mBitmap);
 
                         ContactDao contactDao = new ContactDao(CreateContactActivity.this);

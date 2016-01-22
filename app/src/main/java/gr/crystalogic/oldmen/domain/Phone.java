@@ -2,23 +2,23 @@ package gr.crystalogic.oldmen.domain;
 
 import java.io.Serializable;
 
+import gr.crystalogic.oldmen.utils.DataAction;
+
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 8522263950995573452L;
 
+    private String id;
     private String number;
     private String type;
+    private boolean primary;
+    private DataAction dataAction;
 
     public Phone() {
     }
 
     public Phone(String number) {
         this.number = number;
-    }
-
-    public Phone(Phone phone) {
-        this.number = phone.getNumber();
-        this.type = phone.getType();
     }
 
     public String getNumber() {
@@ -40,5 +40,29 @@ public class Phone implements Serializable {
     @Override
     public String toString() {
         return " Phone: " + number + " " + type;
+    }
+
+    public boolean isPrimary() {
+        return primary;
+    }
+
+    public void setPrimary(boolean primary) {
+        this.primary = primary;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public DataAction getDataAction() {
+        return dataAction;
+    }
+
+    public void setDataAction(DataAction dataAction) {
+        this.dataAction = dataAction;
     }
 }

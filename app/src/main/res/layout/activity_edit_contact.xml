@@ -23,7 +23,7 @@
                     android:id="@+id/photo"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:background="@drawable/avatar"
                     android:scaleType="center" />
 
@@ -39,6 +39,7 @@
                     <EditText
                         android:id="@+id/name"
                         style="@style/editContactField"
+                        android:inputType="text"
                         android:singleLine="true" />
 
                 </LinearLayout>
@@ -56,6 +57,7 @@
                     <EditText
                         android:id="@+id/surname"
                         style="@style/editContactField"
+                        android:inputType="text"
                         android:singleLine="true" />
 
                 </LinearLayout>

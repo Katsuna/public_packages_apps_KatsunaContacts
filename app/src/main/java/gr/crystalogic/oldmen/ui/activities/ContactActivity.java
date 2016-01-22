@@ -84,7 +84,7 @@ public class ContactActivity extends AppCompatActivity {
     private void showContactInfo() {
         if (contact != null) {
             name.setText(contact.getDisplayName());
-            number.setText(contact.getPrimaryTelephone());
+            number.setText(contact.getPhones().get(0).getNumber());
             loadImage();
         }
     }
@@ -104,12 +104,12 @@ public class ContactActivity extends AppCompatActivity {
             return;
         }
 
-        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPrimaryTelephone()));
+        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhones().get(0).getNumber()));
         startActivity(i);
     }
 
     private void sendSMS() {
-        String number = contact.getPrimaryTelephone();
+        String number = contact.getPhones().get(0).getNumber();
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
     }
 }

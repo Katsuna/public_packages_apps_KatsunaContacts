@@ -8,20 +8,26 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Name;
+import gr.crystalogic.oldmen.domain.Phone;
+import gr.crystalogic.oldmen.utils.DataAction;
 import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class EditContactActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    EditText[] mTelephones;
     private EditText mName;
     private EditText mSurname;
     private EditText mTelephone1;
@@ -31,7 +37,7 @@ public class EditContactActivity extends AppCompatActivity {
     private EditText mAddress;
     private ImageView mPhoto;
     private Bitmap mBitmap;
-    private String mContactId;
+    private Contact mContact;
 
     private FloatingActionButton mEditContactFab;
 
@@ -51,6 +57,7 @@ public class EditContactActivity extends AppCompatActivity {
         mTelephone1 = (EditText) findViewById(R.id.telephone1);
         mTelephone2 = (EditText) findViewById(R.id.telephone2);
         mTelephone3 = (EditText) findViewById(R.id.telephone3);
+        mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
         mEmail = (EditText) findViewById(R.id.email);
         mAddress = (EditText) findViewById(R.id.address);
 
@@ -64,25 +71,33 @@ public class EditContactActivity extends AppCompatActivity {
     }
 
     private void loadContact() {
-        mContactId = getIntent().getStringExtra("contactId");
+        String contactId = getIntent().getStringExtra("contactId");
         ContactDao contactDao = new ContactDao(this);
 
-        Contact contact = contactDao.getContact(mContactId);
+        mContact = contactDao.getContact(contactId);
 
         //set data on fields
-        mName.setText(contact.getName().getName());
-        mSurname.setText(contact.getName().getSurname());
-        mTelephone1.setText(contact.getPrimaryTelephone());
-        mTelephone2.setText(contact.getSecondaryTelephone());
-        mTelephone3.setText(contact.getTertiaryTelephone());
-        mEmail.setText(contact.getEmail());
-        mAddress.setText(contact.getAddress());
+        mName.setText(mContact.getName().getName());
+        mSurname.setText(mContact.getName().getSurname());
 
-        if (contact.getPhoto() != null) {
+        loadPhoneNumbers();
 
-            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), contact.getPhoto(), R.drawable.avatar);
+        mEmail.setText(mContact.getEmail());
+        mAddress.setText(mContact.getAddress());
+
+        if (mContact.getPhoto() != null) {
+
+            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), mContact.getPhoto(), R.drawable.avatar);
 
             mPhoto.setImageBitmap(maskedBitmap);
+        }
+    }
+
+    private void loadPhoneNumbers() {
+        for (int i = 0; i < mTelephones.length; i++) {
+            if (mContact.getPhone(i) != null) {
+                mTelephones[i].setText(mContact.getPhone(i).getNumber());
+            }
         }
     }
 
@@ -92,14 +107,40 @@ public class EditContactActivity extends AppCompatActivity {
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Contact contact = new Contact();
-                contact.setId(mContactId);
-                contact.setName(new Name(mName.getText().toString(), mSurname.getText().toString()));
+                mContact.setName(new Name(mName.getText().toString(), mSurname.getText().toString()));
+                mContact.setPhones(getPhonesForUpdate());
+
                 ContactDao contactDao = new ContactDao(EditContactActivity.this);
-                contactDao.updateContact(contact);
+                contactDao.updateContact(mContact);
                 finish();
             }
         });
+    }
+
+    private List<Phone> getPhonesForUpdate() {
+        List<Phone> phones = new ArrayList<>();
+
+        for (int i = 0; i < mTelephones.length; i++) {
+            if (mContact.getPhone(i) == null) {
+                if (!TextUtils.isEmpty(mTelephones[i].getText())) {
+                    Phone phone = new Phone(mTelephones[i].getText().toString());
+                    phone.setDataAction(DataAction.CREATE);
+                    phones.add(phone);
+                }
+            } else {
+                Phone phone = mContact.getPhone(i);
+                if (TextUtils.isEmpty(mTelephones[i].getText())) {
+                    phone.setDataAction(DataAction.DELETE);
+                    phones.add(phone);
+                } else {
+                    phone.setNumber(mTelephones[i].getText().toString());
+                    phone.setDataAction(DataAction.UPDATE);
+                    phones.add(phone);
+                }
+            }
+        }
+
+        return phones;
     }
 
     private void dispatchTakePictureIntent() {

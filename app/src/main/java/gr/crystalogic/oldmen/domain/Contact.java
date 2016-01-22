@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Contact implements Comparable<Contact>, Serializable {
 
@@ -12,9 +14,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private String id;
     private String displayName;
     private Name name;
-    private String primaryTelephone;
-    private String secondaryTelephone;
-    private String tertiaryTelephone;
+    private List<Phone> phones;
     private String email;
     private String address;
     private boolean photoChecked;
@@ -26,15 +26,16 @@ public class Contact implements Comparable<Contact>, Serializable {
     public Contact() {
     }
 
+    //TODO: remove it
     public Contact(String name, String surname, String primaryTelephone) {
-        this.displayName = name + " " + surname;
-        this.primaryTelephone = primaryTelephone;
+        displayName = name + " " + surname;
+        phones = new ArrayList<>();
+        phones.add(new Phone(primaryTelephone));
     }
 
     public Contact(Contact contact) {
         id = contact.getId();
         displayName = contact.getDisplayName();
-        primaryTelephone = contact.getPrimaryTelephone();
         timesContacted = contact.getTimesContacted();
         lastTimeContacted = contact.getLastTimeContacted();
         starred = contact.isStarred();
@@ -42,7 +43,7 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     @Override
     public String toString() {
-        return "Contact: " + id + " " + displayName + " " + primaryTelephone;
+        return "Contact: " + id + " " + displayName;
     }
 
     public String getId() {
@@ -59,14 +60,6 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getPrimaryTelephone() {
-        return primaryTelephone;
-    }
-
-    public void setPrimaryTelephone(String primaryTelephone) {
-        this.primaryTelephone = primaryTelephone;
     }
 
     @Override
@@ -114,22 +107,6 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.starred = starred;
     }
 
-    public String getSecondaryTelephone() {
-        return secondaryTelephone;
-    }
-
-    public void setSecondaryTelephone(String secondaryTelephone) {
-        this.secondaryTelephone = secondaryTelephone;
-    }
-
-    public String getTertiaryTelephone() {
-        return tertiaryTelephone;
-    }
-
-    public void setTertiaryTelephone(String tertiaryTelephone) {
-        this.tertiaryTelephone = tertiaryTelephone;
-    }
-
     public Name getName() {
         return name;
     }
@@ -152,5 +129,21 @@ public class Contact implements Comparable<Contact>, Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
+    public Phone getPhone(int index) {
+        Phone output = null;
+        if (phones != null && phones.size() > index) {
+            output = phones.get(index);
+        }
+        return output;
     }
 }
