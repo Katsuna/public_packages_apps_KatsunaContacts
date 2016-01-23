@@ -57,6 +57,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
+            android:background="@drawable/ic_person_grey_50px"
             android:scaleType="fitCenter" />
 
         <TextView
