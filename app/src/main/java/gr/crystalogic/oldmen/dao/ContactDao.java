@@ -253,7 +253,7 @@ public class ContactDao implements IContactDao {
         ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhones().get(0))
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhones().get(0).getNumber())
                 .withValue(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY, 1)
                 .build());
 
@@ -391,22 +391,27 @@ public class ContactDao implements IContactDao {
             }
         }
 
+        //delete photo and insert
+        if (contact.getPhoto() != null) {
+            where = ContactsContract.CommonDataKinds.Email.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+            params = new String[]{String.valueOf(rawContactId), ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE};
+            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                    .withSelection(where, params)
+                    .build());
 
-/*        if (contact.getPhoto() != null) {
             byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());
 
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
                     .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
                     .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
                     .build());
-        }*/
-
-            try {
-                cr.applyBatch(ContactsContract.AUTHORITY, ops);
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
         }
 
+        try {
+            cr.applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
+}

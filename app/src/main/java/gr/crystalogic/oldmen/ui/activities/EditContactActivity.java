@@ -124,6 +124,7 @@ public class EditContactActivity extends AppCompatActivity {
                 mContact.setPhones(getPhonesForUpdate());
                 mContact.setEmail(getEmailForUpdate());
                 mContact.setAddress(getAddressForUpdate());
+                mContact.setPhoto(mBitmap);
 
                 ContactDao contactDao = new ContactDao(EditContactActivity.this);
                 contactDao.updateContact(mContact);
