@@ -23,7 +23,7 @@
                     android:id="@+id/photo"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_gravity="start"
+                    android:layout_gravity="center"
                     android:background="@drawable/avatar"
                     android:scaleType="center" />
 
@@ -138,7 +138,7 @@
                     <EditText
                         android:id="@+id/address"
                         style="@style/editContactField"
-                        android:inputType="textPostalAddress" />
+                        android:inputType="textMultiLine" />
 
                 </LinearLayout>
 
@@ -151,10 +151,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_gravity="top|end"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
