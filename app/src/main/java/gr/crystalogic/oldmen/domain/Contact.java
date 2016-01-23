@@ -16,7 +16,7 @@ public class Contact implements Comparable<Contact>, Serializable {
     private Name name;
     private List<Phone> phones;
     private Email email;
-    private String address;
+    private Address address;
     private boolean photoChecked;
     private Bitmap photo;
     private int timesContacted;
@@ -123,11 +123,11 @@ public class Contact implements Comparable<Contact>, Serializable {
         this.email = email;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

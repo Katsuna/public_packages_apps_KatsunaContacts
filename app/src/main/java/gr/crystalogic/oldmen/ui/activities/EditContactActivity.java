@@ -18,6 +18,7 @@ import java.util.List;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.domain.Address;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
@@ -83,7 +84,7 @@ public class EditContactActivity extends AppCompatActivity {
 
         loadPhoneNumbers();
         loadEmail();
-        mAddress.setText(mContact.getAddress());
+        loadAddress();
 
         if (mContact.getPhoto() != null) {
 
@@ -107,6 +108,12 @@ public class EditContactActivity extends AppCompatActivity {
         }
     }
 
+    private void loadAddress() {
+        if (mContact.getAddress() != null) {
+            mAddress.setText(mContact.getAddress().getFormattedAddress());
+        }
+    }
+
     private void setupFab() {
         mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
         mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
@@ -116,6 +123,7 @@ public class EditContactActivity extends AppCompatActivity {
                 mContact.setName(getNameForUpdate());
                 mContact.setPhones(getPhonesForUpdate());
                 mContact.setEmail(getEmailForUpdate());
+                mContact.setAddress(getAddressForUpdate());
 
                 ContactDao contactDao = new ContactDao(EditContactActivity.this);
                 contactDao.updateContact(mContact);
@@ -178,6 +186,29 @@ public class EditContactActivity extends AppCompatActivity {
 
         return email;
     }
+
+    private Address getAddressForUpdate() {
+        Address address = null;
+
+        if (mContact.getAddress() == null) {
+            if (!TextUtils.isEmpty(mAddress.getText())) {
+                address = new Address();
+                address.setDataAction(DataAction.CREATE);
+                address.setFormattedAddress(mAddress.getText().toString());
+            }
+        } else {
+            address = mContact.getAddress();
+            if (TextUtils.isEmpty(mAddress.getText())) {
+                address.setDataAction(DataAction.DELETE);
+            } else {
+                address.setDataAction(DataAction.UPDATE);
+                address.setFormattedAddress(mAddress.getText().toString());
+            }
+        }
+
+        return address;
+    }
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

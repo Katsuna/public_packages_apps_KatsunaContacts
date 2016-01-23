@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.crystalogic.oldmen.domain.Address;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
@@ -99,7 +100,7 @@ public class ContactDao implements IContactDao {
         }
 
         //use default address or first found
-        List<String> addresses = getAddresses(contactId);
+        List<Address> addresses = getAddresses(contactId);
         if (addresses.size() > 0) {
             contact.setAddress(addresses.get(0));
         }
@@ -166,11 +167,12 @@ public class ContactDao implements IContactDao {
         return emails;
     }
 
-    private List<String> getAddresses(String contactId) {
-        List<String> addresses = new ArrayList<>();
+    private List<Address> getAddresses(String contactId) {
+        List<Address> addresses = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
         String[] projection = {
+                ContactsContract.CommonDataKinds.StructuredPostal._ID,
                 ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
         };
         String selection = ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + "=" + contactId;
@@ -178,9 +180,12 @@ public class ContactDao implements IContactDao {
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
         if (cursor != null && cursor.moveToFirst()) {
+            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal._ID);
             int addressIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS);
             do {
-                String address = cursor.getString(addressIndex);
+                Address address = new Address();
+                address.setId(cursor.getString(idIndex));
+                address.setFormattedAddress(cursor.getString(addressIndex));
                 addresses.add(address);
             } while (cursor.moveToNext());
             cursor.close();
@@ -357,6 +362,36 @@ public class ContactDao implements IContactDao {
             }
         }
 
+        //process addresses
+        Address address = contact.getAddress();
+        if (address != null) {
+            switch (address.getDataAction()) {
+                case CREATE:
+                    ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+                            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS, address.getFormattedAddress())
+                            .build());
+                    break;
+                case UPDATE:
+                    where = ContactsContract.Data._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{address.getId(), ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .withValue(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS, address.getFormattedAddress())
+                            .build());
+                    break;
+                case DELETE:
+                    where = ContactsContract.CommonDataKinds.Email._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{address.getId(), ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .build());
+                    break;
+            }
+        }
+
+
 /*        if (contact.getPhoto() != null) {
             byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());
 
@@ -367,11 +402,11 @@ public class ContactDao implements IContactDao {
                     .build());
         }*/
 
-        try {
-            cr.applyBatch(ContactsContract.AUTHORITY, ops);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            try {
+                cr.applyBatch(ContactsContract.AUTHORITY, ops);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
-    }
 
-}
+    }
