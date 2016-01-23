@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.utils.ImageHelper;
@@ -92,7 +93,7 @@ public class ContactDao implements IContactDao {
         contact.setPhoto(getImage(contactId, true));
 
         //use default email or first found
-        List<String> emails = getEmails(contactId);
+        List<Email> emails = getEmails(contactId);
         if (emails.size() > 0) {
             contact.setEmail(emails.get(0));
         }
@@ -121,7 +122,7 @@ public class ContactDao implements IContactDao {
         String orderBy = ContactsContract.CommonDataKinds.Phone.IS_PRIMARY + " DESC";
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
             int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             int typeIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
@@ -138,11 +139,12 @@ public class ContactDao implements IContactDao {
         return phones;
     }
 
-    private List<String> getEmails(String contactId) {
-        List<String> emails = new ArrayList<>();
+    private List<Email> getEmails(String contactId) {
+        List<Email> emails = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
         String[] projection = {
+                ContactsContract.CommonDataKinds.Email._ID,
                 ContactsContract.CommonDataKinds.Email.ADDRESS
         };
         String selection = ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contactId;
@@ -150,9 +152,12 @@ public class ContactDao implements IContactDao {
 
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
         if (cursor != null && cursor.moveToFirst()) {
-            int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email._ID);
+            int addressIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
             do {
-                String email = cursor.getString(emailIndex);
+                Email email = new Email();
+                email.setId(cursor.getString(idIndex));
+                email.setAddress(cursor.getString(addressIndex));
                 emails.add(email);
             } while (cursor.moveToNext());
             cursor.close();
@@ -191,6 +196,7 @@ public class ContactDao implements IContactDao {
         Uri baseUri = ContactsContract.Data.CONTENT_URI;
 
         String[] projection = new String[]{
+                ContactsContract.CommonDataKinds.StructuredName._ID,
                 ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
                 ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
         };
@@ -202,6 +208,7 @@ public class ContactDao implements IContactDao {
 
         if (cursor != null && cursor.moveToFirst()) {
             name = new Name();
+            name.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName._ID)));
             name.setName(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME)));
             name.setSurname(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME)));
 
@@ -266,16 +273,6 @@ public class ContactDao implements IContactDao {
     public void updateContact(Contact contact) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
-        //update name
-        String where = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
-        String[] params = new String[]{contact.getId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
-
-        ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                .withSelection(where, params)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName().getName())
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, contact.getName().getSurname())
-                .build());
-
         // Get first available raw_contact_id for creations
         String[] projection = new String[]{ContactsContract.RawContacts._ID};
         String selection = ContactsContract.RawContacts.CONTACT_ID + "=?";
@@ -283,10 +280,22 @@ public class ContactDao implements IContactDao {
 
         Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, selectionArgs, null);
         int rawContactId = 0;
-        if (c.moveToFirst()) {
-            rawContactId = c.getInt(c.getColumnIndex(ContactsContract.RawContacts._ID));
+        if (c != null) {
+            if (c.moveToFirst()) {
+                rawContactId = c.getInt(c.getColumnIndex(ContactsContract.RawContacts._ID));
+            }
+            c.close();
         }
-        c.close();
+
+        //update name
+        String where = ContactsContract.Data._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+        String[] params = new String[]{contact.getName().getId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
+
+        ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                .withSelection(where, params)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName().getName())
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, contact.getName().getSurname())
+                .build());
 
         //process phones
         for (Phone phone : contact.getPhones()) {
@@ -312,6 +321,35 @@ public class ContactDao implements IContactDao {
                 case DELETE:
                     where = ContactsContract.CommonDataKinds.Phone._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
                     params = new String[]{phone.getId(), ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .build());
+                    break;
+            }
+        }
+
+        //process Email
+        Email email = contact.getEmail();
+        if (email != null) {
+            switch (email.getDataAction()) {
+                case CREATE:
+                    ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+                            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, email.getAddress())
+                            .build());
+                    break;
+                case UPDATE:
+                    where = ContactsContract.Data._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{email.getId(), ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE};
+                    ops.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(where, params)
+                            .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, email.getAddress())
+                            .build());
+                    break;
+                case DELETE:
+                    where = ContactsContract.CommonDataKinds.Email._ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+                    params = new String[]{email.getId(), ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE};
                     ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
                             .withSelection(where, params)
                             .build());

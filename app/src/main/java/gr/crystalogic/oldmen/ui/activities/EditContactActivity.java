@@ -19,6 +19,7 @@ import java.util.List;
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.dao.ContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
+import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.utils.DataAction;
@@ -81,8 +82,7 @@ public class EditContactActivity extends AppCompatActivity {
         mSurname.setText(mContact.getName().getSurname());
 
         loadPhoneNumbers();
-
-        mEmail.setText(mContact.getEmail());
+        loadEmail();
         mAddress.setText(mContact.getAddress());
 
         if (mContact.getPhoto() != null) {
@@ -101,20 +101,34 @@ public class EditContactActivity extends AppCompatActivity {
         }
     }
 
+    private void loadEmail() {
+        if (mContact.getEmail() != null) {
+            mEmail.setText(mContact.getEmail().getAddress());
+        }
+    }
+
     private void setupFab() {
         mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
         mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContact.setName(new Name(mName.getText().toString(), mSurname.getText().toString()));
+                mContact.setName(getNameForUpdate());
                 mContact.setPhones(getPhonesForUpdate());
+                mContact.setEmail(getEmailForUpdate());
 
                 ContactDao contactDao = new ContactDao(EditContactActivity.this);
                 contactDao.updateContact(mContact);
                 finish();
             }
         });
+    }
+
+    private Name getNameForUpdate() {
+        Name name = mContact.getName();
+        name.setName(mName.getText().toString());
+        name.setSurname(mSurname.getText().toString());
+        return name;
     }
 
     private List<Phone> getPhonesForUpdate() {
@@ -141,6 +155,28 @@ public class EditContactActivity extends AppCompatActivity {
         }
 
         return phones;
+    }
+
+    private Email getEmailForUpdate() {
+        Email email = null;
+
+        if (mContact.getEmail() == null) {
+            if (!TextUtils.isEmpty(mEmail.getText())) {
+                email = new Email();
+                email.setDataAction(DataAction.CREATE);
+                email.setAddress(mEmail.getText().toString());
+            }
+        } else {
+            email = mContact.getEmail();
+            if (TextUtils.isEmpty(mEmail.getText())) {
+                email.setDataAction(DataAction.DELETE);
+            } else {
+                email.setDataAction(DataAction.UPDATE);
+                email.setAddress(mEmail.getText().toString());
+            }
+        }
+
+        return email;
     }
 
     private void dispatchTakePictureIntent() {
