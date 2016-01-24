@@ -29,19 +29,14 @@ import gr.crystalogic.oldmen.utils.ImageHelper;
 public class EditContactActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    EditText[] mTelephones;
+    private EditText[] mTelephones;
     private EditText mName;
     private EditText mSurname;
-    private EditText mTelephone1;
-    private EditText mTelephone2;
-    private EditText mTelephone3;
     private EditText mEmail;
     private EditText mAddress;
     private ImageView mPhoto;
     private Bitmap mBitmap;
     private Contact mContact;
-
-    private FloatingActionButton mEditContactFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +51,9 @@ public class EditContactActivity extends AppCompatActivity {
     private void initControls() {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
-        mTelephone1 = (EditText) findViewById(R.id.telephone1);
-        mTelephone2 = (EditText) findViewById(R.id.telephone2);
-        mTelephone3 = (EditText) findViewById(R.id.telephone3);
+        EditText mTelephone1 = (EditText) findViewById(R.id.telephone1);
+        EditText mTelephone2 = (EditText) findViewById(R.id.telephone2);
+        EditText mTelephone3 = (EditText) findViewById(R.id.telephone3);
         mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
         mEmail = (EditText) findViewById(R.id.email);
         mAddress = (EditText) findViewById(R.id.address);
@@ -115,7 +110,7 @@ public class EditContactActivity extends AppCompatActivity {
     }
 
     private void setupFab() {
-        mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
+        FloatingActionButton mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
         mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Contacts</string>
-    <string name="make_call">make call</string>
-    <string name="send_message">send message</string>
     <string name="contact_photo">Contact photo</string>
     <string name="call">Call</string>
     <string name="message">Message</string>
