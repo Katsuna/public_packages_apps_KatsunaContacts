@@ -26,21 +26,18 @@ import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
-import gr.crystalogic.oldmen.ui.listeners.IContactsFragmentInteractionListener;
+import gr.crystalogic.oldmen.ui.listeners.IContactInteractionListener;
 import gr.crystalogic.oldmen.utils.ContactArranger;
-import gr.crystalogic.oldmen.utils.Step;
 
-public class MainActivity extends AppCompatActivity implements IContactsFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
 
-    private FloatingActionButton mNewContactFab;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
-    private Step mStep;
     private Contact mSelectedContact;
 
     @Override
@@ -56,15 +53,11 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     @Override
     protected void onResume() {
         super.onResume();
-
-        //always resume on INITIAL
-        mStep = Step.INITIAL;
-        showButtons(mStep);
         loadContacts();
     }
 
     private void setupFab() {
-        mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
 
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         List<ContactListItemModel> models = ContactArranger.getContactsProcessed(contactList);
         Log.e(TAG, "-3-");
 
-        mAdapter = new ContactsRecyclerViewAdapter(models, this, mStep);
+        mAdapter = new ContactsRecyclerViewAdapter(models, this);
         Log.e(TAG, "-4-");
 
         mRecyclerView.setAdapter(mAdapter);
@@ -165,67 +158,17 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         }
     }
 
-    private List<ContactListItemModel> getDeepCopy(List<ContactListItemModel> models) {
-        //deep copy to keep initial list
-        List<ContactListItemModel> output = new ArrayList<>();
-        for (ContactListItemModel m : models) {
-            output.add(new ContactListItemModel(m));
-        }
-        return output;
+    @Override
+    public void selectContact(int position) {
+        mAdapter.selectContactAtPosition(position);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 130);
     }
 
     @Override
-    public void onContactSelected(int position) {
-        goToStep(Step.CONTACT_SELECTION, position);
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 60);
-    }
-
-    @Override
-    public void onLostFocusContactClick() {
-        goToStep(Step.INITIAL);
-    }
-
-    @Override
-    public void onSeparatorClick(int position) {
-        goToStep(Step.INITIAL);
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mStep == Step.CONTACT_SELECTION) {
-            goToStep(Step.INITIAL);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private void goToStep(Step step) {
-        goToStep(step, null);
-    }
-
-    private void goToStep(Step step, Integer position) {
-        mStep = step;
-        showButtons(step);
-        switch (step) {
-            case INITIAL:
-                mAdapter.goToStep(mStep);
-                break;
-            case CONTACT_SELECTION:
-                mAdapter.goToStepWithContactSelection(mStep, position);
-                break;
-        }
-    }
-
-    private void showButtons(Step step) {
-        switch (step) {
-            case INITIAL:
-                mNewContactFab.setVisibility(View.VISIBLE);
-                break;
-            case CONTACT_SELECTION:
-                mNewContactFab.setVisibility(View.GONE);
-                break;
-        }
+    public void editContact(String contactId) {
+        Intent i = new Intent(this, EditContactActivity.class);
+        i.putExtra("contactId", contactId);
+        startActivity(i);
     }
 
     @Override
@@ -240,14 +183,14 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         startActivity(i);
     }
 
-    private String getContactPhone(Contact contact) {
-        List<Phone> phones = new ContactDao(this).getPhones(contact.getId());
-        return phones.get(0).getNumber();
-    }
-
     @Override
     public void sendSMS(Contact contact) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", getContactPhone(contact), null)));
+    }
+
+    private String getContactPhone(Contact contact) {
+        List<Phone> phones = new ContactDao(this).getPhones(contact.getId());
+        return phones.get(0).getNumber();
     }
 
 }
