@@ -25,7 +25,6 @@ import gr.crystalogic.oldmen.utils.Step;
 
 public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
-    private final TextView mLargeSeparatorView;
     private final LinearLayout mContactBasicContainer;
     private final LinearLayout mContactDetails;
     private final TextView mSeparatorView;
@@ -41,7 +40,6 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     public ContactListItemViewHolder(View view, IContactsFragmentInteractionListener listener) {
         super(view);
         mView = view;
-        mLargeSeparatorView = (TextView) view.findViewById(R.id.largeSeparator);
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
         mContactDetails = (LinearLayout) view.findViewById(R.id.contact_details);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
@@ -55,22 +53,10 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final ContactListItemModel model, Step step, final int position, int selectedContactPosition) {
-        final Contact contact = model.getContact();
+        initialize();
 
-        //initialize
-        mLargeSeparatorView.setText("");
-        mContactBasicContainer.setOnClickListener(null);
-        mContactDetails.setVisibility(View.GONE);
-        mLargeSeparatorView.setVisibility(View.GONE);
-        mEditButton.setVisibility(View.GONE);
-        mSeparatorView.setVisibility(View.VISIBLE);
-        mSeparatorView.setText("");
-        mSeparatorImage.setVisibility(View.GONE);
+        final Contact contact = model.getContact();
         mContentView.setText(contact.getDisplayName());
-        mContactBasicContainer.setOnClickListener(null);
-        mCallButton.setOnClickListener(null);
-        mMessageButton.setOnClickListener(null);
-        mPhoto.setImageBitmap(null);
 
         switch (step) {
             case INITIAL:
@@ -159,6 +145,20 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         }
 
         new ImageLoader(mView.getContext()).execute(contact);
+    }
+
+    private void initialize() {
+        mContactBasicContainer.setOnClickListener(null);
+        mContactDetails.setVisibility(View.GONE);
+        mEditButton.setVisibility(View.GONE);
+        mSeparatorView.setVisibility(View.VISIBLE);
+        mSeparatorView.setText("");
+        mSeparatorImage.setVisibility(View.GONE);
+        mContentView.setText("");
+        mContactBasicContainer.setOnClickListener(null);
+        mCallButton.setOnClickListener(null);
+        mMessageButton.setOnClickListener(null);
+        mPhoto.setImageBitmap(null);
     }
 
     private class ImageLoader extends AsyncTask<Contact, Void, Bitmap> {

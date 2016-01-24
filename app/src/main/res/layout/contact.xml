@@ -4,20 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/largeSeparator"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/separator"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="35sp"
-        android:visibility="gone" />
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/contact_basic_container"
         android:layout_width="match_parent"
