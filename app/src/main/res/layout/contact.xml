@@ -4,6 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/top_ruler"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/pink"
+        android:visibility="gone" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/contact_basic_container"
         android:layout_width="match_parent"
@@ -22,8 +31,7 @@
             android:layout_marginStart="@dimen/text_margin_left_right"
             android:layout_marginTop="@dimen/text_margin_top_bottom"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/pink"
-            android:textSize="24sp" />
+            android:textColor="@color/pink" />
 
         <ImageView
             android:id="@+id/separator_image"
@@ -57,14 +65,14 @@
             android:layout_marginRight="@dimen/text_margin_left_right"
             android:layout_marginStart="@dimen/text_margin_left_right"
             android:layout_marginTop="@dimen/text_margin_top_bottom"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="20sp" />
+            android:textAppearance="?attr/textAppearanceListItem" />
 
         <ImageButton
             android:id="@+id/edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
+            android:layout_margin="16dp"
             android:background="@drawable/ic_edit_black_18dp"
             android:visibility="gone" />
     </LinearLayout>
@@ -93,5 +101,14 @@
             android:textColor="@color/white" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_ruler"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/pink"
+        android:visibility="gone" />
 
 </LinearLayout>

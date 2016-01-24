@@ -32,7 +32,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     private final ImageButton mEditButton;
     private final Button mCallButton;
     private final Button mMessageButton;
-
+    private final View mTopRuler;
+    private final View mBottomRuler;
     private final ImageView mPhoto;
     private final ImageView mSeparatorImage;
     private final IContactsFragmentInteractionListener mListener;
@@ -49,6 +50,8 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mEditButton = (ImageButton) view.findViewById(R.id.edit_button);
         mCallButton = (Button) view.findViewById(R.id.call_button);
         mMessageButton = (Button) view.findViewById(R.id.message_button);
+        mTopRuler = view.findViewById(R.id.top_ruler);
+        mBottomRuler = view.findViewById(R.id.bottom_ruler);
         mListener = listener;
     }
 
@@ -58,25 +61,22 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         final Contact contact = model.getContact();
         mContentView.setText(contact.getDisplayName());
 
+        switch (model.getSeparator()) {
+            case FIRST_LETTER:
+                mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                mSeparatorView.setVisibility(View.VISIBLE);
+                break;
+            case STARRED:
+                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
+                mSeparatorImage.setVisibility(View.VISIBLE);
+                break;
+            case NONE:
+                mSeparatorView.setVisibility(View.INVISIBLE);
+                break;
+        }
+
         switch (step) {
             case INITIAL:
-                mSeparatorView.setTextSize(20);
-                mContentView.setTextSize(20);
-                mPhoto.getLayoutParams().width = 50;
-                mPhoto.getLayoutParams().height = 50;
-
-                switch (model.getSeparator()) {
-                    case FIRST_LETTER:
-                        mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-                        mSeparatorView.setVisibility(View.VISIBLE);
-                        break;
-                    case STARRED:
-                        mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
-                        mSeparatorImage.setVisibility(View.VISIBLE);
-                        mSeparatorView.setVisibility(View.GONE);
-                        break;
-                }
-
                 mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -86,16 +86,10 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                 break;
             case CONTACT_SELECTION:
                 if (position == selectedContactPosition) {
+                    mTopRuler.setVisibility(View.VISIBLE);
+                    mBottomRuler.setVisibility(View.VISIBLE);
                     mContactDetails.setVisibility(View.VISIBLE);
-                    mSeparatorView.setTextSize(20);
-                    mContentView.setTextSize(20);
-                    if (contact.getPhoto() == null) {
-                        mPhoto.getLayoutParams().width = 25;
-                        mPhoto.getLayoutParams().height = 25;
-                    } else {
-                        mPhoto.getLayoutParams().width = 50;
-                        mPhoto.getLayoutParams().height = 50;
-                    }
+                    mContentView.setTextSize(25);
                     mEditButton.setVisibility(View.VISIBLE);
                     mEditButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -119,21 +113,6 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                         }
                     });
                 } else {
-                    switch (model.getSeparator()) {
-                        case FIRST_LETTER:
-                            mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-                            mSeparatorView.setVisibility(View.VISIBLE);
-                            break;
-                        case STARRED:
-                            mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
-                            mSeparatorImage.setVisibility(View.VISIBLE);
-                            mSeparatorView.setVisibility(View.GONE);
-                            break;
-                    }
-                    mSeparatorView.setTextSize(12);
-                    mContentView.setTextSize(12);
-                    mPhoto.getLayoutParams().width = 25;
-                    mPhoto.getLayoutParams().height = 25;
                     mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -148,13 +127,20 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void initialize() {
-        mContactBasicContainer.setOnClickListener(null);
+        mTopRuler.setVisibility(View.GONE);
+        mBottomRuler.setVisibility(View.GONE);
+
         mContactDetails.setVisibility(View.GONE);
         mEditButton.setVisibility(View.GONE);
-        mSeparatorView.setVisibility(View.VISIBLE);
-        mSeparatorView.setText("");
         mSeparatorImage.setVisibility(View.GONE);
+
+        mSeparatorView.setText("");
+        mSeparatorView.setTextSize(18);
+        mSeparatorView.setVisibility(View.GONE);
+
         mContentView.setText("");
+        mContentView.setTextSize(18);
+
         mContactBasicContainer.setOnClickListener(null);
         mCallButton.setOnClickListener(null);
         mMessageButton.setOnClickListener(null);
