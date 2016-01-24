@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
 
-    private FloatingActionButton mSearchFab;
     private FloatingActionButton mNewContactFab;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupFabs();
+        setupFab();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -58,22 +57,13 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
     protected void onResume() {
         super.onResume();
 
-        //always resume on S1
-        mStep = Step.S1;
+        //always resume on INITIAL
+        mStep = Step.INITIAL;
         showButtons(mStep);
         loadContacts();
     }
 
-    private void setupFabs() {
-        mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        mSearchFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.indigo_blue)));
-        mSearchFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToStep(Step.S2);
-            }
-        });
-
+    private void setupFab() {
         mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
 
@@ -186,27 +176,25 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
     @Override
     public void onContactSelected(int position) {
-        goToStep(Step.S5, position);
+        goToStep(Step.CONTACT_SELECTION, position);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 60);
     }
 
     @Override
     public void onLostFocusContactClick() {
-        goToStep(Step.S1);
+        goToStep(Step.INITIAL);
     }
 
     @Override
     public void onSeparatorClick(int position) {
-        goToStep(Step.S1);
+        goToStep(Step.INITIAL);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override
     public void onBackPressed() {
-        if (mStep == Step.S2) {
-            goToStep(Step.S1);
-        } else if (mStep == Step.S5) {
-            goToStep(Step.S1);
+        if (mStep == Step.CONTACT_SELECTION) {
+            goToStep(Step.INITIAL);
         } else {
             super.onBackPressed();
         }
@@ -220,13 +208,10 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
         mStep = step;
         showButtons(step);
         switch (step) {
-            case S1:
+            case INITIAL:
                 mAdapter.goToStep(mStep);
                 break;
-            case S2:
-                mAdapter.goToStep(mStep);
-                break;
-            case S5:
+            case CONTACT_SELECTION:
                 mAdapter.goToStepWithContactSelection(mStep, position);
                 break;
         }
@@ -234,15 +219,10 @@ public class MainActivity extends AppCompatActivity implements IContactsFragment
 
     private void showButtons(Step step) {
         switch (step) {
-            case S1:
-                mSearchFab.setVisibility(View.VISIBLE);
+            case INITIAL:
                 mNewContactFab.setVisibility(View.VISIBLE);
                 break;
-            case S2:
-                mSearchFab.setVisibility(View.GONE);
-                break;
-            case S5:
-                mSearchFab.setVisibility(View.GONE);
+            case CONTACT_SELECTION:
                 mNewContactFab.setVisibility(View.GONE);
                 break;
         }

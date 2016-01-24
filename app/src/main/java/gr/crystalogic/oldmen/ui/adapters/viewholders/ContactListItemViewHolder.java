@@ -73,7 +73,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
         mPhoto.setImageBitmap(null);
 
         switch (step) {
-            case S1:
+            case INITIAL:
                 mSeparatorView.setTextSize(20);
                 mContentView.setTextSize(20);
                 mPhoto.getLayoutParams().width = 50;
@@ -98,31 +98,7 @@ public class ContactListItemViewHolder extends RecyclerView.ViewHolder {
                     }
                 });
                 break;
-            case S2:
-                mSeparatorView.setTextSize(12);
-                mContentView.setTextSize(12);
-                mPhoto.getLayoutParams().width = 25;
-                switch (model.getSeparator()) {
-                    case FIRST_LETTER:
-                        mLargeSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-                        mLargeSeparatorView.setVisibility(View.VISIBLE);
-                        mLargeSeparatorView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (mListener != null) {
-                                    mListener.onSeparatorClick(position);
-                                }
-                            }
-                        });
-                        break;
-                    case STARRED:
-                        mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
-                        mSeparatorImage.setVisibility(View.VISIBLE);
-                        mSeparatorView.setVisibility(View.GONE);
-                        break;
-                }
-                break;
-            case S5:
+            case CONTACT_SELECTION:
                 if (position == selectedContactPosition) {
                     mContactDetails.setVisibility(View.VISIBLE);
                     mSeparatorView.setTextSize(20);
