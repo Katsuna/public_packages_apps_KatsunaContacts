@@ -6,15 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways" />
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/contacts_list"
         android:name="gr.crystalogic.oldmen.fragments.ContactsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".ui.fragments.ContactsFragment"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/contact" />
 
     <android.support.design.widget.FloatingActionButton
@@ -23,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/activity_vertical_margin"
-        android:src="@drawable/ic_person_add_white_24dp" />
+        android:src="@drawable/ic_person_add_white_24dp"
+        app:layout_behavior="gr.crystalogic.oldmen.ui.behaviors.ScrollingFABBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

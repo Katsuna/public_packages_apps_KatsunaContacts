@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -46,11 +47,18 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initToolbar();
         setupFab();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         loadContacts();
+    }
+
+    private void initToolbar() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        setTitle(getString(R.string.app_name));
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
     }
 
     private void setupFab() {
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_EDIT_CONTACT) {
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 String contactId = data.getStringExtra("contactId");
                 loadContacts();
                 int position = mAdapter.getPositionByContactId(contactId);
