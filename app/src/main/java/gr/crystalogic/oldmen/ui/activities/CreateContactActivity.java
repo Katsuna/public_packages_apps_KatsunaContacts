@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,7 +28,9 @@ public class CreateContactActivity extends AppCompatActivity {
 
     private ImageView mPhoto;
     private EditText mName;
+    private TextInputLayout mSurnameLayout;
     private EditText mSurname;
+    private TextInputLayout mTelephoneLayout;
     private EditText mTelephone;
     private Bitmap mBitmap;
 
@@ -42,7 +45,9 @@ public class CreateContactActivity extends AppCompatActivity {
     private void initControls() {
         mPhoto = (ImageView) findViewById(R.id.photo);
         mName = (EditText) findViewById(R.id.name);
+        mSurnameLayout = (TextInputLayout) findViewById(R.id.surnameLayout);
         mSurname = (EditText) findViewById(R.id.surname);
+        mTelephoneLayout = (TextInputLayout) findViewById(R.id.telephoneLayout);
         mTelephone = (EditText) findViewById(R.id.telephone);
 
         mPhoto.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +65,7 @@ public class CreateContactActivity extends AppCompatActivity {
                         mName.setError(getResources().getString(R.string.name_validation));
                     } else {
                         mName.setError(null);
-                        mSurname.setVisibility(View.VISIBLE);
+                        mSurnameLayout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 }
@@ -76,7 +81,7 @@ public class CreateContactActivity extends AppCompatActivity {
                         mSurname.setError(getResources().getString(R.string.surname_validation));
                     } else {
                         mSurname.setError(null);
-                        mTelephone.setVisibility(View.VISIBLE);
+                        mTelephoneLayout.setVisibility(View.VISIBLE);
                         return false;
                     }
                 }
