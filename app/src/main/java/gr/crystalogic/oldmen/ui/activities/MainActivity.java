@@ -8,13 +8,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private DrawerLayout drawerLayout;
 
     private Contact mSelectedContact;
 
@@ -47,19 +54,85 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initControls();
         initToolbar();
+        setupDrawerLayout();
         setupFab();
-        mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
 
         loadContacts();
     }
 
-    private void initToolbar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        setTitle(getString(R.string.app_name));
-        mToolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+    private void initControls() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
+
+    private void initToolbar() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent e) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, e);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupDrawerLayout() {
+        NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
+        view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                drawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()) {
+                    case R.id.drawer_settings:
+                        break;
+                    case R.id.drawer_help:
+                        break;
+                    case R.id.drawer_info:
+                        break;
+                }
+
+                return true;
+            }
+        });
+    }
+
 
     private void setupFab() {
         FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
