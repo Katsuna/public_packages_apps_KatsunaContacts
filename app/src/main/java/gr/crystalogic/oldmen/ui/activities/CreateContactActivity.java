@@ -101,6 +101,10 @@ public class CreateContactActivity extends AppCompatActivity {
                         ContactDao contactDao = new ContactDao(CreateContactActivity.this);
                         contactDao.addContact(c);
 
+                        Intent intent = new Intent();
+                        intent.putExtra("contactId", c.getId());
+                        setResult(RESULT_OK, intent);
+
                         finish();
                     }
                 }

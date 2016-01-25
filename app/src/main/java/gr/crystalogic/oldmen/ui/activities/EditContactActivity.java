@@ -123,6 +123,10 @@ public class EditContactActivity extends AppCompatActivity {
 
                 ContactDao contactDao = new ContactDao(EditContactActivity.this);
                 contactDao.updateContact(mContact);
+
+                Intent intent = new Intent();
+                intent.putExtra("contactId", mContact.getId());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });

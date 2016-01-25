@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
+    private static final int REQUEST_CODE_EDIT_CONTACT = 3;
 
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -48,11 +49,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         setupFab();
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         loadContacts();
     }
 
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
             }
         });
     }
@@ -159,6 +156,21 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_EDIT_CONTACT) {
+            if(resultCode == RESULT_OK){
+                String contactId = data.getStringExtra("contactId");
+                loadContacts();
+                int position = mAdapter.getPositionByContactId(contactId);
+                if (position != -1) {
+                    selectContact(position);
+                }
+            }
+        }
+    }
+
+    @Override
     public void selectContact(int position) {
         mAdapter.selectContactAtPosition(position);
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 130);
@@ -168,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     public void editContact(String contactId) {
         Intent i = new Intent(this, EditContactActivity.class);
         i.putExtra("contactId", contactId);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
     }
 
     @Override

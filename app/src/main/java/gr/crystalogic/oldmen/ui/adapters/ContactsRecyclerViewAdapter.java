@@ -80,4 +80,15 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         mSelectedContactPosition = position;
         notifyItemChanged(position);
     }
+
+    public int getPositionByContactId(String contactId) {
+        int position = -1;
+        for (int i = 0; i < mModels.size(); i++) {
+            if (mModels.get(i).getContact().getId().equals(contactId)) {
+                position = i;
+                break;
+            }
+        }
+        return position;
+    }
 }

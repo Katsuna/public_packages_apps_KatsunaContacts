@@ -1,7 +1,9 @@
 package gr.crystalogic.oldmen.dao;
 
 import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -268,7 +270,21 @@ public class ContactDao implements IContactDao {
         }
 
         try {
-            cr.applyBatch(ContactsContract.AUTHORITY, ops);
+            ContentProviderResult[] res = cr.applyBatch(ContactsContract.AUTHORITY, ops);
+
+            // get generated contactId from rawContactId
+            long rawContactId = ContentUris.parseId(res[0].uri);
+            String[] projection = new String[]{ContactsContract.RawContacts.CONTACT_ID};
+            String selection = ContactsContract.RawContacts._ID + "=?";
+            String[] selectionArgs = new String[]{String.valueOf(rawContactId)};
+
+            Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, selectionArgs, null);
+
+            if (c != null && c.moveToFirst()) {
+                String contactId = c.getString(c.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
+                contact.setId(String.valueOf(contactId));
+                c.close();
+            }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
