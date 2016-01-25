@@ -32,6 +32,7 @@ public class EditContactActivity extends AppCompatActivity {
     private EditText[] mTelephones;
     private EditText mName;
     private EditText mSurname;
+    private EditText mTelephone1;
     private EditText mEmail;
     private EditText mAddress;
     private ImageView mPhoto;
@@ -51,7 +52,7 @@ public class EditContactActivity extends AppCompatActivity {
     private void initControls() {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
-        EditText mTelephone1 = (EditText) findViewById(R.id.telephone1);
+        mTelephone1 = (EditText) findViewById(R.id.telephone1);
         EditText mTelephone2 = (EditText) findViewById(R.id.telephone2);
         EditText mTelephone3 = (EditText) findViewById(R.id.telephone3);
         mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
@@ -115,21 +116,40 @@ public class EditContactActivity extends AppCompatActivity {
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContact.setName(getNameForUpdate());
-                mContact.setPhones(getPhonesForUpdate());
-                mContact.setEmail(getEmailForUpdate());
-                mContact.setAddress(getAddressForUpdate());
-                mContact.setPhoto(mBitmap);
-
-                ContactDao contactDao = new ContactDao(EditContactActivity.this);
-                contactDao.updateContact(mContact);
-
-                Intent intent = new Intent();
-                intent.putExtra("contactId", mContact.getId());
-                setResult(RESULT_OK, intent);
-                finish();
+                updateContact();
             }
         });
+    }
+
+    private void updateContact() {
+        if (inputIsValid()) {
+            mContact.setName(getNameForUpdate());
+            mContact.setPhones(getPhonesForUpdate());
+            mContact.setEmail(getEmailForUpdate());
+            mContact.setAddress(getAddressForUpdate());
+            mContact.setPhoto(mBitmap);
+
+            ContactDao contactDao = new ContactDao(EditContactActivity.this);
+            contactDao.updateContact(mContact);
+
+            Intent intent = new Intent();
+            intent.putExtra("contactId", mContact.getId());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    }
+
+    private boolean inputIsValid() {
+        boolean output = true;
+        if (mName.getText().length() == 0) {
+            mName.setError(getResources().getString(R.string.name_validation));
+            output = false;
+        }
+        if (mTelephone1.getText().length() == 0) {
+            mTelephone1.setError(getResources().getString(R.string.number_validation));
+            output = false;
+        }
+        return output;
     }
 
     private Name getNameForUpdate() {
