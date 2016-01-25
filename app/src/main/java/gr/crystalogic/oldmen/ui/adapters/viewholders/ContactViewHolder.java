@@ -33,7 +33,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
-        mContentView = (TextView) view.findViewById(R.id.content);
+        mContentView = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
     }

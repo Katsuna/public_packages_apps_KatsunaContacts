@@ -19,8 +19,8 @@ import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
-    private final TextView mContentView;
-    private final ImageButton mEditButton;
+    private final TextView mContactName;
+    private final Button mEditButton;
     private final Button mCallButton;
     private final Button mMessageButton;
     private final ImageView mPhoto;
@@ -29,16 +29,16 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
         super(view);
         mView = view;
-        mContentView = (TextView) view.findViewById(R.id.content);
+        mContactName = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
-        mEditButton = (ImageButton) view.findViewById(R.id.edit_button);
+        mEditButton = (Button) view.findViewById(R.id.edit_button);
         mCallButton = (Button) view.findViewById(R.id.call_button);
         mMessageButton = (Button) view.findViewById(R.id.message_button);
         mListener = listener;
     }
 
     public void bind(final Contact contact) {
-        mContentView.setText(contact.getDisplayName());
+        mContactName.setText(contact.getDisplayName());
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
