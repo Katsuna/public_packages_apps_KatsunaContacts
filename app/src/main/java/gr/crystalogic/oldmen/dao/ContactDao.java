@@ -70,6 +70,8 @@ public class ContactDao implements IContactDao {
                 contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
                 int starred = cursor.getInt(starredIndex);
                 contact.setStarred(starred == 1);
+                Uri photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contact.getId()));
+                contact.setPhotoUri(photoUri);
                 contacts.add(contact);
             } while (cursor.moveToNext());
 

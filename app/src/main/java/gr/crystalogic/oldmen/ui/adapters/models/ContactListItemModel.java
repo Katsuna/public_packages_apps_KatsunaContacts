@@ -26,10 +26,4 @@ public class ContactListItemModel {
 
     public ContactListItemModel() {}
 
-    public ContactListItemModel(ContactListItemModel model) {
-        setSeparator(model.getSeparator());
-        if (model.getContact() != null) {
-            contact = new Contact(model.getContact());
-        }
-    }
 }

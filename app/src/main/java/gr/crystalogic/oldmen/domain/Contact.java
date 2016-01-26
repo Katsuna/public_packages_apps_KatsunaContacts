@@ -1,6 +1,7 @@
 package gr.crystalogic.oldmen.domain;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -17,11 +18,11 @@ public class Contact implements Comparable<Contact>, Serializable {
     private List<Phone> phones;
     private Email email;
     private Address address;
-    private boolean photoChecked;
     private Bitmap photo;
     private int timesContacted;
     private long lastTimeContacted;
     private boolean starred;
+    private Uri photoUri;
 
     public Contact() {
     }
@@ -39,6 +40,7 @@ public class Contact implements Comparable<Contact>, Serializable {
         timesContacted = contact.getTimesContacted();
         lastTimeContacted = contact.getLastTimeContacted();
         starred = contact.isStarred();
+        photoUri = contact.getPhotoUri();
     }
 
     @Override
@@ -65,14 +67,6 @@ public class Contact implements Comparable<Contact>, Serializable {
     @Override
     public int compareTo(@NonNull Contact another) {
         return displayName.compareTo(another.displayName);
-    }
-
-    public boolean isPhotoChecked() {
-        return photoChecked;
-    }
-
-    public void setPhotoChecked(boolean photoChecked) {
-        this.photoChecked = photoChecked;
     }
 
     public Bitmap getPhoto() {
@@ -145,5 +139,13 @@ public class Contact implements Comparable<Contact>, Serializable {
             output = phones.get(index);
         }
         return output;
+    }
+
+    public Uri getPhotoUri() {
+        return photoUri;
+    }
+
+    public void setPhotoUri(Uri photoUri) {
+        this.photoUri = photoUri;
     }
 }

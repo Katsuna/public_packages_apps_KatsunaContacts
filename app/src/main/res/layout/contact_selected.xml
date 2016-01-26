@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,21 +10,23 @@
         android:layout_height="2dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/indigo_blue" />
+        android:background="@color/pink" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/ic_person_grey_50px"
-            android:scaleType="fitCenter" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            app:riv_corner_radius="50dp"
+            app:riv_mutate_background="true"
+            app:riv_oval="false"
+            app:riv_tile_mode="repeat" />
 
         <Button
             android:id="@+id/edit_button"
@@ -32,7 +35,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="18dp"
+            android:layout_margin="10dp"
             android:background="@drawable/edit_button"
             android:gravity="end" />
 
@@ -40,10 +43,10 @@
             android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/text_margin_top_bottom"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="@dimen/text_margin_top_bottom"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/photo"
             android:layout_toLeftOf="@id/edit_button"
             android:layout_toRightOf="@id/photo"
@@ -51,7 +54,7 @@
             android:gravity="center"
             android:maxLines="5"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="25sp" />
+            android:textSize="24sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -83,6 +86,6 @@
         android:layout_height="2dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/indigo_blue" />
+        android:background="@color/pink" />
 
 </LinearLayout>

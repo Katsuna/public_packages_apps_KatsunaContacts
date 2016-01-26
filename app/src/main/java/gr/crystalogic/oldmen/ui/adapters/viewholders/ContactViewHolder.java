@@ -1,8 +1,5 @@
 package gr.crystalogic.oldmen.ui.adapters.viewholders;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,13 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.dao.ContactDao;
-import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactInteractionListener;
-import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
@@ -42,6 +38,13 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         initialize();
 
         final Contact contact = model.getContact();
+
+        //load photo
+        Picasso.with(mView.getContext())
+                .load(contact.getPhotoUri())
+                .fit()
+                .into(mPhoto);
+
         mContentView.setText(contact.getDisplayName());
 
         switch (model.getSeparator()) {
@@ -64,50 +67,11 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 mListener.selectContact(position);
             }
         });
-
-        new ImageLoader(mView.getContext()).execute(contact);
     }
 
     private void initialize() {
         mSeparatorView.setVisibility(View.GONE);
         mSeparatorImage.setVisibility(View.GONE);
-    }
-
-    private class ImageLoader extends AsyncTask<Contact, Void, Bitmap> {
-
-        private final Context context;
-
-        public ImageLoader(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Contact... params) {
-            Contact contact = params[0];
-
-            Bitmap output = null;
-            if (contact.isPhotoChecked()) {
-                output = contact.getPhoto();
-            } else {
-                IContactDao contactDao = new ContactDao(context);
-                Bitmap image = contactDao.getImage(contact.getId(), false);
-
-                if (image != null) {
-                    int drawable = R.drawable.shape_circle;
-                    output = ImageHelper.getMaskedBitmap(context.getResources(), image, drawable);
-                    //cache for reuse
-                    contact.setPhoto(output);
-                }
-                contact.setPhotoChecked(true);
-            }
-
-            return output;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            mPhoto.setImageBitmap(result);
-        }
     }
 
 }
