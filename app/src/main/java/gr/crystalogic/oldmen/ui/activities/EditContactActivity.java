@@ -163,23 +163,28 @@ public class EditContactActivity extends AppCompatActivity {
         List<Phone> phones = new ArrayList<>();
 
         for (int i = 0; i < mTelephones.length; i++) {
+            Phone phone = null;
             if (mContact.getPhone(i) == null) {
                 if (!TextUtils.isEmpty(mTelephones[i].getText())) {
-                    Phone phone = new Phone(mTelephones[i].getText().toString());
+                    phone = new Phone(mTelephones[i].getText().toString());
                     phone.setDataAction(DataAction.CREATE);
                     phones.add(phone);
                 }
             } else {
-                Phone phone = mContact.getPhone(i);
+                phone = mContact.getPhone(i);
                 if (TextUtils.isEmpty(mTelephones[i].getText())) {
                     phone.setDataAction(DataAction.DELETE);
-                    phones.add(phone);
                 } else {
                     phone.setNumber(mTelephones[i].getText().toString());
                     phone.setDataAction(DataAction.UPDATE);
-                    phones.add(phone);
                 }
             }
+
+            //1st phone is always primary
+            if (i == 0) {
+                phone.setPrimary(true);
+            }
+            phones.add(phone);
         }
 
         return phones;
