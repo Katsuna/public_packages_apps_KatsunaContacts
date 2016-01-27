@@ -1,11 +1,13 @@
 package gr.crystalogic.oldmen.ui.activities;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -22,6 +24,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             if (resultCode == RESULT_OK) {
                 String contactId = data.getStringExtra("contactId");
                 loadContacts();
+
+                //invalidate cached photo
+                Uri photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contactId));
+                Picasso.with(this).invalidate(photoUri);
+
                 int position = mAdapter.getPositionByContactId(contactId);
                 if (position != -1) {
                     selectContact(position);

@@ -1,7 +1,9 @@
 package gr.crystalogic.oldmen.domain;
 
+import android.content.ContentUris;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -142,10 +144,9 @@ public class Contact implements Comparable<Contact>, Serializable {
     }
 
     public Uri getPhotoUri() {
+        if (photoUri == null) {
+            photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(id));
+        }
         return photoUri;
-    }
-
-    public void setPhotoUri(Uri photoUri) {
-        this.photoUri = photoUri;
     }
 }
