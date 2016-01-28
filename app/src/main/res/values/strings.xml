@@ -11,8 +11,7 @@
     <string name="address">address</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
-    <string name="name_validation">Name is required</string>
-    <string name="surname_validation">Surname is required</string>
+    <string name="name_validation">Name or Surname is required</string>
     <string name="number_validation">Telephone is required</string>
 
     <string name="settings">Settings</string>

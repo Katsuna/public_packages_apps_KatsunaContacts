@@ -61,13 +61,8 @@ public class CreateContactActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    if (mName.getText().length() == 0) {
-                        mName.setError(getResources().getString(R.string.name_validation));
-                    } else {
-                        mName.setError(null);
                         mSurnameLayout.setVisibility(View.VISIBLE);
                         return false;
-                    }
                 }
                 return true;
             }
@@ -77,8 +72,8 @@ public class CreateContactActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    if (mSurname.getText().length() == 0) {
-                        mSurname.setError(getResources().getString(R.string.surname_validation));
+                    if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
+                        mSurname.setError(getResources().getString(R.string.name_validation));
                     } else {
                         mSurname.setError(null);
                         mTelephoneLayout.setVisibility(View.VISIBLE);
@@ -120,12 +115,8 @@ public class CreateContactActivity extends AppCompatActivity {
 
     private boolean inputIsValid() {
         boolean output = true;
-        if (mName.getText().length() == 0) {
+        if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
             mName.setError(getResources().getString(R.string.name_validation));
-            output = false;
-        }
-        if (mSurname.getText().length() == 0) {
-            mSurname.setError(getResources().getString(R.string.surname_validation));
             output = false;
         }
         if (mTelephone.getText().length() == 0) {

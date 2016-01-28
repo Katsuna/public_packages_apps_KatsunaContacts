@@ -141,7 +141,7 @@ public class EditContactActivity extends AppCompatActivity {
 
     private boolean inputIsValid() {
         boolean output = true;
-        if (mName.getText().length() == 0) {
+        if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
             mName.setError(getResources().getString(R.string.name_validation));
             output = false;
         }
