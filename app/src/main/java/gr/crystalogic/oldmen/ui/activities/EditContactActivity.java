@@ -180,11 +180,14 @@ public class EditContactActivity extends AppCompatActivity {
                 }
             }
 
-            //1st phone is always primary
-            if (i == 0) {
-                phone.setPrimary(true);
+            //add only if phone is set
+            if (phone != null) {
+                //1st phone is always primary
+                if (i == 0) {
+                    phone.setPrimary(true);
+                }
+                phones.add(phone);
             }
-            phones.add(phone);
         }
 
         return phones;
