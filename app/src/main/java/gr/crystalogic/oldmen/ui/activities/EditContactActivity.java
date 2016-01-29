@@ -1,17 +1,22 @@
 package gr.crystalogic.oldmen.ui.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
+import com.makeramen.roundedimageview.RoundedDrawable;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +34,15 @@ import gr.crystalogic.oldmen.utils.ImageHelper;
 public class EditContactActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int SELECT_FILE = 2;
+
     private EditText[] mTelephones;
     private EditText mName;
     private EditText mSurname;
     private EditText mTelephone1;
     private EditText mEmail;
     private EditText mAddress;
-    private ImageView mPhoto;
-    private Bitmap mBitmap;
+    private RoundedImageView mPhoto;
     private Contact mContact;
 
     @Override
@@ -59,11 +65,11 @@ public class EditContactActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mAddress = (EditText) findViewById(R.id.address);
 
-        mPhoto = (ImageView) findViewById(R.id.photo);
+        mPhoto = (RoundedImageView) findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                selectImage();
             }
         });
     }
@@ -127,7 +133,10 @@ public class EditContactActivity extends AppCompatActivity {
             mContact.setPhones(getPhonesForUpdate());
             mContact.setEmail(getEmailForUpdate());
             mContact.setAddress(getAddressForUpdate());
-            mContact.setPhoto(mBitmap);
+            if (mPhoto.getDrawable() != null) {
+                Bitmap bitmap = ((RoundedDrawable)mPhoto.getDrawable()).getSourceBitmap();
+                mContact.setPhoto(bitmap);
+            }
 
             ContactDao contactDao = new ContactDao(EditContactActivity.this);
             contactDao.updateContact(mContact);
@@ -237,6 +246,28 @@ public class EditContactActivity extends AppCompatActivity {
         return address;
     }
 
+    private void selectImage() {
+        final CharSequence[] items = {getString(R.string.take_photo),
+                getString(R.string.choose_from_gallery), getString(R.string.cancel)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_photo);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals(getString(R.string.take_photo))) {
+                    dispatchTakePictureIntent();
+                } else if (items[item].equals(getString(R.string.choose_from_gallery))) {
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, getString(R.string.select_file)), SELECT_FILE);
+                } else if (items[item].equals(getString(R.string.cancel))) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -247,13 +278,17 @@ public class EditContactActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap bitmap = (Bitmap) extras.get("data");
-            Bitmap centeredBitmap = ImageHelper.centerCrop(bitmap);
-            mBitmap = centeredBitmap;
-            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), centeredBitmap, R.drawable.avatar);
-            mPhoto.setImageBitmap(maskedBitmap);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Bundle extras = data.getExtras();
+                Bitmap bitmap = (Bitmap) extras.get("data");
+                Bitmap centeredBitmap = ImageHelper.centerCrop(bitmap);
+                mPhoto.setImageBitmap(centeredBitmap);
+            } else if (requestCode == SELECT_FILE) {
+                Uri selectedImageUri = data.getData();
+
+                Picasso.with(this).load(selectedImageUri).fit().centerCrop().into(mPhoto);
+            }
         }
     }
 
