@@ -1,16 +1,12 @@
 package gr.crystalogic.oldmen.ui.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -29,12 +25,8 @@ import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
 import gr.crystalogic.oldmen.utils.DataAction;
-import gr.crystalogic.oldmen.utils.ImageHelper;
 
-public class EditContactActivity extends AppCompatActivity {
-
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int SELECT_FILE = 2;
+public class EditContactActivity extends PhotoActivity {
 
     private EditText[] mTelephones;
     private EditText mName;
@@ -89,10 +81,7 @@ public class EditContactActivity extends AppCompatActivity {
         loadAddress();
 
         if (mContact.getPhoto() != null) {
-
-            Bitmap maskedBitmap = ImageHelper.getMaskedBitmap(getResources(), mContact.getPhoto(), R.drawable.avatar);
-
-            mPhoto.setImageBitmap(maskedBitmap);
+            mPhoto.setImageBitmap(mContact.getPhoto());
         }
     }
 
@@ -134,7 +123,7 @@ public class EditContactActivity extends AppCompatActivity {
             mContact.setEmail(getEmailForUpdate());
             mContact.setAddress(getAddressForUpdate());
             if (mPhoto.getDrawable() != null) {
-                Bitmap bitmap = ((RoundedDrawable)mPhoto.getDrawable()).getSourceBitmap();
+                Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
                 mContact.setPhoto(bitmap);
             }
 
@@ -246,50 +235,14 @@ public class EditContactActivity extends AppCompatActivity {
         return address;
     }
 
-    private void selectImage() {
-        final CharSequence[] items = {getString(R.string.take_photo),
-                getString(R.string.choose_from_gallery), getString(R.string.cancel)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_photo);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals(getString(R.string.take_photo))) {
-                    dispatchTakePictureIntent();
-                } else if (items[item].equals(getString(R.string.choose_from_gallery))) {
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, getString(R.string.select_file)), SELECT_FILE);
-                } else if (items[item].equals(getString(R.string.cancel))) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+    @Override
+    void loadPhoto(Uri uri) {
+        Picasso.with(this).load(uri).fit().centerCrop().into(mPhoto);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                Bundle extras = data.getExtras();
-                Bitmap bitmap = (Bitmap) extras.get("data");
-                Bitmap centeredBitmap = ImageHelper.centerCrop(bitmap);
-                mPhoto.setImageBitmap(centeredBitmap);
-            } else if (requestCode == SELECT_FILE) {
-                Uri selectedImageUri = data.getData();
-
-                Picasso.with(this).load(selectedImageUri).fit().centerCrop().into(mPhoto);
-            }
-        }
+    void removePhoto() {
+        mPhoto.setImageDrawable(null);
+        mContact.setPhoto(null);
     }
-
 }

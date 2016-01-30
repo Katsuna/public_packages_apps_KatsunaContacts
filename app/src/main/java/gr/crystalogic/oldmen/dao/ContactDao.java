@@ -407,14 +407,14 @@ public class ContactDao implements IContactDao {
             }
         }
 
-        //delete photo and insert
-        if (contact.getPhoto() != null) {
-            where = ContactsContract.CommonDataKinds.Email.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
-            params = new String[]{String.valueOf(rawContactId), ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE};
-            ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-                    .withSelection(where, params)
-                    .build());
+        //delete photo always and insert if new
+        where = ContactsContract.CommonDataKinds.Email.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ? ";
+        params = new String[]{String.valueOf(rawContactId), ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE};
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                .withSelection(where, params)
+                .build());
 
+        if (contact.getPhoto() != null) {
             byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());
 
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
