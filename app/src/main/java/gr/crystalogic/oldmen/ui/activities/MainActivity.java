@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
+    private SearchView mSearchView;
 
     private Contact mSelectedContact;
 
@@ -99,11 +100,10 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
                 return false;
             }
         });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 mAdapter.animateTo(getDeepCopy(mModels));
@@ -198,6 +198,21 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
 
     private void setupFab() {
+        FloatingActionButton searchFab = (FloatingActionButton) findViewById(R.id.search_fab);
+        searchFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.indigo_blue)));
+
+        searchFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSearchView.isIconified()) {
+                    mSearchView.setIconified(false);
+                } else {
+                    mSearchView.setIconified(true);
+                }
+            }
+        });
+
+
         FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
 
