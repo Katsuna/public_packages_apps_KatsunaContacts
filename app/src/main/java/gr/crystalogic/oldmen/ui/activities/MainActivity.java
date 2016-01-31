@@ -1,7 +1,9 @@
 package gr.crystalogic.oldmen.ui.activities;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -19,11 +21,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -47,9 +54,11 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
 
+    private List<ContactListItemModel> mModels;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
+    private TextView mNoResultsView;
 
     private Contact mSelectedContact;
 
@@ -69,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private void initControls() {
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNoResultsView = (TextView) findViewById(R.id.no_results);
     }
 
     private void initToolbar() {
@@ -79,6 +89,55 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search(newText);
+                return false;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mAdapter.animateTo(getDeepCopy(mModels));
+                showNoResultsView();
+                return false;
+            }
+        });
+
+
+        return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            search(query);
         }
     }
 
@@ -160,9 +219,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
         //get contacts from device
         IContactDao dao = new ContactDao(this);
-        Log.e(TAG, "-1-");
         List<Contact> contactList = dao.getContacts();
-        Log.e(TAG, "-2-");
 
         //create some contacts for demo - test
         //TODO remove this before production
@@ -209,13 +266,10 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             contactList = customList;
         }
 
-        List<ContactListItemModel> models = ContactArranger.getContactsProcessed(contactList);
-        Log.e(TAG, "-3-");
-
-        mAdapter = new ContactsRecyclerViewAdapter(models, this);
-        Log.e(TAG, "-4-");
-
+        mModels = ContactArranger.getContactsProcessed(contactList);
+        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this);
         mRecyclerView.setAdapter(mAdapter);
+        showNoResultsView();
     }
 
     @Override
@@ -295,4 +349,48 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         return phones.get(0).getNumber();
     }
 
+    private List<ContactListItemModel> filter(List<ContactListItemModel> models, String query) {
+        query = query.toLowerCase();
+
+        final List<ContactListItemModel> filteredModelList = new ArrayList<>();
+        for (ContactListItemModel model : models) {
+            final String text = model.getContact().getDisplayName().toLowerCase();
+            if (text.contains(query)) {
+                //exclude premium contacts
+                if (!model.isPremium()) {
+                    filteredModelList.add(model);
+                }
+            }
+        }
+        return filteredModelList;
+    }
+
+    private void search(String query) {
+        if (TextUtils.isEmpty(query)) {
+            mAdapter.animateTo(getDeepCopy(mModels));
+        } else {
+            final List<ContactListItemModel> filteredModelList = filter(mModels, query);
+            mAdapter.animateTo(getDeepCopy(filteredModelList));
+            mRecyclerView.scrollToPosition(0);
+        }
+        showNoResultsView();
+    }
+
+    private void showNoResultsView() {
+        if (mAdapter.getItemCount() > 0) {
+            mNoResultsView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            mNoResultsView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    private List<ContactListItemModel> getDeepCopy(List<ContactListItemModel> contactListItemModels) {
+        List<ContactListItemModel> output = new ArrayList<>();
+        for (ContactListItemModel model : contactListItemModels) {
+            output.add(new ContactListItemModel(model));
+        }
+        return output;
+    }
 }

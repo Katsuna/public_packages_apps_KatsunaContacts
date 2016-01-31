@@ -7,6 +7,18 @@ public class ContactListItemModel {
 
     private Contact contact;
     private Separator separator = Separator.NONE;
+    private boolean premium;
+
+    public ContactListItemModel() {
+    }
+
+    public ContactListItemModel(ContactListItemModel model) {
+        setSeparator(model.getSeparator());
+        setPremium(model.isPremium());
+        if (model.getContact() != null) {
+            contact = new Contact(model.getContact());
+        }
+    }
 
     public Contact getContact() {
         return contact;
@@ -24,6 +36,11 @@ public class ContactListItemModel {
         this.separator = separator;
     }
 
-    public ContactListItemModel() {}
+    public boolean isPremium() {
+        return premium;
+    }
 
+    public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
 }

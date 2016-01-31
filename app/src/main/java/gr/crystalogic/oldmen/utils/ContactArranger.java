@@ -96,6 +96,7 @@ public class ContactArranger {
         {
             ContactListItemModel model = new ContactListItemModel();
             model.setContact(entry.getValue());
+            model.setPremium(true);
             if (!firstItemSet) {
                 model.setSeparator(Separator.STARRED);
                 firstItemSet = true;
