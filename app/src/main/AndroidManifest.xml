@@ -60,10 +60,20 @@
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="gr.crystalogic.oldmen.ui.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.SelectContactsActivity"
+            android:label="@string/title_activity_select_contacts"
+            android:parentActivityName=".ui.activities.SettingsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="gr.crystalogic.oldmen.ui.activities.SettingsActivity" />
         </activity>
     </application>
 

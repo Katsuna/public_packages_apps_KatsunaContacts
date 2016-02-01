@@ -11,7 +11,7 @@ import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 
 public class ContactArranger {
 
-    private static List<ContactListItemModel> sortContactsBySurname(List<Contact> contacts) {
+    public static List<ContactListItemModel> sortContactsBySurname(List<Contact> contacts) {
         Collections.sort(contacts);
 
         List<ContactListItemModel> output = new ArrayList<>();
