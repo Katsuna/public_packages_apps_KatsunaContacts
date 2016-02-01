@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_settings:
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
                     case R.id.drawer_help:
                         break;

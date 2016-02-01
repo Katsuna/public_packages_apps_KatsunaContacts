@@ -5,4 +5,5 @@
     <dimen name="edit_contact_margin">5dp</dimen>
     <dimen name="text_margin_top_bottom">5dp</dimen>
     <dimen name="text_margin_left_right">14dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
