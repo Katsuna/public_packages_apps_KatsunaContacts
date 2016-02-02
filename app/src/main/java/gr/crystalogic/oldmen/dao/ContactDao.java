@@ -429,5 +429,23 @@ public class ContactDao implements IContactDao {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+     }
+
+    @Override
+    public void deleteContact(Contact contact) {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+        String where = ContactsContract.RawContacts.CONTACT_ID + " = ? ";
+        String[] params = new String[]{contact.getId()};
+
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                .withSelection(where, params)
+                .build());
+
+        try {
+            cr.applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 }

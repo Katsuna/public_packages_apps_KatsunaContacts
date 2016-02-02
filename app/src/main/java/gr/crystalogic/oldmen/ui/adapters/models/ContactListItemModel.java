@@ -8,6 +8,7 @@ public class ContactListItemModel {
     private Contact contact;
     private Separator separator = Separator.NONE;
     private boolean premium;
+    private boolean selected;
 
     public ContactListItemModel() {
     }
@@ -15,6 +16,7 @@ public class ContactListItemModel {
     public ContactListItemModel(ContactListItemModel model) {
         setSeparator(model.getSeparator());
         setPremium(model.isPremium());
+        setSelected(model.isSelected());
         if (model.getContact() != null) {
             contact = new Contact(model.getContact());
         }
@@ -42,5 +44,13 @@ public class ContactListItemModel {
 
     public void setPremium(boolean premium) {
         this.premium = premium;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

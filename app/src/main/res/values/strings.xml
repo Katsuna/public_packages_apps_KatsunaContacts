@@ -36,4 +36,10 @@
     <string name="export_contacts">Export contacts</string>
     <string name="title_activity_select_contacts">Delete contacts</string>
 
+    <string name="delete_contacts_approval">Are you sure you want to delete the selected contacts?</string>
+    <string name="no_contacts_selected">No contacts selected.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="contacts_deleted">Deletion succeeded.</string>
+
 </resources>

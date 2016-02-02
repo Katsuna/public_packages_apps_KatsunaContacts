@@ -24,4 +24,6 @@ public interface IContactDao {
 
     void updateContact(Contact contact);
 
+    void deleteContact(Contact contact);
+
 }

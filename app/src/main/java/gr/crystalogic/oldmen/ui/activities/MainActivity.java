@@ -72,8 +72,14 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         initToolbar();
         setupDrawerLayout();
         setupFab();
+    }
 
-        loadContacts();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isChanged()) {
+            loadContacts();
+        }
     }
 
     private void initControls() {
@@ -184,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_settings:
+                        markChanged();
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
                     case R.id.drawer_help:
@@ -197,6 +204,13 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         });
     }
 
+    private boolean isChanged() {
+        return mModels == null;
+    }
+
+    private void markChanged() {
+        mModels = null;
+    }
 
     private void setupFab() {
         FloatingActionButton searchFab = (FloatingActionButton) findViewById(R.id.search_fab);
