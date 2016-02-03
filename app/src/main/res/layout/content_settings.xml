@@ -5,10 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="gr.crystalogic.oldmen.ui.activities.SettingsActivity"
     tools:showIn="@layout/activity_settings">
@@ -17,6 +13,9 @@
         android:id="@+id/deleteContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/delete_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -26,6 +25,9 @@
         android:id="@+id/importContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/import_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -35,22 +37,35 @@
         android:id="@+id/exportContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/export_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/grey"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/contacts_display" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/contacts_display"
+        android:textStyle="bold" />
 
     <RadioGroup
         android:id="@+id/display_sort_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="horizontal">
 
         <RadioButton
@@ -67,65 +82,41 @@
             android:text="@string/name_first" />
     </RadioGroup>
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/contacts_filter" />
-
-
-    <HorizontalScrollView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="1px"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/grey"/>
 
-        <RadioGroup
-            android:id="@+id/contacts_filter"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="@string/contacts_filter"
+            android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/contacts_filter_all_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contacts_filter_all" />
+        <Spinner
+            android:id="@+id/spinner_contacts_filters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:entries="@array/contacts_filter_array"
+            android:prompt="@string/contacts_filter_prompt"/>
 
-            <RadioButton
-                android:id="@+id/contacts_filter_sim_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="@string/contacts_filter_sim" />
+    </LinearLayout>
 
-            <RadioButton
-                android:id="@+id/contacts_filter_phone_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contacts_filter_phone" />
-
-            <RadioButton
-                android:id="@+id/contacts_filter_google_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="@string/contacts_filter_google" />
-
-            <RadioButton
-                android:id="@+id/contacts_filter_skype_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contacts_filter_skype" />
-
-            <RadioButton
-                android:id="@+id/contacts_filter_viber_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="@string/contacts_filter_viber" />
-        </RadioGroup>
-
-    </HorizontalScrollView>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/grey"/>
 
 </LinearLayout>

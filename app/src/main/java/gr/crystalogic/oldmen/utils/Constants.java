@@ -15,4 +15,11 @@ public final class Constants {
     public static final String DISPLAY_SORT_SURNAME = "1";
     public static final String DISPLAY_SORT_NAME = "2";
 
+    public static final String CONTACTS_FILTER_KEY = "contacts_filter";
+    public static final String CONTACTS_FILTER_ALL = "0";
+    public static final String CONTACTS_FILTER_SIM = "1";
+    public static final String CONTACTS_FILTER_PHONE = "2";
+    public static final String CONTACTS_FILTER_GOOGLE = "3";
+    public static final String CONTACTS_FILTER_SKYPE = "4";
+    public static final String CONTACTS_FILTER_VIBER = "5";
 }
