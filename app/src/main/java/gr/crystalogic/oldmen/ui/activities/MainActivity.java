@@ -6,15 +6,12 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -32,6 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
     private SearchView mSearchView;
+    private FloatingActionsMenu mFabMenu;
 
     private Contact mSelectedContact;
 
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNoResultsView = (TextView) findViewById(R.id.no_results);
+        mFabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
     }
 
     private void initToolbar() {
@@ -214,23 +215,17 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     private void setupFab() {
         FloatingActionButton searchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        searchFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.indigo_blue)));
-
         searchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSearchView.isIconified()) {
-                    mSearchView.setIconified(false);
-                } else {
-                    mSearchView.setIconified(true);
-                }
+                //focus on search
+                mFabMenu.collapse();
+                mSearchView.setIconified(false);
             }
         });
 
 
         FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.pink)));
-
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
