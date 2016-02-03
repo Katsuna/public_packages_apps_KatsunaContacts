@@ -67,4 +67,65 @@
             android:text="@string/name_first" />
     </RadioGroup>
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/contacts_filter" />
+
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/contacts_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/contacts_filter_all_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contacts_filter_all" />
+
+            <RadioButton
+                android:id="@+id/contacts_filter_sim_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/contacts_filter_sim" />
+
+            <RadioButton
+                android:id="@+id/contacts_filter_phone_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contacts_filter_phone" />
+
+            <RadioButton
+                android:id="@+id/contacts_filter_google_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/contacts_filter_google" />
+
+            <RadioButton
+                android:id="@+id/contacts_filter_skype_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contacts_filter_skype" />
+
+            <RadioButton
+                android:id="@+id/contacts_filter_viber_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/contacts_filter_viber" />
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+
 </LinearLayout>

@@ -43,7 +43,16 @@
     <string name="contacts_deleted">Deletion succeeded.</string>
     <string name="search">Search</string>
     <string name="add_new_contact">Add contact</string>
-    <string name="contacts_display">Contacts display</string>
+    <string name="contacts_display">Contacts display format</string>
     <string name="surname_first">Surname first</string>
     <string name="name_first">Name first</string>
+
+    <string name="contacts_filter">Contacts to display</string>
+    <string name="contacts_filter_all">All</string>
+    <string name="contacts_filter_sim">Sim</string>
+    <string name="contacts_filter_phone">Phone</string>
+    <string name="contacts_filter_google">Google</string>
+    <string name="contacts_filter_skype">Skype</string>
+    <string name="contacts_filter_viber">Viber</string>
+
 </resources>
