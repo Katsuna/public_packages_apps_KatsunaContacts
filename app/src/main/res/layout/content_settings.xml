@@ -40,4 +40,31 @@
         android:textColor="@color/white"
         android:textSize="18sp" />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/contacts_display" />
+
+    <RadioGroup
+        android:id="@+id/display_sort_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/surname_first_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/surname_first" />
+
+        <RadioButton
+            android:id="@+id/name_first_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/name_first" />
+    </RadioGroup>
+
 </LinearLayout>

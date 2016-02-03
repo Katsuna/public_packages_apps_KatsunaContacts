@@ -43,5 +43,7 @@
     <string name="contacts_deleted">Deletion succeeded.</string>
     <string name="search">Search</string>
     <string name="add_new_contact">Add contact</string>
-
+    <string name="contacts_display">Contacts display</string>
+    <string name="surname_first">Surname first</string>
+    <string name="name_first">Name first</string>
 </resources>

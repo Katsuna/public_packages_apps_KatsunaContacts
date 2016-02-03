@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 
@@ -21,6 +22,7 @@ import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Email;
 import gr.crystalogic.oldmen.domain.Name;
 import gr.crystalogic.oldmen.domain.Phone;
+import gr.crystalogic.oldmen.utils.Constants;
 import gr.crystalogic.oldmen.utils.ImageHelper;
 
 public class ContactDao implements IContactDao {
@@ -28,9 +30,11 @@ public class ContactDao implements IContactDao {
     private static final String TAG = "ContactDao";
 
     private final ContentResolver cr;
+    private final Context mContext;
 
     public ContactDao(Context context) {
         cr = context.getContentResolver();
+        mContext = context;
     }
 
     @Override
@@ -50,13 +54,21 @@ public class ContactDao implements IContactDao {
         String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
         String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
+        String displaySort = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+
         Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
 
             int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
-            int displayNameAltIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE);
+
+            int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE);
+            if (displaySort.equals(Constants.DISPLAY_SORT_NAME)) {
+                displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+            }
+
             int timesContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED);
             int lastTimeContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED);
             int starredIndex = cursor.getColumnIndex(ContactsContract.Contacts.STARRED);
@@ -65,7 +77,7 @@ public class ContactDao implements IContactDao {
                 Contact contact = new Contact();
 
                 contact.setId(cursor.getString(idIndex));
-                contact.setDisplayName(cursor.getString(displayNameAltIndex));
+                contact.setDisplayName(cursor.getString(displayNameIndex));
                 contact.setTimesContacted(cursor.getInt(timesContactedIndex));
                 contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
                 int starred = cursor.getInt(starredIndex);
@@ -429,7 +441,7 @@ public class ContactDao implements IContactDao {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-     }
+    }
 
     @Override
     public void deleteContact(Contact contact) {
