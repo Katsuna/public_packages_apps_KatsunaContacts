@@ -79,7 +79,9 @@ public class EditContactActivity extends PhotoActivity {
         loadPhoneNumbers();
         loadEmail();
         loadAddress();
-        loadPhoto(mContact.getPhotoUri());
+        if (mContact.getPhoto() != null) {
+            loadPhoto(mContact.getPhotoUri());
+        }
     }
 
     private void loadPhoneNumbers() {

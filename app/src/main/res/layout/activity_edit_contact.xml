@@ -21,10 +21,8 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:background="@drawable/avatar"
                 android:contentDescription="@string/contact_photo"
-                app:riv_border_color="@color/pink"
-                app:riv_border_width="2dp"
+                android:background="@drawable/circle_blue"
                 app:riv_mutate_background="true"
                 app:riv_oval="true"
                 app:riv_tile_mode="repeat" />
