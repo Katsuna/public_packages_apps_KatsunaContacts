@@ -44,4 +44,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="SelectContactStyle">
+        <item name="android:background">@color/greyXLight</item>
+    </style>
+
 </resources>
