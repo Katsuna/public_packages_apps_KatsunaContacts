@@ -13,9 +13,9 @@
         android:id="@+id/deleteContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/delete_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -25,9 +25,9 @@
         android:id="@+id/importContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/import_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -37,9 +37,9 @@
         android:id="@+id/exportContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/export_contacts"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -48,9 +48,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/grey"/>
+        android:layout_marginTop="16dp"
+        android:background="@color/grey" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -79,44 +79,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/name_first" />
     </RadioGroup>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/grey"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contacts_filter"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/spinner_contacts_filters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:entries="@array/contacts_filter_array"
-            android:prompt="@string/contacts_filter_prompt"/>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/grey"/>
+        android:background="@color/grey" />
 
 </LinearLayout>

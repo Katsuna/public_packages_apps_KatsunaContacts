@@ -8,21 +8,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import gr.crystalogic.oldmen.R;
 import gr.crystalogic.oldmen.utils.Constants;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private RadioGroup mRadioGroup;
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
-    private Spinner mContactFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.display_sort_group);
+        RadioGroup mRadioGroup = (RadioGroup) findViewById(R.id.display_sort_group);
         mSurnameFirstRadioButton = (RadioButton) findViewById(R.id.surname_first_button);
         mNameFirstRadioButton = (RadioButton) findViewById(R.id.name_first_button);
 
@@ -60,7 +56,6 @@ public class SettingsActivity extends AppCompatActivity {
                 // This will get the radiobutton that has changed in its check state
                 RadioButton checkedRadioButton = (RadioButton) rGroup.findViewById(checkedId);
 
-                boolean isChecked = checkedRadioButton.isChecked();
                 if (mSurnameFirstRadioButton == checkedRadioButton) {
 
                     setSetting(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
@@ -81,49 +76,13 @@ public class SettingsActivity extends AppCompatActivity {
                 mNameFirstRadioButton.setChecked(true);
                 break;
         }
-
-        mContactFilter = (Spinner) findViewById(R.id.spinner_contacts_filters);
-        mContactFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                handleSpinnerSelection(selectedItem);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        String contactFilter = readSetting(Constants.CONTACTS_FILTER_KEY, Constants.CONTACTS_FILTER_ALL);
-        mContactFilter.setSelection(Integer.parseInt(contactFilter));
-    }
-
-    private void handleSpinnerSelection(String selection) {
-        String valueToSet = null;
-        if (selection.equals(getResources().getString(R.string.contacts_filter_all))) {
-            valueToSet = Constants.CONTACTS_FILTER_ALL;
-        } else if (selection.equals(getResources().getString(R.string.contacts_filter_sim))) {
-            valueToSet = Constants.CONTACTS_FILTER_SIM;
-        } else if (selection.equals(getResources().getString(R.string.contacts_filter_phone))) {
-            valueToSet = Constants.CONTACTS_FILTER_PHONE;
-        } else if (selection.equals(getResources().getString(R.string.contacts_filter_google))) {
-            valueToSet = Constants.CONTACTS_FILTER_GOOGLE;
-        } else if (selection.equals(getResources().getString(R.string.contacts_filter_skype))) {
-            valueToSet = Constants.CONTACTS_FILTER_SKYPE;
-        } else if (selection.equals(getResources().getString(R.string.contacts_filter_viber))) {
-            valueToSet = Constants.CONTACTS_FILTER_VIBER;
-        }
-
-        setSetting(Constants.CONTACTS_FILTER_KEY, valueToSet);
     }
 
     private void setSetting(String key, String value) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     private String readSetting(String key, String defaultValue) {

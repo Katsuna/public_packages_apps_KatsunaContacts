@@ -47,23 +47,4 @@
     <string name="surname_first">Surname first</string>
     <string name="name_first">Name first</string>
 
-    <string name="contacts_filter">Contacts to display</string>
-    <string name="contacts_filter_all">All</string>
-    <string name="contacts_filter_sim">Sim</string>
-    <string name="contacts_filter_phone">Phone</string>
-    <string name="contacts_filter_google">Google</string>
-    <string name="contacts_filter_skype">Skype</string>
-    <string name="contacts_filter_viber">Viber</string>
-
-    <string name="contacts_filter_prompt">Contacts to display</string>
-
-    <string-array name="contacts_filter_array">
-        <item>@string/contacts_filter_all</item>
-        <item>@string/contacts_filter_sim</item>
-        <item>@string/contacts_filter_phone</item>
-        <item>@string/contacts_filter_google</item>
-        <item>@string/contacts_filter_skype</item>
-        <item>@string/contacts_filter_viber</item>
-    </string-array>
-
 </resources>
