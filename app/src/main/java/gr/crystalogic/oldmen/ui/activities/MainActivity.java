@@ -45,6 +45,7 @@ import gr.crystalogic.oldmen.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.oldmen.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.oldmen.ui.listeners.IContactInteractionListener;
 import gr.crystalogic.oldmen.utils.ContactArranger;
+import gr.crystalogic.oldmen.utils.Separator;
 
 public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
 
@@ -383,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             if (text.contains(query)) {
                 //exclude premium contacts
                 if (!model.isPremium()) {
+                    model.setSeparator(Separator.NONE);
                     filteredModelList.add(model);
                 }
             }
@@ -394,8 +396,8 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         if (TextUtils.isEmpty(query)) {
             mAdapter.animateTo(getDeepCopy(mModels));
         } else {
-            final List<ContactListItemModel> filteredModelList = filter(mModels, query);
-            mAdapter.animateTo(getDeepCopy(filteredModelList));
+            final List<ContactListItemModel> filteredModelList = filter(getDeepCopy(mModels), query);
+            mAdapter.animateTo(filteredModelList);
             mRecyclerView.scrollToPosition(0);
         }
         showNoResultsView();
