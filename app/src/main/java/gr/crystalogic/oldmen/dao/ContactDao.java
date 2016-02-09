@@ -92,6 +92,68 @@ public class ContactDao implements IContactDao {
     }
 
     @Override
+    public List<Contact> getContactsForExport() {
+        List<Contact> contacts = new ArrayList<>();
+
+        Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
+        String[] projection = {
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.LOOKUP_KEY,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+                ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE,
+                ContactsContract.Contacts.TIMES_CONTACTED,
+                ContactsContract.Contacts.LAST_TIME_CONTACTED,
+                ContactsContract.Contacts.STARRED
+        };
+        String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
+        String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
+
+        String displaySort = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+
+        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+
+            int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE);
+            if (displaySort.equals(Constants.DISPLAY_SORT_NAME)) {
+                displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+            }
+
+            int timesContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED);
+            int lastTimeContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED);
+            int starredIndex = cursor.getColumnIndex(ContactsContract.Contacts.STARRED);
+
+            do {
+                Contact contact = new Contact();
+
+                contact.setId(cursor.getString(idIndex));
+                contact.setDisplayName(cursor.getString(displayNameIndex));
+                contact.setTimesContacted(cursor.getInt(timesContactedIndex));
+                contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
+                int starred = cursor.getInt(starredIndex);
+                contact.setStarred(starred == 1);
+
+
+                //name
+                contact.setName(getName(contact.getId()));
+                contact.setPhones(getPhones(contact.getId()));
+
+
+                contacts.add(contact);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return contacts;
+    }
+
+
+    @Override
     public Contact getContact(String contactId) {
         Contact contact = new Contact();
 

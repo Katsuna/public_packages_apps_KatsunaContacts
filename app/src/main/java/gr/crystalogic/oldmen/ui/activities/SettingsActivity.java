@@ -7,13 +7,22 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ezvcard.VCard;
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.utils.Constants;
+import gr.crystalogic.oldmen.utils.VCardHelper;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -46,6 +55,25 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(SettingsActivity.this, SelectContactsActivity.class));
             }
         });
+
+        Button exportButton = (Button) findViewById(R.id.exportContacts);
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IContactDao dao = new ContactDao(SettingsActivity.this);
+                List<Contact> contactList = dao.getContactsForExport();
+
+                List<VCard> vCards = new ArrayList<>();
+                for (Contact contact : contactList) {
+                    VCard vCard = VCardHelper.getVCard(contact);
+                    Log.e("tt", vCard.toString());
+
+                    vCards.add(vCard);
+                }
+            }
+
+        });
+
 
         RadioGroup mRadioGroup = (RadioGroup) findViewById(R.id.display_sort_group);
         mSurnameFirstRadioButton = (RadioButton) findViewById(R.id.surname_first_button);

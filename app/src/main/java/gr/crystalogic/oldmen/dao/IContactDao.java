@@ -12,6 +12,8 @@ public interface IContactDao {
 
     List<Contact> getContacts();
 
+    List<Contact> getContactsForExport();
+
     Contact getContact(String contactId);
 
     List<Phone> getPhones(String contactId);
