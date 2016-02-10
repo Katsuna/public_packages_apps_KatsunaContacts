@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -27,6 +28,7 @@ import gr.crystalogic.oldmen.dao.IContactDao;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.utils.Constants;
 import gr.crystalogic.oldmen.utils.DirectoryChooserDialog;
+import gr.crystalogic.oldmen.utils.FileChooserDialog;
 import gr.crystalogic.oldmen.utils.VCardHelper;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -59,6 +61,25 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, SelectContactsActivity.class));
             }
+        });
+
+        Button importButton = (Button) findViewById(R.id.importContacts);
+        importButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileChooserDialog fileChooserDialog =
+                        new FileChooserDialog(SettingsActivity.this,
+                                new FileChooserDialog.ChosenFileListener() {
+                                    @Override
+                                    public void onChosenFile(String chosenFile) {
+                                        importContacts(chosenFile);
+
+                                    }
+                                });
+
+                fileChooserDialog.choose();
+            }
+
         });
 
         Button exportButton = (Button) findViewById(R.id.exportContacts);
@@ -110,6 +131,10 @@ public class SettingsActivity extends AppCompatActivity {
                 mNameFirstRadioButton.setChecked(true);
                 break;
         }
+    }
+
+    private void importContacts(String file) {
+        Log.e("TAG", file);
     }
 
     private void exportContacts(String directory) {
