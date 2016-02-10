@@ -68,8 +68,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_search_white_24dp"
                 app:fab_colorNormal="@color/indigo_blue"
-                app:fab_colorPressed="@color/indigo_blue_dark"
-                app:fab_title="@string/search" />
+                app:fab_colorPressed="@color/indigo_blue_dark" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/new_contact_fab"
@@ -78,8 +77,7 @@
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_person_add_white_24dp"
                 app:fab_colorNormal="@color/pink"
-                app:fab_colorPressed="@color/pink_dark"
-                app:fab_title="@string/add_new_contact" />
+                app:fab_colorPressed="@color/pink_dark" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
