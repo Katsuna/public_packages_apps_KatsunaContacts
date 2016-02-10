@@ -139,9 +139,22 @@ public class ContactDao implements IContactDao {
 
 
                 //name
-                contact.setName(getName(contact.getId()));
-                contact.setPhones(getPhones(contact.getId()));
+                String contactId = contact.getId();
+                contact.setName(getName(contactId));
+                contact.setPhones(getPhones(contactId));
+                contact.setPhoto(getImage(contactId, true));
 
+                //use default email or first found
+                List<Email> emails = getEmails(contactId);
+                if (emails.size() > 0) {
+                    contact.setEmail(emails.get(0));
+                }
+
+                //use default address or first found
+                List<Address> addresses = getAddresses(contactId);
+                if (addresses.size() > 0) {
+                    contact.setAddress(addresses.get(0));
+                }
 
                 contacts.add(contact);
             } while (cursor.moveToNext());

@@ -1,6 +1,13 @@
 package gr.crystalogic.oldmen.utils;
 
+import android.graphics.Bitmap;
+
+import java.io.ByteArrayOutputStream;
+
 import ezvcard.VCard;
+import ezvcard.parameter.ImageType;
+import ezvcard.property.Address;
+import ezvcard.property.Photo;
 import ezvcard.property.Revision;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Uid;
@@ -20,42 +27,31 @@ public class VCardHelper {
             vcard.addTelephoneNumber(phone.getNumber());
         }
 
+        if (contact.getEmail() != null) {
+            vcard.addEmail(contact.getEmail().getAddress());
+        }
 
-/*        Address adr = new Address();
-        adr.s
-        adr.setStreetAddress("123 Wall St.");
-        adr.setLocality("New York");
-        adr.setRegion("NY");
-        adr.setPostalCode("12345");
-        adr.setCountry("USA");
-        adr.setLabel("123 Wall St.\nNew York, NY 12345\nUSA");
-        adr.addType(AddressType.WORK);
-        vcard.addAddress(adr);
+        if (contact.getAddress() != null) {
+            Address adr = new Address();
+            adr.setLabel(contact.getAddress().getFormattedAddress());
+            vcard.addAddress(adr);
+        }
 
-        adr = new Address();
-        adr.setStreetAddress("123 Main St.");
-        adr.setLocality("Albany");
-        adr.setRegion("NY");
-        adr.setPostalCode("54321");
-        adr.setCountry("USA");
-        adr.setLabel("123 Main St.\nAlbany, NY 54321\nUSA");
-        adr.addType(AddressType.HOME);
-        vcard.addAddress(adr);
-
-
-
-        vcard.addEmail("johndoe@hotmail.com", EmailType.HOME);
-        vcard.addEmail("doe.john@acme.com", EmailType.WORK);
-
-        File file = new File("portrait.jpg");
-        Photo photo = new Photo(file, ImageType.JPEG);
-        vcard.addPhoto(photo);
-*/
+        if (contact.getPhoto() != null) {
+            Photo photo = new Photo(getPhotoBytes(contact.getPhoto()), ImageType.JPEG);
+            vcard.addPhoto(photo);
+        }
 
         vcard.setUid(Uid.random());
 
         vcard.setRevision(Revision.now());
 
         return vcard;
+    }
+
+    private static byte[] getPhotoBytes(Bitmap photo) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 }

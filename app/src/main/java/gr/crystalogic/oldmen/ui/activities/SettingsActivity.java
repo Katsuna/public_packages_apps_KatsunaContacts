@@ -7,11 +7,11 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,21 +113,18 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void exportContacts(String directory) {
-
-        Log.e("TAG", "directory: " + directory);
-
         IContactDao dao = new ContactDao(this);
         List<Contact> contactList = dao.getContactsForExport();
 
         List<VCard> vCards = new ArrayList<>();
         for (Contact contact : contactList) {
             VCard vCard = VCardHelper.getVCard(contact);
-            Log.e("tt", vCard.toString());
             vCards.add(vCard);
         }
 
         try {
-            File file = new File(directory + File.separator + "contacts.vcf");
+            String fullPath = directory + File.separator + "contacts.vcf";
+            File file = new File(fullPath);
             VCardWriter writer = new VCardWriter(file, VCardVersion.V4_0);
             try {
                 for (VCard vcard : vCards) {
@@ -136,6 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
             } finally {
                 writer.close();
             }
+            Toast.makeText(this, String.format(getResources().getString(R.string.contacts_export_completed), fullPath), Toast.LENGTH_LONG).show();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

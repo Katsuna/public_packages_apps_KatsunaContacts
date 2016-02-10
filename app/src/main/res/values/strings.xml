@@ -51,5 +51,6 @@
     <string name="new_folder">New folder</string>
     <string name="new_folder_name">New folder name</string>
     <string name="folder_creation_failed">Failed to create \'%1$s\' folder.</string>
+    <string name="contacts_export_completed">Exported contacts saved at file: \'%1$s\'.</string>
 
 </resources>
