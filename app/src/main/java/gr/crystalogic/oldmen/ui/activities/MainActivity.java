@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         //create some contacts for demo - test
         //TODO remove this before production
         if (contactList.size() == 0) {
-            List<Contact> customList = new ArrayList<>();
+/*            List<Contact> customList = new ArrayList<>();
             customList.add(new Contact("Thomas", "Walker", "07985677911"));
             customList.add(new Contact("Gianna", "Wizz", "07985677912"));
             customList.add(new Contact("John", "Wocker", "07985677913"));
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
                 dao.addContact(c);
             }
 
-            contactList = customList;
+            contactList = customList;*/
         }
 
         mModels = ContactArranger.getContactsProcessed(contactList);

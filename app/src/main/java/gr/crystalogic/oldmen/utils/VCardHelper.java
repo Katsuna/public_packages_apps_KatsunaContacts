@@ -1,8 +1,11 @@
 package gr.crystalogic.oldmen.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import ezvcard.VCard;
 import ezvcard.parameter.ImageType;
@@ -10,6 +13,7 @@ import ezvcard.property.Address;
 import ezvcard.property.Photo;
 import ezvcard.property.Revision;
 import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 import ezvcard.property.Uid;
 import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.domain.Phone;
@@ -47,6 +51,28 @@ public class VCardHelper {
         vcard.setRevision(Revision.now());
 
         return vcard;
+    }
+
+    public static Contact getContact(VCard vCard) {
+        Contact contact = new Contact();
+        String name = vCard.getStructuredName().getGiven() + " " + vCard.getStructuredName().getFamily();
+        contact.setDisplayName(name.trim());
+
+        List<Phone> phoneList = new ArrayList<>();
+        for (Telephone telephone : vCard.getTelephoneNumbers()) {
+            Phone phone = new Phone();
+            phone.setNumber(telephone.getText());
+            phoneList.add(phone);
+        }
+        contact.setPhones(phoneList);
+
+        for (Photo photo : vCard.getPhotos()) {
+            byte[] bitmapdata = photo.getData();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+            contact.setPhoto(bitmap);
+        }
+
+        return contact;
     }
 
     private static byte[] getPhotoBytes(Bitmap photo) {

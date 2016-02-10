@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
@@ -133,8 +134,28 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void importContacts(String file) {
-        Log.e("TAG", file);
+    private void importContacts(String fullPath) {
+        Log.e("TAG", fullPath);
+
+        try {
+            File file = new File(fullPath);
+            List<VCard> vCards = Ezvcard.parse(file).all();
+
+            if (vCards.size() == 0) {
+                Toast.makeText(this, R.string.invalid_vcf, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            IContactDao dao = new ContactDao(this);
+            for (VCard vCard : vCards) {
+                Contact contact = VCardHelper.getContact(vCard);
+                dao.addContact(contact);
+            }
+            Toast.makeText(this, R.string.import_completed, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("TAG", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     private void exportContacts(String directory) {
@@ -150,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             String fullPath = directory + File.separator + "contacts.vcf";
             File file = new File(fullPath);
-            VCardWriter writer = new VCardWriter(file, VCardVersion.V4_0);
+            VCardWriter writer = new VCardWriter(file, VCardVersion.V3_0);
             try {
                 for (VCard vcard : vCards) {
                     writer.write(vcard);

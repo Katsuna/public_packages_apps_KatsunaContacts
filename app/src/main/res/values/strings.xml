@@ -53,4 +53,7 @@
     <string name="folder_creation_failed">Failed to create \'%1$s\' folder.</string>
     <string name="contacts_export_completed">Exported contacts saved at file: \'%1$s\'.</string>
 
+    <string name="invalid_vcf">Invalid vcf.</string>
+    <string name="import_completed">Import completed.</string>
+
 </resources>
