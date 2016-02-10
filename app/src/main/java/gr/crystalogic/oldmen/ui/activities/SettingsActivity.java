@@ -13,9 +13,21 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import ezvcard.VCard;
+import ezvcard.VCardVersion;
+import ezvcard.io.text.VCardWriter;
 import gr.crystalogic.oldmen.R;
+import gr.crystalogic.oldmen.dao.ContactDao;
+import gr.crystalogic.oldmen.dao.IContactDao;
+import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.utils.Constants;
 import gr.crystalogic.oldmen.utils.DirectoryChooserDialog;
+import gr.crystalogic.oldmen.utils.VCardHelper;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -104,16 +116,29 @@ public class SettingsActivity extends AppCompatActivity {
 
         Log.e("TAG", "directory: " + directory);
 
-/*        IContactDao dao = new ContactDao(SettingsActivity.this);
+        IContactDao dao = new ContactDao(this);
         List<Contact> contactList = dao.getContactsForExport();
 
         List<VCard> vCards = new ArrayList<>();
         for (Contact contact : contactList) {
             VCard vCard = VCardHelper.getVCard(contact);
             Log.e("tt", vCard.toString());
-
             vCards.add(vCard);
-        }*/
+        }
+
+        try {
+            File file = new File(directory + File.separator + "contacts.vcf");
+            VCardWriter writer = new VCardWriter(file, VCardVersion.V4_0);
+            try {
+                for (VCard vcard : vCards) {
+                    writer.write(vcard);
+                }
+            } finally {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void setSetting(String key, String value) {
