@@ -13,16 +13,9 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ezvcard.VCard;
 import gr.crystalogic.oldmen.R;
-import gr.crystalogic.oldmen.dao.ContactDao;
-import gr.crystalogic.oldmen.dao.IContactDao;
-import gr.crystalogic.oldmen.domain.Contact;
 import gr.crystalogic.oldmen.utils.Constants;
-import gr.crystalogic.oldmen.utils.VCardHelper;
+import gr.crystalogic.oldmen.utils.DirectoryChooserDialog;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -60,16 +53,17 @@ public class SettingsActivity extends AppCompatActivity {
         exportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IContactDao dao = new ContactDao(SettingsActivity.this);
-                List<Contact> contactList = dao.getContactsForExport();
+                DirectoryChooserDialog directoryChooserDialog =
+                        new DirectoryChooserDialog(SettingsActivity.this,
+                                new DirectoryChooserDialog.ChosenDirectoryListener() {
+                                    @Override
+                                    public void onChosenDir(String chosenDir) {
+                                        exportContacts(chosenDir);
+                                    }
+                                });
 
-                List<VCard> vCards = new ArrayList<>();
-                for (Contact contact : contactList) {
-                    VCard vCard = VCardHelper.getVCard(contact);
-                    Log.e("tt", vCard.toString());
-
-                    vCards.add(vCard);
-                }
+                directoryChooserDialog.setNewFolderEnabled(true);
+                directoryChooserDialog.chooseDirectory();
             }
 
         });
@@ -104,6 +98,22 @@ public class SettingsActivity extends AppCompatActivity {
                 mNameFirstRadioButton.setChecked(true);
                 break;
         }
+    }
+
+    private void exportContacts(String directory) {
+
+        Log.e("TAG", "directory: " + directory);
+
+/*        IContactDao dao = new ContactDao(SettingsActivity.this);
+        List<Contact> contactList = dao.getContactsForExport();
+
+        List<VCard> vCards = new ArrayList<>();
+        for (Contact contact : contactList) {
+            VCard vCard = VCardHelper.getVCard(contact);
+            Log.e("tt", vCard.toString());
+
+            vCards.add(vCard);
+        }*/
     }
 
     private void setSetting(String key, String value) {

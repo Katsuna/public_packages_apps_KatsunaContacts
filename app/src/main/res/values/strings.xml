@@ -47,4 +47,9 @@
     <string name="surname_first">Surname first</string>
     <string name="name_first">Name first</string>
 
+    <string name="ok">OK</string>
+    <string name="new_folder">New folder</string>
+    <string name="new_folder_name">New folder name</string>
+    <string name="folder_creation_failed">Failed to create \'%1$s\' folder.</string>
+
 </resources>
