@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -29,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
     private SearchView mSearchView;
-    private FloatingActionsMenu mFabMenu;
 
     private Contact mSelectedContact;
 
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNoResultsView = (TextView) findViewById(R.id.no_results);
-        mFabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
     }
 
     private void initToolbar() {
@@ -215,17 +212,6 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     }
 
     private void setupFab() {
-        FloatingActionButton searchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        searchFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //focus on search
-                mFabMenu.collapse();
-                mSearchView.setIconified(false);
-            }
-        });
-
-
         FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
         //create some contacts for demo - test
         //TODO remove this before production
-        if (contactList.size() == 0) {
-/*            List<Contact> customList = new ArrayList<>();
+/*        if (contactList.size() == 0) {
+            List<Contact> customList = new ArrayList<>();
             customList.add(new Contact("Thomas", "Walker", "07985677911"));
             customList.add(new Contact("Gianna", "Wizz", "07985677912"));
             customList.add(new Contact("John", "Wocker", "07985677913"));
@@ -289,8 +275,9 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
                 dao.addContact(c);
             }
 
-            contactList = customList;*/
+            contactList = customList;
         }
+    */
 
         mModels = ContactArranger.getContactsProcessed(contactList);
         mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this);
