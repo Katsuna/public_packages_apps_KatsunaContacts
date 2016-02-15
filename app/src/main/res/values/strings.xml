@@ -55,5 +55,7 @@
 
     <string name="invalid_vcf">Invalid vcf.</string>
     <string name="import_completed">Import completed.</string>
+    <string name="importing_contacts">Importing contacts. Please wait...</string>
+    <string name="exporting_contacts">Exporting contacts. Please wait...</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package gr.crystalogic.oldmen.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -15,7 +17,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    private ProgressDialog mProgressDialog;
+
     private void initControls() {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+
         Button deleteButton = (Button) findViewById(R.id.deleteContacts);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,8 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 new FileChooserDialog.ChosenFileListener() {
                                     @Override
                                     public void onChosenFile(String chosenFile) {
-                                        importContacts(chosenFile);
-
+                                        new ImportContactsAsyncTask().execute(chosenFile);
                                     }
                                 });
 
@@ -92,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 new DirectoryChooserDialog.ChosenDirectoryListener() {
                                     @Override
                                     public void onChosenDir(String chosenDir) {
-                                        exportContacts(chosenDir);
+                                        new ExportContactsAsyncTask().execute(chosenDir);
                                     }
                                 });
 
@@ -134,57 +142,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void importContacts(String fullPath) {
-        Log.e("TAG", fullPath);
-
-        try {
-            File file = new File(fullPath);
-            List<VCard> vCards = Ezvcard.parse(file).all();
-
-            if (vCards.size() == 0) {
-                Toast.makeText(this, R.string.invalid_vcf, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            IContactDao dao = new ContactDao(this);
-            for (VCard vCard : vCards) {
-                Contact contact = VCardHelper.getContact(vCard);
-                dao.addContact(contact);
-            }
-            Toast.makeText(this, R.string.import_completed, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e("TAG", e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void exportContacts(String directory) {
-        IContactDao dao = new ContactDao(this);
-        List<Contact> contactList = dao.getContactsForExport();
-
-        List<VCard> vCards = new ArrayList<>();
-        for (Contact contact : contactList) {
-            VCard vCard = VCardHelper.getVCard(contact);
-            vCards.add(vCard);
-        }
-
-        try {
-            String fullPath = directory + File.separator + "contacts.vcf";
-            File file = new File(fullPath);
-            VCardWriter writer = new VCardWriter(file, VCardVersion.V3_0);
-            try {
-                for (VCard vcard : vCards) {
-                    writer.write(vcard);
-                }
-            } finally {
-                writer.close();
-            }
-            Toast.makeText(this, String.format(getResources().getString(R.string.contacts_export_completed), fullPath), Toast.LENGTH_LONG).show();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     private void setSetting(String key, String value) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
         SharedPreferences.Editor editor = settings.edit();
@@ -196,5 +153,100 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         return settings.getString(key, defaultValue);
     }
+
+    private class ExportContactsAsyncTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.setMessage(getResources().getString(R.string.exporting_contacts));
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String directory = params[0];
+
+            String fullPath;
+
+            IContactDao dao = new ContactDao(SettingsActivity.this);
+            List<Contact> contactList = dao.getContactsForExport();
+
+            List<VCard> vCards = new ArrayList<>();
+            for (Contact contact : contactList) {
+                VCard vCard = VCardHelper.getVCard(contact);
+                vCards.add(vCard);
+            }
+
+            try {
+                fullPath = directory + File.separator + "contacts.vcf";
+                File file = new File(fullPath);
+                VCardWriter writer = new VCardWriter(file, VCardVersion.V3_0);
+                try {
+                    for (VCard vcard : vCards) {
+                        writer.write(vcard);
+                    }
+                } finally {
+                    writer.close();
+                }
+
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+
+            return fullPath;
+        }
+
+        @Override
+        protected void onPostExecute(String fullPath) {
+            mProgressDialog.dismiss();
+            Toast.makeText(SettingsActivity.this, String.format(getResources().getString(R.string.contacts_export_completed), fullPath), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class ImportContactsAsyncTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.setMessage(getResources().getString(R.string.importing_contacts));
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String fullPath = params[0];
+            Log.e("TAG", fullPath);
+
+            try {
+                File file = new File(fullPath);
+                List<VCard> vCards = Ezvcard.parse(file).all();
+
+                if (vCards.size() == 0) {
+                    Toast.makeText(SettingsActivity.this, R.string.invalid_vcf, Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+
+                IContactDao dao = new ContactDao(SettingsActivity.this);
+                for (VCard vCard : vCards) {
+                    Contact contact = VCardHelper.getContact(vCard);
+                    dao.addContact(contact);
+                }
+
+            } catch (Exception e) {
+                Log.e("TAG", e.getMessage());
+                throw new RuntimeException(e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mProgressDialog.dismiss();
+            Toast.makeText(SettingsActivity.this, R.string.import_completed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }
