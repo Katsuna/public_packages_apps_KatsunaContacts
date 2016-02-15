@@ -89,6 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:theme="@style/drawer"
         app:menu="@menu/drawer" />
 
 </android.support.v4.widget.DrawerLayout>

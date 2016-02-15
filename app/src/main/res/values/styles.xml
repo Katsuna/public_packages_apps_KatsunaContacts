@@ -10,6 +10,10 @@
         <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
 
+    <style name="drawer">
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="BoldText" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/black</item>
