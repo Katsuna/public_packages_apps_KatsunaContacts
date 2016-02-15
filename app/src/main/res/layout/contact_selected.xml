@@ -8,8 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:paddingTop="5dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
@@ -46,6 +46,7 @@
             android:layout_toLeftOf="@id/edit_button"
             android:layout_toRightOf="@id/photo"
             android:layout_toStartOf="@id/edit_button"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:maxLines="5"
             android:textAppearance="?attr/textAppearanceListItem"

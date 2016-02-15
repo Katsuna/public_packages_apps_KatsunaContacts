@@ -18,9 +18,10 @@
         android:layout_marginRight="5dp"
         android:layout_marginStart="@dimen/text_margin_left_right"
         android:layout_marginTop="@dimen/text_margin_top_bottom"
+        android:fontFamily="sans-serif-medium"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="@color/pink"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/separator_image"
@@ -61,7 +62,8 @@
         android:layout_marginRight="@dimen/text_margin_left_right"
         android:layout_marginStart="@dimen/text_margin_left_right"
         android:layout_marginTop="@dimen/text_margin_top_bottom"
+        android:fontFamily="sans-serif-medium"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>
