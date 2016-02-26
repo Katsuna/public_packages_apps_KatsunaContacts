@@ -1,0 +1,1 @@
+git clone ssh://root@78.47.232.41:/srv/git/contacts.git
