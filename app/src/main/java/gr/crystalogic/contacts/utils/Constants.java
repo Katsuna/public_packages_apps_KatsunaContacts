@@ -22,4 +22,6 @@ public final class Constants {
     public static final String CONTACTS_FILTER_GOOGLE = "3";
     public static final String CONTACTS_FILTER_SKYPE = "4";
     public static final String CONTACTS_FILTER_VIBER = "5";
+
+    public static final String CREATE_CONTACT_ACTION = "gr.crystalogic.contacts.create";
 }

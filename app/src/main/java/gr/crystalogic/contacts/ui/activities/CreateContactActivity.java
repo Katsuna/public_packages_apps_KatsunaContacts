@@ -22,6 +22,7 @@ import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.dao.ContactDao;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Phone;
+import gr.crystalogic.contacts.utils.Constants;
 
 public class CreateContactActivity extends PhotoActivity {
 
@@ -38,6 +39,12 @@ public class CreateContactActivity extends PhotoActivity {
         setContentView(R.layout.activity_create_contact);
 
         initControls();
+
+        Intent incomingIntent = getIntent();
+        if (incomingIntent.getAction() != null &&
+                incomingIntent.getAction().equals(Constants.CREATE_CONTACT_ACTION)) {
+            mTelephone.setText(incomingIntent.getStringExtra("number"));
+        }
     }
 
     private void initControls() {
@@ -104,6 +111,7 @@ public class CreateContactActivity extends PhotoActivity {
 
                         Intent intent = new Intent();
                         intent.putExtra("contactId", c.getId());
+                        intent.putExtra("number", mTelephone.getText());
                         setResult(RESULT_OK, intent);
 
                         finish();
