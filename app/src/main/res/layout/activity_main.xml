@@ -28,7 +28,6 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_list"
-            android:name="gr.crystalogic.oldmen.fragments.ContactsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -54,7 +53,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/activity_vertical_margin"
             android:src="@drawable/ic_person_add_white_24dp"
-            app:layout_behavior="gr.crystalogic.oldmen.ui.behaviors.ScrollingFABBehavior" />
+            app:layout_behavior="gr.crystalogic.contacts.ui.behaviors.ScrollingFABBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 
