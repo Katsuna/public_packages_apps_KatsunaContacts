@@ -1,4 +1,4 @@
-package gr.crystalogic.oldmen;
+package gr.crystalogic.contacts;
 
 import org.junit.Test;
 
