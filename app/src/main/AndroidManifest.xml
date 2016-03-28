@@ -74,8 +74,10 @@
         </activity>
         <activity
             android:name=".ui.activities.SelectContactsActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_select_contacts"
             android:parentActivityName=".ui.activities.SettingsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
