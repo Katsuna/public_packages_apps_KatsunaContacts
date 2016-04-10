@@ -54,4 +54,7 @@
     <string name="importing_contacts">Importing contacts. Please wait…</string>
     <string name="exporting_contacts">Exporting contacts. Please wait…</string>
 
+    <string name="call">call</string>
+    <string name="message">message</string>
+
 </resources>

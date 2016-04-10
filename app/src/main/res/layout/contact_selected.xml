@@ -54,6 +54,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -61,18 +62,39 @@
 
         <Button
             android:id="@+id/call_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/call_button" />
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@color/green4button"
+            android:drawableLeft="@drawable/ic_call_white_36dp"
+            android:drawableStart="@drawable/ic_call_white_36dp"
+            android:padding="5dp"
+            android:text="@string/call"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/message_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/message_button" />
-
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:background="@color/blue4button"
+            android:drawableLeft="@drawable/ic_message_white_36dp"
+            android:drawableStart="@drawable/ic_message_white_36dp"
+            android:padding="5dp"
+            android:text="@string/message"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
 
     </LinearLayout>
 

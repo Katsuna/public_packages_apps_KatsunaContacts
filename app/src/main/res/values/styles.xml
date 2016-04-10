@@ -49,7 +49,7 @@
     </style>
 
     <style name="SelectContactStyle">
-        <item name="android:background">@color/greyXLight</item>
+        <item name="android:background">@color/white</item>
     </style>
 
 </resources>
