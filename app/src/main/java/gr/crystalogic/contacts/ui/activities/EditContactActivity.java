@@ -165,7 +165,6 @@ public class EditContactActivity extends PhotoActivity {
                 if (!TextUtils.isEmpty(mTelephones[i].getText())) {
                     phone = new Phone(mTelephones[i].getText().toString());
                     phone.setDataAction(DataAction.CREATE);
-                    phones.add(phone);
                 }
             } else {
                 phone = mContact.getPhone(i);
