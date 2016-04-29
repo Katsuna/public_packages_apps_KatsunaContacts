@@ -30,11 +30,6 @@ public abstract class PhotoActivity extends AppCompatActivity {
 
     void selectImage() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-            return;
-        }
-
         final CharSequence[] items = {getString(R.string.take_photo),
                 getString(R.string.choose_from_gallery), getString(R.string.remove_photo), getString(R.string.cancel)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -60,6 +55,11 @@ public abstract class PhotoActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+            return;
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -114,7 +114,7 @@ public abstract class PhotoActivity extends AppCompatActivity {
             case REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    selectImage();
+                    dispatchTakePictureIntent();
                 }
                 break;
             default:
