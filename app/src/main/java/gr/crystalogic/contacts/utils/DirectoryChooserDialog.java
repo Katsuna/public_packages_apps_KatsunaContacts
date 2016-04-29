@@ -32,7 +32,7 @@ import gr.crystalogic.contacts.R;
 public class DirectoryChooserDialog {
     private boolean m_isNewFolderEnabled = true;
     private String m_sdcardDirectory = "";
-    private Context m_context;
+    private final Context m_context;
     private TextView m_titleView;
 
     private String m_dir = "";
