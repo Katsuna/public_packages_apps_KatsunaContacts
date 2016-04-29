@@ -1,10 +1,14 @@
 package gr.crystalogic.contacts.ui.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,10 +24,17 @@ public abstract class PhotoActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_FILE = 2;
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 3;
 
     private Uri mUri;
 
     void selectImage() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+            return;
+        }
+
         final CharSequence[] items = {getString(R.string.take_photo),
                 getString(R.string.choose_from_gallery), getString(R.string.remove_photo), getString(R.string.cancel)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -94,6 +105,20 @@ public abstract class PhotoActivity extends AppCompatActivity {
                 Uri uri = data.getData();
                 loadPhoto(uri);
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    selectImage();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
