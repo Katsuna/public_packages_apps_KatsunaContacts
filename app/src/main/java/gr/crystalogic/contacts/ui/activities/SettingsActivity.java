@@ -181,13 +181,10 @@ public class SettingsActivity extends AppCompatActivity {
             try {
                 fullPath = directory + File.separator + "contacts.vcf";
                 File file = new File(fullPath);
-                VCardWriter writer = new VCardWriter(file, VCardVersion.V3_0);
-                try {
+                try (VCardWriter writer = new VCardWriter(file, VCardVersion.V3_0)) {
                     for (VCard vcard : vCards) {
                         writer.write(vcard);
                     }
-                } finally {
-                    writer.close();
                 }
 
             } catch (Exception ex) {
