@@ -166,7 +166,6 @@ public class ContactDao implements IContactDao {
     }
 
 
-    @Override
     public Contact getContact(String contactId) {
         Contact contact = new Contact();
 
@@ -198,7 +197,6 @@ public class ContactDao implements IContactDao {
     }
 
 
-    @Override
     public List<Phone> getPhones(String contactId) {
         List<Phone> phones = new ArrayList<>();
 
@@ -283,8 +281,7 @@ public class ContactDao implements IContactDao {
         return addresses;
     }
 
-    @Override
-    public Name getName(String contactId) {
+    private Name getName(String contactId) {
         Name name = null;
 
         Uri baseUri = ContactsContract.Data.CONTENT_URI;
@@ -312,8 +309,7 @@ public class ContactDao implements IContactDao {
         return name;
     }
 
-    @Override
-    public Bitmap getImage(String contactId, boolean preferHighres) {
+    private Bitmap getImage(String contactId, boolean preferHighres) {
         Bitmap output = null;
 
         Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId);
@@ -377,7 +373,6 @@ public class ContactDao implements IContactDao {
         }
     }
 
-    @Override
     public void updateContact(Contact contact) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
