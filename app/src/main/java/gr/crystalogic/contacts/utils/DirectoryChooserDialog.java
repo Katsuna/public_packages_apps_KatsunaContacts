@@ -146,6 +146,7 @@ public class DirectoryChooserDialog {
         dirsDialog.show();
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     private boolean createSubDir(String newDir) {
         File newDirFile = new File(newDir);
         if (!newDirFile.exists()) {

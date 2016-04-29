@@ -106,6 +106,7 @@ public class EditContactActivity extends PhotoActivity {
 
     private void setupFab() {
         FloatingActionButton mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
+        assert mEditContactFab != null;
         mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
         mEditContactFab.setOnClickListener(new View.OnClickListener() {
             @Override

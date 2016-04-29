@@ -66,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         Button deleteButton = (Button) findViewById(R.id.deleteContacts);
+        assert deleteButton != null;
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         Button importButton = (Button) findViewById(R.id.importContacts);
+        assert importButton != null;
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         Button exportButton = (Button) findViewById(R.id.exportContacts);
+        assert exportButton != null;
         exportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
         mSurnameFirstRadioButton = (RadioButton) findViewById(R.id.surname_first_button);
         mNameFirstRadioButton = (RadioButton) findViewById(R.id.name_first_button);
 
+        assert mRadioGroup != null;
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
                 // This will get the radiobutton that has changed in its check state

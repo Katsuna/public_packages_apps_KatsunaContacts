@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     private void setupDrawerLayout() {
         NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
+        assert view != null;
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     private void setupFab() {
         FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        assert mNewContactFab != null;
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
