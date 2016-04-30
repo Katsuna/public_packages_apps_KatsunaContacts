@@ -50,7 +50,7 @@ public class FileChooserDialog {
         choose(m_sdcardDirectory);
     }
 
-    public void choose(String dir) {
+    private void choose(String dir) {
         File dirFile = new File(dir);
         if (!dirFile.exists() || !dirFile.isDirectory()) {
             dir = m_sdcardDirectory;

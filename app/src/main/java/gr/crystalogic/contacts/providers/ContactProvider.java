@@ -1,4 +1,4 @@
-package gr.crystalogic.contacts.dao;
+package gr.crystalogic.contacts.providers;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -25,19 +25,18 @@ import gr.crystalogic.contacts.domain.Phone;
 import gr.crystalogic.contacts.utils.Constants;
 import gr.crystalogic.contacts.utils.ImageHelper;
 
-public class ContactDao implements IContactDao {
+public class ContactProvider {
 
-    private static final String TAG = "ContactDao";
+    private static final String TAG = "ContactProvider";
 
     private final ContentResolver cr;
     private final Context mContext;
 
-    public ContactDao(Context context) {
+    public ContactProvider(Context context) {
         cr = context.getContentResolver();
         mContext = context;
     }
 
-    @Override
     public List<Contact> getContacts() {
         List<Contact> contacts = new ArrayList<>();
 
@@ -91,7 +90,6 @@ public class ContactDao implements IContactDao {
         return contacts;
     }
 
-    @Override
     public List<Contact> getContactsForExport() {
         List<Contact> contacts = new ArrayList<>();
 
@@ -320,7 +318,6 @@ public class ContactDao implements IContactDao {
         return output;
     }
 
-    @Override
     public void addContact(Contact contact) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         ops.add(ContentProviderOperation.newInsert(
@@ -513,7 +510,6 @@ public class ContactDao implements IContactDao {
         }
     }
 
-    @Override
     public void deleteContact(Contact contact) {
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
@@ -530,4 +526,81 @@ public class ContactDao implements IContactDao {
             Log.e(TAG, e.getMessage());
         }
     }
+
+    public void importContact(Contact contact) {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+        ops.add(ContentProviderOperation.newInsert(
+                ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build());
+
+        ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getDisplayName())
+                .build());
+
+        //process phones
+        for (Phone phone : contact.getPhones()) {
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, phone.getNumber())
+                    .withValue(ContactsContract.CommonDataKinds.Phone.IS_PRIMARY, phone.isPrimary() ? 1 : 0)
+                    .build());
+        }
+
+        //process Email
+        Email email = contact.getEmail();
+        if (email != null) {
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Email.ADDRESS, email.getAddress())
+                    .build());
+        }
+
+        //process address
+        Address address = contact.getAddress();
+        if (address != null) {
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS, address.getFormattedAddress())
+                    .build());
+        }
+
+
+        if (contact.getPhoto() != null) {
+            byte[] photo = ImageHelper.bitmapToByteArray(contact.getPhoto());
+
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+                    .build());
+        }
+
+        try {
+            ContentProviderResult[] res = cr.applyBatch(ContactsContract.AUTHORITY, ops);
+
+            // get generated contactId from rawContactId
+            long rawContactId = ContentUris.parseId(res[0].uri);
+            String[] projection = new String[]{ContactsContract.RawContacts.CONTACT_ID};
+            String selection = ContactsContract.RawContacts._ID + "=?";
+            String[] selectionArgs = new String[]{String.valueOf(rawContactId)};
+
+            Cursor c = cr.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, selectionArgs, null);
+
+            if (c != null && c.moveToFirst()) {
+                String contactId = c.getString(c.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
+                contact.setId(String.valueOf(contactId));
+                c.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
 }

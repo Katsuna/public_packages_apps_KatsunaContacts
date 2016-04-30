@@ -82,7 +82,7 @@ public class DirectoryChooserDialog {
     // input 'dir' directory
     ////////////////////////////////////////////////////////////////////////////////
 
-    public void chooseDirectory(String dir) {
+    private void chooseDirectory(String dir) {
         File dirFile = new File(dir);
         if (!dirFile.exists() || !dirFile.isDirectory()) {
             dir = m_sdcardDirectory;

@@ -7,7 +7,6 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Contact implements Comparable<Contact>, Serializable {
@@ -27,13 +26,6 @@ public class Contact implements Comparable<Contact>, Serializable {
     private Uri photoUri;
 
     public Contact() {
-    }
-
-    //TODO: remove it
-    public Contact(String name, String surname, String primaryTelephone) {
-        displayName = name + " " + surname;
-        phones = new ArrayList<>();
-        phones.add(new Phone(primaryTelephone));
     }
 
     public Contact(Contact contact) {

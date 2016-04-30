@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.dao.ContactDao;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Phone;
 import gr.crystalogic.contacts.utils.Constants;
@@ -106,8 +106,8 @@ public class CreateContactActivity extends PhotoActivity {
                             c.setPhoto(bitmap);
                         }
 
-                        ContactDao contactDao = new ContactDao(CreateContactActivity.this);
-                        contactDao.addContact(c);
+                        ContactProvider contactProvider = new ContactProvider(CreateContactActivity.this);
+                        contactProvider.addContact(c);
 
                         Intent intent = new Intent();
                         intent.putExtra("contactId", c.getId());

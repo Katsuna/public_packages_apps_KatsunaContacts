@@ -25,8 +25,7 @@ import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.dao.ContactDao;
-import gr.crystalogic.contacts.dao.IContactDao;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.utils.Constants;
 import gr.crystalogic.contacts.utils.DirectoryChooserDialog;
@@ -173,7 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             String fullPath;
 
-            IContactDao dao = new ContactDao(SettingsActivity.this);
+            ContactProvider dao = new ContactProvider(SettingsActivity.this);
             List<Contact> contactList = dao.getContactsForExport();
 
             List<VCard> vCards = new ArrayList<>();
@@ -228,10 +227,10 @@ public class SettingsActivity extends AppCompatActivity {
                     return null;
                 }
 
-                IContactDao dao = new ContactDao(SettingsActivity.this);
+                ContactProvider dao = new ContactProvider(SettingsActivity.this);
                 for (VCard vCard : vCards) {
                     Contact contact = VCardHelper.getContact(vCard);
-                    dao.addContact(contact);
+                    dao.importContact(contact);
                 }
 
             } catch (Exception e) {

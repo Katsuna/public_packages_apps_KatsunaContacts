@@ -36,8 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.dao.ContactDao;
-import gr.crystalogic.contacts.dao.IContactDao;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Phone;
 import gr.crystalogic.contacts.ui.adapters.ContactsRecyclerViewAdapter;
@@ -231,55 +230,8 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         }
 
         //get contacts from device
-        IContactDao dao = new ContactDao(this);
+        ContactProvider dao = new ContactProvider(this);
         List<Contact> contactList = dao.getContacts();
-
-        //create some contacts for demo - test
-        //TODO remove this before production
-/*        if (contactList.size() == 0) {
-            List<Contact> customList = new ArrayList<>();
-            customList.add(new Contact("Thomas", "Walker", "07985677911"));
-            customList.add(new Contact("Gianna", "Wizz", "07985677912"));
-            customList.add(new Contact("John", "Wocker", "07985677913"));
-            customList.add(new Contact("Dietrich", "Wonn", "07985677914"));
-            customList.add(new Contact("Johannes", "Wyrting", "07985677915"));
-            customList.add(new Contact("Thomas", "Xalker", "07985677916"));
-            customList.add(new Contact("John", "Xocker", "07985677917"));
-            customList.add(new Contact("Dietrich", "Xonn", "07985677918"));
-            customList.add(new Contact("Johnannes", "Xyrting", "07985677919"));
-            customList.add(new Contact("Gianna", "Yizz", "07985677926"));
-            customList.add(new Contact("John", "Pocker", "07985677916"));
-            customList.add(new Contact("Thomas", "Salker", "07985677911"));
-            customList.add(new Contact("Gianna", "Sizz", "07985677912"));
-            customList.add(new Contact("John", "Socker", "07985677913"));
-            customList.add(new Contact("Dietrich", "Sonn", "07985677914"));
-            customList.add(new Contact("Johannes", "Syrting", "07985677915"));
-            customList.add(new Contact("Thomas", "Talker", "07985677916"));
-            customList.add(new Contact("John", "Tocker", "07985677917"));
-            customList.add(new Contact("Dietrich", "Tonn", "07985677918"));
-            customList.add(new Contact("Johnannes", "Tyrting", "07985677919"));
-            customList.add(new Contact("Gianna", "Tizz", "07985677926"));
-            customList.add(new Contact("John", "Kocker", "07985677916"));
-            customList.add(new Contact("Thomas", "Kalker", "07985677911"));
-            customList.add(new Contact("Gianna", "Kizz", "07985677912"));
-            customList.add(new Contact("John", "Kocker", "07985677913"));
-            customList.add(new Contact("Dietrich", "Lonn", "07985677914"));
-            customList.add(new Contact("Johannes", "Ryrting", "07985677915"));
-            customList.add(new Contact("Thomas", "Ralker", "07985677916"));
-            customList.add(new Contact("John", "Rocker", "07985677917"));
-            customList.add(new Contact("Dietrich", "Ronn", "07985677918"));
-            customList.add(new Contact("Johnannes", "Hyrting", "07985677919"));
-            customList.add(new Contact("Gianna", "Hizz", "07985677926"));
-            customList.add(new Contact("John", "Hocker", "07985677916"));
-
-            for (Contact c : customList) {
-                dao.addContact(c);
-            }
-
-            contactList = customList;
-        }
-    */
-
         mModels = ContactArranger.getContactsProcessed(contactList);
         mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this);
         mRecyclerView.setAdapter(mAdapter);
@@ -359,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     }
 
     private String getContactPhone(Contact contact) {
-        List<Phone> phones = new ContactDao(this).getPhones(contact.getId());
+        List<Phone> phones = new ContactProvider(this).getPhones(contact.getId());
         return phones.get(0).getNumber();
     }
 

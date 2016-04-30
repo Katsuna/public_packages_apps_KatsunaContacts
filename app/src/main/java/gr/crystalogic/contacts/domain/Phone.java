@@ -29,10 +29,6 @@ public class Phone implements Serializable {
         this.number = number;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public void setType(String type) {
         this.type = type;
     }

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.dao.ContactDao;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Address;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Email;
@@ -68,9 +68,9 @@ public class EditContactActivity extends PhotoActivity {
 
     private void loadContact() {
         String contactId = getIntent().getStringExtra("contactId");
-        ContactDao contactDao = new ContactDao(this);
+        ContactProvider contactProvider = new ContactProvider(this);
 
-        mContact = contactDao.getContact(contactId);
+        mContact = contactProvider.getContact(contactId);
 
         //set data on fields
         mName.setText(mContact.getName().getName());
@@ -127,8 +127,8 @@ public class EditContactActivity extends PhotoActivity {
                 mContact.setPhoto(bitmap);
             }
 
-            ContactDao contactDao = new ContactDao(EditContactActivity.this);
-            contactDao.updateContact(mContact);
+            ContactProvider contactProvider = new ContactProvider(EditContactActivity.this);
+            contactProvider.updateContact(mContact);
 
             Intent intent = new Intent();
             intent.putExtra("contactId", mContact.getId());

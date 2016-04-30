@@ -10,6 +10,7 @@ import java.util.List;
 import ezvcard.VCard;
 import ezvcard.parameter.ImageType;
 import ezvcard.property.Address;
+import ezvcard.property.Email;
 import ezvcard.property.Photo;
 import ezvcard.property.Revision;
 import ezvcard.property.StructuredName;
@@ -55,7 +56,13 @@ public class VCardHelper {
 
     public static Contact getContact(VCard vCard) {
         Contact contact = new Contact();
-        String name = vCard.getStructuredName().getGiven() + " " + vCard.getStructuredName().getFamily();
+        String name = "";
+        if (vCard.getStructuredName().getGiven() != null) {
+            name += vCard.getStructuredName().getGiven();
+        }
+        if (vCard.getStructuredName().getFamily() != null) {
+            name += " " + vCard.getStructuredName().getFamily();
+        }
         contact.setDisplayName(name.trim());
 
         List<Phone> phoneList = new ArrayList<>();
@@ -65,6 +72,22 @@ public class VCardHelper {
             phoneList.add(phone);
         }
         contact.setPhones(phoneList);
+
+        List<Address> addresses = vCard.getAddresses();
+        if (!addresses.isEmpty()) {
+            gr.crystalogic.contacts.domain.Address address = new gr.crystalogic.contacts.domain.Address();
+            //we support only one address
+            address.setFormattedAddress(addresses.get(0).getLabel());
+            contact.setAddress(address);
+        }
+
+        List<Email> emails = vCard.getEmails();
+        if (!emails.isEmpty()) {
+            gr.crystalogic.contacts.domain.Email email = new gr.crystalogic.contacts.domain.Email();
+            //we support only one email
+            email.setAddress(emails.get(0).getValue());
+            contact.setEmail(email);
+        }
 
         for (Photo photo : vCard.getPhotos()) {
             byte[] bitmapdata = photo.getData();

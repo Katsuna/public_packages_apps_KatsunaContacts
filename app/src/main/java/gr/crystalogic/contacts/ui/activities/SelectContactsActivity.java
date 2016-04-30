@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.dao.ContactDao;
-import gr.crystalogic.contacts.dao.IContactDao;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.ui.adapters.ContactsSelectionAdapter;
 import gr.crystalogic.contacts.ui.adapters.models.ContactListItemModel;
@@ -56,7 +55,7 @@ public class SelectContactsActivity extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    IContactDao dao = new ContactDao(SelectContactsActivity.this);
+                                    ContactProvider dao = new ContactProvider(SelectContactsActivity.this);
                                     for (Contact contact : selectedContacts) {
                                         dao.deleteContact(contact);
                                         mAdapter.removeItem(contact);
@@ -104,7 +103,7 @@ public class SelectContactsActivity extends AppCompatActivity {
 
     private void loadContacts() {
         //get contacts from device
-        IContactDao dao = new ContactDao(this);
+        ContactProvider dao = new ContactProvider(this);
         List<Contact> contactList = dao.getContacts();
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
