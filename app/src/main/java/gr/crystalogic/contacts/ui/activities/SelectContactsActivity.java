@@ -55,9 +55,9 @@ public class SelectContactsActivity extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    ContactProvider dao = new ContactProvider(SelectContactsActivity.this);
+                                    ContactProvider contactProvider = new ContactProvider(SelectContactsActivity.this);
                                     for (Contact contact : selectedContacts) {
-                                        dao.deleteContact(contact);
+                                        contactProvider.deleteContact(contact);
                                         mAdapter.removeItem(contact);
                                     }
                                     Toast.makeText(SelectContactsActivity.this, R.string.contacts_deleted, Toast.LENGTH_LONG).show();
@@ -103,8 +103,8 @@ public class SelectContactsActivity extends AppCompatActivity {
 
     private void loadContacts() {
         //get contacts from device
-        ContactProvider dao = new ContactProvider(this);
-        List<Contact> contactList = dao.getContacts();
+        ContactProvider contactProvider = new ContactProvider(this);
+        List<Contact> contactList = contactProvider.getContacts();
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
         mAdapter = new ContactsSelectionAdapter(mModels);

@@ -172,8 +172,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             String fullPath;
 
-            ContactProvider dao = new ContactProvider(SettingsActivity.this);
-            List<Contact> contactList = dao.getContactsForExport();
+            ContactProvider contactProvider = new ContactProvider(SettingsActivity.this);
+            List<Contact> contactList = contactProvider.getContactsForExport();
 
             List<VCard> vCards = new ArrayList<>();
             for (Contact contact : contactList) {
@@ -227,10 +227,10 @@ public class SettingsActivity extends AppCompatActivity {
                     return null;
                 }
 
-                ContactProvider dao = new ContactProvider(SettingsActivity.this);
+                ContactProvider contactProvider = new ContactProvider(SettingsActivity.this);
                 for (VCard vCard : vCards) {
                     Contact contact = VCardHelper.getContact(vCard);
-                    dao.importContact(contact);
+                    contactProvider.importContact(contact);
                 }
 
             } catch (Exception e) {

@@ -230,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         }
 
         //get contacts from device
-        ContactProvider dao = new ContactProvider(this);
-        List<Contact> contactList = dao.getContacts();
+        ContactProvider contactProvider = new ContactProvider(this);
+        List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsProcessed(contactList);
         mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this);
         mRecyclerView.setAdapter(mAdapter);
