@@ -1,11 +1,15 @@
 package gr.crystalogic.contacts.ui.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,8 +29,8 @@ import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.utils.Constants;
 import gr.crystalogic.contacts.utils.DirectoryChooserDialog;
 import gr.crystalogic.contacts.utils.FileChooserDialog;
@@ -34,8 +38,14 @@ import gr.crystalogic.contacts.utils.VCardHelper;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final String TAG = "SettingsActivity";
+
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 2;
+
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +64,6 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
-    private ProgressDialog mProgressDialog;
 
     private void initControls() {
 
@@ -78,18 +86,8 @@ public class SettingsActivity extends AppCompatActivity {
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileChooserDialog fileChooserDialog =
-                        new FileChooserDialog(SettingsActivity.this,
-                                new FileChooserDialog.ChosenFileListener() {
-                                    @Override
-                                    public void onChosenFile(String chosenFile) {
-                                        new ImportContactsAsyncTask().execute(chosenFile);
-                                    }
-                                });
-
-                fileChooserDialog.choose();
+                importContacts();
             }
-
         });
 
         Button exportButton = (Button) findViewById(R.id.exportContacts);
@@ -97,19 +95,8 @@ public class SettingsActivity extends AppCompatActivity {
         exportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DirectoryChooserDialog directoryChooserDialog =
-                        new DirectoryChooserDialog(SettingsActivity.this,
-                                new DirectoryChooserDialog.ChosenDirectoryListener() {
-                                    @Override
-                                    public void onChosenDir(String chosenDir) {
-                                        new ExportContactsAsyncTask().execute(chosenDir);
-                                    }
-                                });
-
-                directoryChooserDialog.setNewFolderEnabled(true);
-                directoryChooserDialog.chooseDirectory();
+                exportContacts();
             }
-
         });
 
 
@@ -144,6 +131,64 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private void importContacts() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
+            return;
+        }
+
+        FileChooserDialog fileChooserDialog =
+                new FileChooserDialog(this,
+                        new FileChooserDialog.ChosenFileListener() {
+                            @Override
+                            public void onChosenFile(String chosenFile) {
+                                new ImportContactsAsyncTask().execute(chosenFile);
+                            }
+                        });
+
+        fileChooserDialog.choose();
+    }
+
+    private void exportContacts() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+            return;
+        }
+
+        DirectoryChooserDialog directoryChooserDialog =
+                new DirectoryChooserDialog(SettingsActivity.this,
+                        new DirectoryChooserDialog.ChosenDirectoryListener() {
+                            @Override
+                            public void onChosenDir(String chosenDir) {
+                                new ExportContactsAsyncTask().execute(chosenDir);
+                            }
+                        });
+
+        directoryChooserDialog.setNewFolderEnabled(true);
+        directoryChooserDialog.chooseDirectory();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    importContacts();
+                }
+                break;
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    exportContacts();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
 
     private void setSetting(String key, String value) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
@@ -190,8 +235,9 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
 
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+                throw new RuntimeException(e);
             }
 
             return fullPath;
@@ -204,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private class ImportContactsAsyncTask extends AsyncTask<String, Void, Void> {
+    private class ImportContactsAsyncTask extends AsyncTask<String, Void, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -214,17 +260,15 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
             String fullPath = params[0];
-            Log.e("TAG", fullPath);
 
             try {
                 File file = new File(fullPath);
                 List<VCard> vCards = Ezvcard.parse(file).all();
 
                 if (vCards.size() == 0) {
-                    Toast.makeText(SettingsActivity.this, R.string.invalid_vcf, Toast.LENGTH_SHORT).show();
-                    return null;
+                    return R.string.invalid_vcf;
                 }
 
                 ContactProvider contactProvider = new ContactProvider(SettingsActivity.this);
@@ -233,20 +277,18 @@ public class SettingsActivity extends AppCompatActivity {
                     contactProvider.importContact(contact);
                 }
 
+                return R.string.import_completed;
+
             } catch (Exception e) {
-                Log.e("TAG", e.getMessage());
+                Log.e(TAG, e.getMessage());
                 throw new RuntimeException(e);
             }
-
-            return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Integer resultResourceId) {
             mProgressDialog.dismiss();
-            Toast.makeText(SettingsActivity.this, R.string.import_completed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsActivity.this, resultResourceId, Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
