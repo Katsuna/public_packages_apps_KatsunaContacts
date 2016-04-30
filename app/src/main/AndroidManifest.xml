@@ -47,42 +47,26 @@
                 <action android:name="gr.crystalogic.contacts.create" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
             android:name=".ui.activities.EditContactActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
-        </activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".ui.activities.SelectContactsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_select_contacts"
             android:parentActivityName=".ui.activities.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity" />
-        </activity>
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
