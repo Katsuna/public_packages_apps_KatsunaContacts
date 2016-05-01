@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
+    private SearchView mSearchView;
 
     private Contact mSelectedContact;
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Assumes current activity is the searchable activity
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            search(query);
+            mSearchView.setQuery(query, false);
         }
     }
 
