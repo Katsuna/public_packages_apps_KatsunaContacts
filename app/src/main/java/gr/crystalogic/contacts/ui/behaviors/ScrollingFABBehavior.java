@@ -1,37 +1,54 @@
 package gr.crystalogic.contacts.ui.behaviors;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import gr.crystalogic.contacts.utils.MeasureHelper;
+import org.joda.time.DateTime;
 
 public class ScrollingFABBehavior extends FloatingActionButton.Behavior {
-    private final int toolbarHeight;
+
+    private Handler handler;
+    private Runnable runnable;
+    private DateTime lastScroll;
 
     public ScrollingFABBehavior(Context context, AttributeSet attrs) {
         super();
-        this.toolbarHeight = MeasureHelper.getToolbarHeight(context);
+        handler = new Handler();
+
+    }
+
+    public boolean onStartNestedScroll(CoordinatorLayout parent, FloatingActionButton child, View directTargetChild, View target, int nestedScrollAxes) {
+        return true;
     }
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton fab, View dependency) {
-        return super.layoutDependsOn(parent, fab, dependency) || (dependency instanceof AppBarLayout);
+        return dependency instanceof RecyclerView;
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton fab, View dependency) {
-        boolean returnValue = super.onDependentViewChanged(parent, fab, dependency);
-        if (dependency instanceof AppBarLayout) {
-            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            int fabBottomMargin = lp.bottomMargin;
-            int distanceToScroll = fab.getHeight() + fabBottomMargin;
-            float ratio = dependency.getY() / (float) toolbarHeight;
-            fab.setTranslationY(-distanceToScroll * ratio);
-        }
-        return returnValue;
+    public void onNestedScroll(CoordinatorLayout coordinatorLayout,
+                               final FloatingActionButton child, View target, int dxConsumed,
+                               int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed,
+                dxUnconsumed, dyUnconsumed);
+
+        lastScroll = new DateTime();
+        child.hide();
+        handler.removeCallbacks(runnable);
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (lastScroll.plusMillis(1000).isBefore(new DateTime())) {
+                    child.show();
+                }
+            }
+        };
+        handler.postDelayed(runnable, 1001);
     }
 }
