@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
 
 public class ScrollingFABBehavior extends FloatingActionButton.Behavior {
 
-    private Handler handler;
+    private final Handler handler;
     private Runnable runnable;
     private DateTime lastScroll;
 
