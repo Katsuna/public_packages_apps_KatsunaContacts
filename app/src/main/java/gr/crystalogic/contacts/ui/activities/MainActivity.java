@@ -36,14 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.contacts.R;
-import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Phone;
+import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.contacts.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.contacts.ui.listeners.IContactInteractionListener;
 import gr.crystalogic.contacts.utils.ContactArranger;
 import gr.crystalogic.contacts.utils.Separator;
+import gr.crystalogic.contacts.utils.TelephonyInfo;
 
 public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
 
@@ -296,13 +297,36 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     @Override
     public void callContact(Contact contact) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             mSelectedContact = contact;
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE_ASK_CALL_PERMISSION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE},
+                    REQUEST_CODE_ASK_CALL_PERMISSION);
             return;
         }
 
-        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getContactPhone(contact)));
+        TelephonyInfo telephonyInfo = TelephonyInfo.getInstance(this);
+
+        String imsiSIM1 = telephonyInfo.getImsiSIM1();
+        String imsiSIM2 = telephonyInfo.getImsiSIM2();
+
+        boolean isSIM1Ready = telephonyInfo.isSIM1Ready();
+        boolean isSIM2Ready = telephonyInfo.isSIM2Ready();
+
+        boolean isDualSIM = telephonyInfo.isDualSIM();
+
+        Log.e(TAG, " IME1 : " + imsiSIM1 + "\n" +
+                " IME2 : " + imsiSIM2 + "\n" +
+                " IS DUAL SIM : " + isDualSIM + "\n" +
+                " IS SIM1 READY : " + isSIM1Ready + "\n" +
+                " IS SIM2 READY : " + isSIM2Ready + "\n");
+
+        Intent i;
+        if (isDualSIM && isSIM1Ready && isSIM2Ready) {
+            i = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + getContactPhone(contact)));
+        } else {
+            i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getContactPhone(contact)));
+        }
         startActivity(i);
     }
 
