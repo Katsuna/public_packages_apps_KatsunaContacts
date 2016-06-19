@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black87_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }

@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator"
+    style="@style/ActivitiesBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,8 +22,8 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:contentDescription="@string/contact_photo"
                 android:background="@drawable/circle_blue"
+                android:contentDescription="@string/contact_photo"
                 app:riv_mutate_background="true"
                 app:riv_oval="true"
                 app:riv_tile_mode="repeat" />
