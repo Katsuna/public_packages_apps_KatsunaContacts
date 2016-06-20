@@ -57,7 +57,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 mSeparatorImage.setVisibility(View.VISIBLE);
                 break;
             case NONE:
-                mSeparatorView.setVisibility(View.INVISIBLE);
+                mSeparatorView.setVisibility(View.GONE);
                 break;
         }
 

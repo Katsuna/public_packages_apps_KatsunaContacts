@@ -8,12 +8,10 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -34,6 +32,8 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="80dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/contact" />

@@ -4,7 +4,6 @@
     <color name="grey100">#F5F5F5</color>
     <color name="grey300">#E0E0E0</color>
     <color name="black87">#de000000</color>
-    <color name="teala20087">#de64ffda</color>
     <color name="teala40087">#de1de9b6</color>
 
     <color name="colorPrimary">#9E9E9E</color>
@@ -17,6 +16,4 @@
     <color name="green">#1b9b8d</color>
     <color name="greenLight">#3cbbae</color>
     <color name="grey">#48484a</color>
-    <color name="green4button">#009640</color>
-    <color name="blue4button">#009ed4</color>
 </resources>

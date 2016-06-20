@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/SelectContactStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp">
+        android:background="@color/white">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
+            android:layout_margin="5dp"
             app:riv_corner_radius="50dp"
             app:riv_mutate_background="true"
             app:riv_oval="false"
@@ -28,24 +28,22 @@
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
+            android:layout_marginStart="2dp"
             android:background="@drawable/edit_button"
             android:gravity="end" />
 
         <TextView
             android:id="@+id/contact_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/text_margin_top_bottom"
-            android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/photo"
             android:layout_toStartOf="@id/edit_button"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:maxLines="5"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -60,33 +58,32 @@
             android:id="@+id/call_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_height="72dp"
             android:layout_gravity="start"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@color/green4button"
-            android:drawableStart="@drawable/ic_call_white_36dp"
-            android:padding="5dp"
+            android:background="@color/white"
+            android:drawableStart="@drawable/ic_call_black_36dp"
+            android:padding="15dp"
             android:text="@string/call"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textColor="@color/black87"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/message_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_height="72dp"
             android:layout_gravity="start"
-            android:layout_marginStart="2dp"
             android:layout_weight="1"
-            android:background="@color/blue4button"
-            android:drawableStart="@drawable/ic_message_white_36dp"
-            android:padding="5dp"
+            android:background="@color/white"
+            android:drawableStart="@drawable/ic_message_black_36dp"
+            android:padding="15dp"
             android:text="@string/message"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textColor="@color/black87"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
