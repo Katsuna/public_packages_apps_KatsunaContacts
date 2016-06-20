@@ -4,10 +4,10 @@
     <color name="grey100">#F5F5F5</color>
     <color name="grey300">#E0E0E0</color>
     <color name="black87">#de000000</color>
-
+    <color name="teala20087">#de64ffda</color>
+    <color name="teala40087">#de1de9b6</color>
 
     <color name="colorPrimary">#9E9E9E</color>
-    <color name="colorAccent">#448AFF</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="white">#FFFFFF</color>
