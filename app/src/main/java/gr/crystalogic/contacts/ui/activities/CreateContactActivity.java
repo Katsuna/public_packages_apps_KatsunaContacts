@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedDrawable;
@@ -32,6 +33,7 @@ public class CreateContactActivity extends PhotoActivity {
     private EditText mSurname;
     private TextInputLayout mTelephoneLayout;
     private EditText mTelephone;
+    private LinearLayout mNoPhotoContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +122,14 @@ public class CreateContactActivity extends PhotoActivity {
                 return false;
             }
         });
+
+        mNoPhotoContainer = (LinearLayout) findViewById(R.id.noPhotoContainer);
+        mNoPhotoContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage();
+            }
+        });
     }
 
     private boolean inputIsValid() {
@@ -138,11 +148,15 @@ public class CreateContactActivity extends PhotoActivity {
     @Override
     void loadPhoto(Uri uri) {
         Picasso.with(this).load(uri).fit().centerCrop().into(mPhoto);
+        mNoPhotoContainer.setVisibility(View.GONE);
+        mPhoto.setVisibility(View.VISIBLE);
     }
 
     @Override
     void removePhoto() {
         mPhoto.setImageDrawable(null);
+        mNoPhotoContainer.setVisibility(View.VISIBLE);
+        mPhoto.setVisibility(View.GONE);
     }
 
 }
