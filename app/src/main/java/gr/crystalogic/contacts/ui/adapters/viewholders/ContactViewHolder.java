@@ -17,6 +17,7 @@ import gr.crystalogic.contacts.ui.listeners.IContactInteractionListener;
 public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
     private final LinearLayout mContactBasicContainer;
+    private final LinearLayout mSeparatorWrapper;
     private final TextView mSeparatorView;
     private final TextView mContentView;
     private final ImageView mPhoto;
@@ -29,6 +30,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
+        mSeparatorWrapper = (LinearLayout) view.findViewById(R.id.separator_wrapper);
         mContentView = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
@@ -51,10 +53,12 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             case FIRST_LETTER:
                 mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
                 mSeparatorView.setVisibility(View.VISIBLE);
+                mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;
             case STARRED:
                 mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
                 mSeparatorImage.setVisibility(View.VISIBLE);
+                mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;
             case NONE:
                 mSeparatorView.setVisibility(View.GONE);
@@ -70,6 +74,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void initialize() {
+        mSeparatorWrapper.setVisibility(View.GONE);
         mSeparatorView.setVisibility(View.GONE);
         mSeparatorImage.setVisibility(View.GONE);
     }
