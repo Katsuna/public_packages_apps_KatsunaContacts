@@ -6,7 +6,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -29,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.commons.entities.Profile;
-import gr.crystalogic.commons.providers.ProfileProvider;
 import gr.crystalogic.commons.utils.Log;
+import gr.crystalogic.commons.utils.ProfileReader;
 import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.domain.Phone;
@@ -65,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private SearchView mSearchView;
 
     private Contact mSelectedContact;
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +74,13 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         initToolbar();
         setupDrawerLayout();
         setupFab();
-
-        Profile profile = getProfile();
-        Toast.makeText(this, profile.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        profile = ProfileReader.getProfile(this);
+
         if (isChanged()) {
             loadContacts();
         }
@@ -242,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsProcessed(contactList);
-        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this);
+        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this, profile);
         mRecyclerView.setAdapter(mAdapter);
         showNoResultsView();
     }
@@ -391,21 +389,5 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             output.add(new ContactListItemModel(model));
         }
         return output;
-    }
-
-
-    private Profile getProfile() {
-        Profile profile = null;
-        Cursor cursor = getContentResolver().query(Uri.withAppendedPath(ProfileProvider.URI_PROFILES, "1"), null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                profile = new Profile();
-                profile.setId(cursor.getLong(cursor.getColumnIndex(Profile.COL_ID)));
-                profile.setType(cursor.getInt(cursor.getColumnIndex(Profile.COL_TYPE)));
-                Log.d(this, "Error for content provider: " + profile);
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        return profile;
     }
 }

@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:orientation="vertical">
+    android:background="@color/grey800"
+    android:orientation="vertical"
+    android:paddingBottom="4dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/contact_photo_size_default"
+            android:layout_height="@dimen/contact_photo_size_default"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             app:riv_corner_radius="50dp"
@@ -24,8 +27,8 @@
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="2dp"
@@ -37,13 +40,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="22dp"
+            android:layout_marginStart="@dimen/text_margin_left_right"
             android:layout_toEndOf="@id/photo"
             android:layout_toStartOf="@id/edit_button"
             android:fontFamily="sans-serif-medium"
             android:gravity="start"
             android:maxLines="5"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
 
@@ -59,31 +63,33 @@
             android:id="@+id/call_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="72dp"
+            android:layout_height="40dp"
             android:layout_gravity="start"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:drawableStart="@drawable/ic_call_black_36dp"
-            android:padding="15dp"
+            android:background="@drawable/action_button"
+            android:drawableStart="@drawable/ic_call_grey50_24dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/call"
             android:textAllCaps="false"
-            android:textColor="@color/black87"
+            android:textColor="@color/grey50"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/message_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="72dp"
+            android:layout_height="40dp"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:drawableStart="@drawable/ic_message_black_36dp"
-            android:padding="15dp"
+            android:background="@drawable/action_button"
+            android:drawableStart="@drawable/ic_message_grey50_24dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/message"
             android:textAllCaps="false"
-            android:textColor="@color/black87"
+            android:textColor="@color/grey50"
             android:textSize="20sp" />
 
     </LinearLayout>

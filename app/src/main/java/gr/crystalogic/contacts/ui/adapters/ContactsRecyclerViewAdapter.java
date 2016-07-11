@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import gr.crystalogic.commons.entities.Profile;
 import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
@@ -21,10 +22,12 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private final List<ContactListItemModel> mModels;
     private final IContactInteractionListener mListener;
     private int mSelectedContactPosition = -1;
+    private final Profile mProfile;
 
-    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener) {
+    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener, Profile profile) {
         mModels = models;
         mListener = listener;
+        mProfile = profile;
     }
 
     @Override
@@ -43,11 +46,11 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (viewType) {
             case CONTACT_NOT_SELECTED:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
-                viewHolder = new ContactViewHolder(view, mListener);
+                viewHolder = new ContactViewHolder(view, mListener, mProfile);
                 break;
             case CONTACT_SELECTED:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
-                viewHolder = new ContactSelectedViewHolder(view, mListener);
+                viewHolder = new ContactSelectedViewHolder(view, mListener, mProfile);
                 break;
         }
         return viewHolder;

@@ -6,4 +6,12 @@
     <dimen name="text_margin_top_bottom">5dp</dimen>
     <dimen name="text_margin_left_right">14dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <!-- profile dimens -->
+    <dimen name="contact_photo_size_default">56dp</dimen>
+    <dimen name="contact_photo_size_v1">40dp</dimen>
+    <dimen name="contact_photo_size_v2">80dp</dimen>
+    <dimen name="action_button_height_default">56dp</dimen>
+    <dimen name="action_button_height_v1">40dp</dimen>
+    <dimen name="action_button_height_v2">72dp</dimen>
+    <!-- eof profile dimens -->
 </resources>

@@ -16,5 +16,6 @@ public class ContactsApplication extends BaseApplication {
     @Override
     protected void handleException(Throwable throwable) {
         Log.e(this, throwable.getMessage());
+        System.exit(1);
     }
 }

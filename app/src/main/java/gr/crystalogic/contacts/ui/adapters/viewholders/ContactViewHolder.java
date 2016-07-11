@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import gr.crystalogic.commons.entities.Profile;
+import gr.crystalogic.commons.entities.ProfileType;
 import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.ui.adapters.models.ContactListItemModel;
@@ -23,8 +25,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mPhoto;
     private final ImageView mSeparatorImage;
     private final IContactInteractionListener mListener;
+    private final Profile mProfile;
 
-    public ContactViewHolder(View view, IContactInteractionListener listener) {
+    public ContactViewHolder(View view, IContactInteractionListener listener, Profile profile) {
         super(view);
         mView = view;
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
@@ -34,6 +37,8 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mContentView = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
+        mProfile = profile;
+        adjustProfile();
     }
 
     public void bind(final ContactListItemModel model, final int position) {
@@ -77,6 +82,19 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mSeparatorWrapper.setVisibility(View.GONE);
         mSeparatorView.setVisibility(View.GONE);
         mSeparatorImage.setVisibility(View.GONE);
+    }
+
+    private void adjustProfile() {
+        if (mProfile != null) {
+            int size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_default);
+            if (mProfile.getType() == ProfileType.V1.getNumVal()) {
+                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v1);
+            } else if (mProfile.getType() == ProfileType.V2.getNumVal()) {
+                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v2);
+            }
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);
+            mPhoto.setLayoutParams(layoutParams);
+        }
     }
 
 }

@@ -5,8 +5,11 @@
     android:id="@+id/contact_basic_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <LinearLayout
         android:id="@+id/separator_wrapper"
@@ -46,8 +49,8 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/contact_photo_size_default"
+            android:layout_height="@dimen/contact_photo_size_default"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:background="@drawable/ic_person_grey_50px"

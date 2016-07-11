@@ -2,12 +2,16 @@ package gr.crystalogic.contacts.ui.adapters.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import gr.crystalogic.commons.entities.Profile;
+import gr.crystalogic.commons.entities.ProfileType;
 import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.ui.listeners.IContactInteractionListener;
@@ -20,8 +24,9 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     private final Button mMessageButton;
     private final ImageView mPhoto;
     private final IContactInteractionListener mListener;
+    private final Profile mProfile;
 
-    public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
+    public ContactSelectedViewHolder(View view, IContactInteractionListener listener, Profile profile) {
         super(view);
         mView = view;
         mContactName = (TextView) view.findViewById(R.id.contact_name);
@@ -30,6 +35,8 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
         mCallButton = (Button) view.findViewById(R.id.call_button);
         mMessageButton = (Button) view.findViewById(R.id.message_button);
         mListener = listener;
+        mProfile = profile;
+        adjustProfile();
     }
 
     public void bind(final Contact contact) {
@@ -61,4 +68,30 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    private void adjustProfile() {
+        if (mProfile != null) {
+            int photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_default);
+            int actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_default);
+
+            if (mProfile.getType() == ProfileType.V1.getNumVal()) {
+                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v1);
+                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_v1);
+            } else if (mProfile.getType() == ProfileType.V2.getNumVal()) {
+                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v2);
+                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_v2);
+            }
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(photoSize, photoSize);
+            mPhoto.setLayoutParams(layoutParams);
+
+
+            ViewGroup.LayoutParams callButtonParams = mCallButton.getLayoutParams();
+            callButtonParams.height = actionButtonHeight;
+
+            ViewGroup.LayoutParams messageButtonParams = mMessageButton.getLayoutParams();
+            messageButtonParams.height = actionButtonHeight;
+
+            mCallButton.setLayoutParams(callButtonParams);
+            mMessageButton.setLayoutParams(messageButtonParams);
+        }
+    }
 }
