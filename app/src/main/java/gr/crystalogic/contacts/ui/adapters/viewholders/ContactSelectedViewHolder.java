@@ -70,15 +70,15 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
 
     private void adjustProfile() {
         if (mProfile != null) {
-            int photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_default);
-            int actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_default);
+            int photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
+            int actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_intemediate);
 
-            if (mProfile.getType() == ProfileType.V1.getNumVal()) {
-                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v1);
-                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_v1);
-            } else if (mProfile.getType() == ProfileType.V2.getNumVal()) {
-                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v2);
-                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_v2);
+            if (mProfile.getType() == ProfileType.ADVANCED.getNumVal()) {
+                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
+                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_advanced);
+            } else if (mProfile.getType() == ProfileType.SIMPLE.getNumVal()) {
+                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
+                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
             }
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(photoSize, photoSize);
             mPhoto.setLayoutParams(layoutParams);

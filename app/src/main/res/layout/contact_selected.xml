@@ -16,8 +16,8 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/photo"
-            android:layout_width="@dimen/contact_photo_size_default"
-            android:layout_height="@dimen/contact_photo_size_default"
+            android:layout_width="@dimen/contact_photo_size_intemediate"
+            android:layout_height="@dimen/contact_photo_size_intemediate"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             app:riv_corner_radius="50dp"

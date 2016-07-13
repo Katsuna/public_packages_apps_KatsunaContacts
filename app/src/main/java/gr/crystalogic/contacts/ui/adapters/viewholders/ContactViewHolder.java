@@ -86,11 +86,11 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
     private void adjustProfile() {
         if (mProfile != null) {
-            int size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_default);
-            if (mProfile.getType() == ProfileType.V1.getNumVal()) {
-                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v1);
-            } else if (mProfile.getType() == ProfileType.V2.getNumVal()) {
-                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_v2);
+            int size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
+            if (mProfile.getType() == ProfileType.ADVANCED.getNumVal()) {
+                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
+            } else if (mProfile.getType() == ProfileType.SIMPLE.getNumVal()) {
+                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
             }
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);
             mPhoto.setLayoutParams(layoutParams);

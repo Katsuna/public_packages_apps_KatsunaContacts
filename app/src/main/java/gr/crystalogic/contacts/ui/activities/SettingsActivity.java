@@ -15,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
@@ -28,6 +30,7 @@ import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
+import gr.crystalogic.commons.entities.ProfileType;
 import gr.crystalogic.contacts.R;
 import gr.crystalogic.contacts.domain.Contact;
 import gr.crystalogic.contacts.providers.ContactProvider;
@@ -46,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
+    private Spinner mProfileTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +134,22 @@ public class SettingsActivity extends AppCompatActivity {
                 mNameFirstRadioButton.setChecked(true);
                 break;
         }
+
+
+        mProfileTypes = (Spinner) findViewById(R.id.profiles);
+        int profileSetting = readSetting(Constants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
+        mProfileTypes.setSelection(profileSetting);
+        mProfileTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                setSetting(Constants.PROFILE_KEY, i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void importContacts() {
@@ -197,9 +217,21 @@ public class SettingsActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    private void setSetting(String key, int value) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
     private String readSetting(String key, String defaultValue) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         return settings.getString(key, defaultValue);
+    }
+
+    private int readSetting(String key, int defaultValue) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        return settings.getInt(key, defaultValue);
     }
 
     private class ExportContactsAsyncTask extends AsyncTask<String, Void, String> {

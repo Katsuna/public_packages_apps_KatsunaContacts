@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.crystalogic.commons.entities.Profile;
+import gr.crystalogic.commons.entities.ProfileType;
 import gr.crystalogic.commons.utils.Log;
 import gr.crystalogic.commons.utils.ProfileReader;
 import gr.crystalogic.contacts.R;
@@ -44,6 +46,7 @@ import gr.crystalogic.contacts.providers.ContactProvider;
 import gr.crystalogic.contacts.ui.adapters.ContactsRecyclerViewAdapter;
 import gr.crystalogic.contacts.ui.adapters.models.ContactListItemModel;
 import gr.crystalogic.contacts.ui.listeners.IContactInteractionListener;
+import gr.crystalogic.contacts.utils.Constants;
 import gr.crystalogic.contacts.utils.ContactArranger;
 import gr.crystalogic.contacts.utils.Separator;
 import gr.crystalogic.contacts.utils.TelephonyInfo;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private SearchView mSearchView;
 
     private Contact mSelectedContact;
-    private Profile profile;
+    private Profile mProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +82,47 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     @Override
     protected void onResume() {
         super.onResume();
-        profile = ProfileReader.getProfile(this);
 
-        if (isChanged()) {
+        boolean profileChanged = false;
+        Profile freshProfileFromContentProvider = ProfileReader.getProfile(this);
+        Profile profileFromPreferences = getProfileFromPreferences();
+        if (freshProfileFromContentProvider == null) {
+            profileChanged = setSelectedProfile(profileFromPreferences);
+        } else {
+            if (profileFromPreferences.getType() == ProfileType.AUTO.getNumVal()) {
+                profileChanged = setSelectedProfile(freshProfileFromContentProvider);
+            } else {
+                profileChanged = setSelectedProfile(profileFromPreferences);
+            }
+        }
+
+        if (isChanged() || profileChanged) {
             loadContacts();
         }
+    }
+
+    private boolean setSelectedProfile(Profile profile) {
+        boolean profileChanged = false;
+        if (mProfile == null) {
+            mProfile = profile;
+            profileChanged = true;
+        } else {
+            if (mProfile.getType() != profile.getType()) {
+                profileChanged = true;
+                mProfile.setType(profile.getType());
+            }
+        }
+        return profileChanged;
+    }
+
+    private Profile getProfileFromPreferences() {
+        Profile profile = new Profile();
+        int profileType = PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt(Constants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
+
+        profile.setType(profileType);
+
+        return profile;
     }
 
     private void initControls() {
@@ -240,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsProcessed(contactList);
-        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this, profile);
+        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this, mProfile);
         mRecyclerView.setAdapter(mAdapter);
         showNoResultsView();
     }
