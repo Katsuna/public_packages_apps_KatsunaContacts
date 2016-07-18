@@ -61,7 +61,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;
             case STARRED:
-                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.star));
+                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.ic_star_grey800_24dp));
                 mSeparatorImage.setVisibility(View.VISIBLE);
                 mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;

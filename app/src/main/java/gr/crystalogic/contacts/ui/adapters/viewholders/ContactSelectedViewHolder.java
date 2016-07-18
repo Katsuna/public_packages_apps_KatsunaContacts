@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -80,9 +79,10 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
                 photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
                 actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
             }
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(photoSize, photoSize);
+            ViewGroup.LayoutParams layoutParams = mPhoto.getLayoutParams();
+            layoutParams.height = photoSize;
+            layoutParams.width = photoSize;
             mPhoto.setLayoutParams(layoutParams);
-
 
             ViewGroup.LayoutParams callButtonParams = mCallButton.getLayoutParams();
             callButtonParams.height = actionButtonHeight;

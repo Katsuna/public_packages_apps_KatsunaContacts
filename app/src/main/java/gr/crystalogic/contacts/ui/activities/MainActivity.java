@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     protected void onResume() {
         super.onResume();
 
-        boolean profileChanged = false;
+        boolean profileChanged;
         Profile freshProfileFromContentProvider = ProfileReader.getProfile(this);
         Profile profileFromPreferences = getProfileFromPreferences();
         if (freshProfileFromContentProvider == null) {
