@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "gr.crystalogic.contacts"
+        applicationId "com.katsuna.contacts"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
