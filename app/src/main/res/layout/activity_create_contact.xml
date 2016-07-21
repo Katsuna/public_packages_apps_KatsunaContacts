@@ -12,7 +12,7 @@
         android:id="@+id/noPhotoContainer"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:background="@color/black"
+        android:background="@color/grey200"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="20dp">
@@ -22,13 +22,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:contentDescription="@string/tap_to_add_photo"
-            android:src="@drawable/ic_add_a_photo_white_36dp" />
+            android:src="@drawable/ic_add_a_photo_black87_36dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tap_to_add_photo"
-            android:textColor="@color/white"
+            android:textColor="@color/black87"
             android:textSize="20sp" />
 
     </LinearLayout>

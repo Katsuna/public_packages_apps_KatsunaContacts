@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,11 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.katsuna.commons.entities.Profile;
 import com.katsuna.commons.entities.ProfileType;
@@ -49,7 +46,10 @@ import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.katsuna.contacts.utils.Constants;
 import com.katsuna.contacts.utils.ContactArranger;
 import com.katsuna.contacts.utils.Separator;
-import com.katsuna.contacts.utils.TelephonyInfo;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
 
@@ -349,39 +349,57 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             return;
         }
 
-        TelephonyInfo telephonyInfo = TelephonyInfo.getInstance(this);
-
-        String imsiSIM1 = telephonyInfo.getImsiSIM1();
-        String imsiSIM2 = telephonyInfo.getImsiSIM2();
-
-        boolean isSIM1Ready = telephonyInfo.isSIM1Ready();
-        boolean isSIM2Ready = telephonyInfo.isSIM2Ready();
-
-        boolean isDualSIM = telephonyInfo.isDualSIM();
-
-        Log.e(TAG, " IME1 : " + imsiSIM1 + "\n" +
-                " IME2 : " + imsiSIM2 + "\n" +
-                " IS DUAL SIM : " + isDualSIM + "\n" +
-                " IS SIM1 READY : " + isSIM1Ready + "\n" +
-                " IS SIM2 READY : " + isSIM2Ready + "\n");
-
-        Intent i;
-        if (isDualSIM && isSIM1Ready && isSIM2Ready) {
-            i = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + getContactPhone(contact)));
+        final List<Phone> phones = new ContactProvider(this).getPhones(contact.getId());
+        if (phones.size() == 1) {
+            callNumber(phones.get(0).getNumber());
         } else {
-            i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getContactPhone(contact)));
+            phoneNumbersDialog(phones, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    callNumber(phones.get(i).getNumber());
+                }
+            });
         }
+    }
+
+    private void phoneNumbersDialog(List<Phone> phones, DialogInterface.OnClickListener listener) {
+        final CharSequence phonesArray[] = new CharSequence[phones.size()];
+        int i = 0;
+        for (Phone phone : phones) {
+            phonesArray[i++] = phone.getNumber();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_phone);
+        builder.setItems(phonesArray, listener);
+        builder.show();
+    }
+
+    private void callNumber(String number) {
+        Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
         startActivity(i);
     }
 
     @Override
     public void sendSMS(Contact contact) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", getContactPhone(contact), null)));
+        final List<Phone> phones = new ContactProvider(this).getPhones(contact.getId());
+        if (phones.size() == 1) {
+            sendSmsToNumber(phones.get(0).getNumber());
+        } else {
+            phoneNumbersDialog(phones, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    sendSmsToNumber(phones.get(i).getNumber());
+                }
+            });
+        }
+
     }
 
-    private String getContactPhone(Contact contact) {
-        List<Phone> phones = new ContactProvider(this).getPhones(contact.getId());
-        return phones.get(0).getNumber();
+    private void sendSmsToNumber(String number) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
     }
 
     private List<ContactListItemModel> filter(List<ContactListItemModel> models, String query) {

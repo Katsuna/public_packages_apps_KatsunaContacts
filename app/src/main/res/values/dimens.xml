@@ -10,8 +10,8 @@
     <dimen name="contact_photo_size_intemediate">56dp</dimen>
     <dimen name="contact_photo_size_advanced">40dp</dimen>
     <dimen name="contact_photo_size_simple">80dp</dimen>
-    <dimen name="action_button_height_intemediate">56dp</dimen>
-    <dimen name="action_button_height_advanced">40dp</dimen>
-    <dimen name="action_button_height_simple">72dp</dimen>
+    <dimen name="action_button_height_intemediate">74dp</dimen>
+    <dimen name="action_button_height_advanced">52dp</dimen>
+    <dimen name="action_button_height_simple">94dp</dimen>
     <!-- eof profile dimens -->
 </resources>
