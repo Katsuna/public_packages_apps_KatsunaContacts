@@ -13,6 +13,4 @@ public final class Constants {
     public static final String DISPLAY_SORT_NAME = "2";
 
     public static final String CREATE_CONTACT_ACTION = "com.katsuna.contacts.create";
-    public static final String PROFILE_KEY = "profile";
-
 }

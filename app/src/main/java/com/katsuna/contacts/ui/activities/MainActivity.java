@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -32,10 +31,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.katsuna.commons.KatsunaConstants;
 import com.katsuna.commons.entities.Profile;
 import com.katsuna.commons.entities.ProfileType;
 import com.katsuna.commons.utils.Log;
 import com.katsuna.commons.utils.ProfileReader;
+import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Phone;
@@ -43,7 +44,6 @@ import com.katsuna.contacts.providers.ContactProvider;
 import com.katsuna.contacts.ui.adapters.ContactsRecyclerViewAdapter;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
-import com.katsuna.contacts.utils.Constants;
 import com.katsuna.contacts.utils.ContactArranger;
 import com.katsuna.contacts.utils.Separator;
 import com.squareup.picasso.Picasso;
@@ -117,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
 
     private Profile getProfileFromPreferences() {
         Profile profile = new Profile();
-        int profileType = PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt(Constants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
+        int profileType = SettingsManager.readSetting(this, KatsunaConstants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
 
         profile.setType(profileType);
 

@@ -3,11 +3,9 @@ package com.katsuna.contacts.ui.activities;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -22,6 +20,17 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.katsuna.commons.KatsunaConstants;
+import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.utils.SettingsManager;
+import com.katsuna.contacts.R;
+import com.katsuna.contacts.domain.Contact;
+import com.katsuna.contacts.providers.ContactProvider;
+import com.katsuna.contacts.utils.Constants;
+import com.katsuna.contacts.utils.DirectoryChooserDialog;
+import com.katsuna.contacts.utils.FileChooserDialog;
+import com.katsuna.contacts.utils.VCardHelper;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +39,6 @@ import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
-
-import com.katsuna.commons.entities.ProfileType;
-import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.utils.Constants;
-import com.katsuna.contacts.utils.DirectoryChooserDialog;
-import com.katsuna.contacts.utils.FileChooserDialog;
-import com.katsuna.contacts.utils.VCardHelper;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -117,16 +117,16 @@ public class SettingsActivity extends AppCompatActivity {
 
                 if (mSurnameFirstRadioButton == checkedRadioButton) {
 
-                    setSetting(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
                 }
 
                 if (mNameFirstRadioButton == checkedRadioButton) {
-                    setSetting(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_NAME);
+                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_NAME);
                 }
             }
         });
 
-        String displaySortSetting = readSetting(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+        String displaySortSetting = SettingsManager.readSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
         switch (displaySortSetting) {
             case Constants.DISPLAY_SORT_SURNAME:
                 mSurnameFirstRadioButton.setChecked(true);
@@ -138,12 +138,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         mProfileTypes = (Spinner) findViewById(R.id.profiles);
-        int profileSetting = readSetting(Constants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
+        int profileSetting = SettingsManager.readSetting(SettingsActivity.this, KatsunaConstants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
         mProfileTypes.setSelection(profileSetting);
         mProfileTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                setSetting(Constants.PROFILE_KEY, i);
+                SettingsManager.setSetting(SettingsActivity.this, KatsunaConstants.PROFILE_KEY, i);
             }
 
             @Override
@@ -208,31 +208,6 @@ public class SettingsActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-
-    private void setSetting(String key, String value) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
-
-    private void setSetting(String key, int value) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(key, value);
-        editor.apply();
-    }
-
-    private String readSetting(String key, String defaultValue) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        return settings.getString(key, defaultValue);
-    }
-
-    private int readSetting(String key, int defaultValue) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        return settings.getInt(key, defaultValue);
     }
 
     private class ExportContactsAsyncTask extends AsyncTask<String, Void, String> {
