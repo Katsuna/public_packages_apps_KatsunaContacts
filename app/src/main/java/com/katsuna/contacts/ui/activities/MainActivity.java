@@ -25,6 +25,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -370,7 +371,9 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_phone);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.alert_title, null);
+        builder.setCustomTitle(view);
         builder.setItems(phonesArray, listener);
         builder.show();
     }
