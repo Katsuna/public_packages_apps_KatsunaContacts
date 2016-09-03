@@ -50,7 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
-    private Spinner mProfileTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
-        mProfileTypes = (Spinner) findViewById(R.id.profiles);
+        Spinner mProfileTypes = (Spinner) findViewById(R.id.profiles);
         int profileSetting = SettingsManager.readSetting(SettingsActivity.this, KatsunaConstants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
         mProfileTypes.setSelection(profileSetting);
         mProfileTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

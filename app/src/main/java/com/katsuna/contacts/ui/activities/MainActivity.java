@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         assert view != null;
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 drawerLayout.closeDrawers();
 
