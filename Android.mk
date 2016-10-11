@@ -48,8 +48,8 @@ include $(CLEAR_VARS)
 
 # Define here, which extra jar/aar this app needs
 # These should NOT be included in KatsunaCommon
-# These should reside inside app/libs of this app
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ezvcard:app/libs/ezvcard-0.9.9.jar
+# These should reside inside aosp/libs of this app
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ezvcard:aosp/libs/ezvcard-0.9.9.jar
 
 include $(BUILD_MULTI_PREBUILT)
 
