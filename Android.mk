@@ -21,7 +21,8 @@ LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-recyclerview
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-design
 LOCAL_STATIC_JAVA_LIBRARIES += ezvcard
 
-# This is to include the specified aar, DEFINED in KatsunaCommon's Android.mk! 
+# Include the specified aar/jar (s), DEFINED in KatsunaCommon's Android.mk!
+LOCAL_STATIC_JAVA_LIBRARIES += picasso
 LOCAL_STATIC_JAVA_AAR_LIBRARIES := roundedimageview
 
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
