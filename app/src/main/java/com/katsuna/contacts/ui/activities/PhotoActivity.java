@@ -32,7 +32,7 @@ public abstract class PhotoActivity extends AppCompatActivity {
     void selectImage() {
 
         final CharSequence[] items = {getString(R.string.take_photo),
-                getString(R.string.choose_from_gallery), getString(R.string.remove_photo), getString(R.string.cancel)};
+                getString(R.string.choose_from_gallery), getString(R.string.remove_photo), getString(android.R.string.cancel)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_photo);
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -47,7 +47,7 @@ public abstract class PhotoActivity extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(intent, getString(R.string.select_file)), SELECT_FILE);
                 } else if (items[item].equals(getString(R.string.remove_photo))) {
                     removePhoto();
-                } else if (items[item].equals(getString(R.string.cancel))) {
+                } else if (items[item].equals(getString(android.R.string.cancel))) {
                     dialog.dismiss();
                 }
             }

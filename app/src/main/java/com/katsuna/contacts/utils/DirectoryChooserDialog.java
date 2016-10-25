@@ -108,7 +108,7 @@ public class DirectoryChooserDialog {
         AlertDialog.Builder dialogBuilder =
                 createDirectoryChooserDialog(dir, m_subdirs, new DirectoryOnClickListener());
 
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Current directory chosen
@@ -117,7 +117,7 @@ public class DirectoryChooserDialog {
                     m_chosenDirectoryListener.onChosenDir(m_dir);
                 }
             }
-        }).setNegativeButton(R.string.cancel, null);
+        }).setNegativeButton(android.R.string.cancel, null);
 
         final AlertDialog dirsDialog = dialogBuilder.create();
 
@@ -211,7 +211,7 @@ public class DirectoryChooserDialog {
                 // Show new folder name input dialog
                 new AlertDialog.Builder(m_context).
                         setTitle(R.string.new_folder_name).
-                        setView(input).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        setView(input).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable newDir = input.getText();
                         String newDirName = newDir.toString();

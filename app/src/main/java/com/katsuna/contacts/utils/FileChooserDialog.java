@@ -81,7 +81,7 @@ public class FileChooserDialog {
             }
         });
 
-        dialogBuilder.setNegativeButton(R.string.cancel, null);
+        dialogBuilder.setNegativeButton(android.R.string.cancel, null);
 
         mDialog = dialogBuilder.create();
 

@@ -65,7 +65,7 @@ public class SelectContactsActivity extends AppCompatActivity {
                             .setTitle(R.string.delete_contacts)
                             .setMessage(R.string.delete_contacts_approval)
                             .setCancelable(false)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     ContactProvider contactProvider = new ContactProvider(SelectContactsActivity.this);
                                     for (Contact contact : selectedContacts) {
@@ -75,7 +75,7 @@ public class SelectContactsActivity extends AppCompatActivity {
                                     Toast.makeText(SelectContactsActivity.this, R.string.contacts_deleted, Toast.LENGTH_LONG).show();
                                 }
                             })
-                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // if this button is clicked, just close
                                     // the dialog box and do nothing

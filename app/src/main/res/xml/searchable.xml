@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:hint="@string/search_hint"
-    android:label="@string/search_label"
+    android:hint="@string/common_search"
+    android:label="@string/common_search_contacts"
     android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />

@@ -14,6 +14,8 @@ LOCAL_RESOURCE_DIR += frameworks/support/design/res
 # This is to include KatsunaCommon into this app
 LOCAL_REQUIRED_MODULES := KatsunaCommon
 LOCAL_STATIC_JAVA_LIBRARIES := KatsunaCommon
+# Include KatsunaCommon resources
+LOCAL_RESOURCE_DIR += frameworks/KatsunaCommon/commons/src/main/res
 
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v4
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-appcompat
