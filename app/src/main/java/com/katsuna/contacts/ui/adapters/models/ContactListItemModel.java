@@ -10,18 +10,6 @@ public class ContactListItemModel {
     private boolean premium;
     private boolean selected;
 
-    public ContactListItemModel() {
-    }
-
-    public ContactListItemModel(ContactListItemModel model) {
-        setSeparator(model.getSeparator());
-        setPremium(model.isPremium());
-        setSelected(model.isSelected());
-        if (model.getContact() != null) {
-            contact = new Contact(model.getContact());
-        }
-    }
-
     public Contact getContact() {
         return contact;
     }

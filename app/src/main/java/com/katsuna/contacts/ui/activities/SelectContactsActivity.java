@@ -13,15 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
@@ -29,7 +25,9 @@ import com.katsuna.contacts.providers.ContactProvider;
 import com.katsuna.contacts.ui.adapters.ContactsSelectionAdapter;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.utils.ContactArranger;
-import com.katsuna.contacts.utils.Separator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectContactsActivity extends AppCompatActivity {
 
@@ -120,8 +118,16 @@ public class SelectContactsActivity extends AppCompatActivity {
         List<Contact> contactList = contactProvider.getContacts();
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
-        mAdapter = new ContactsSelectionAdapter(getDeepCopy(mModels));
+        mAdapter = new ContactsSelectionAdapter(mModels);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                showNoResultsView();
+            }
+        });
+        showNoResultsView();
     }
 
     @Override
@@ -149,34 +155,20 @@ public class SelectContactsActivity extends AppCompatActivity {
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mAdapter.animateTo(getDeepCopy(mModels));
-                showNoResultsView();
+                mAdapter.resetFilter();
                 return false;
             }
         });
 
-
         return true;
     }
 
-    private List<ContactListItemModel> getDeepCopy(List<ContactListItemModel> contactListItemModels) {
-        List<ContactListItemModel> output = new ArrayList<>();
-        for (ContactListItemModel model : contactListItemModels) {
-            output.add(new ContactListItemModel(model));
-        }
-        return output;
-    }
-
     private void search(String query) {
-        Log.e("TAG", "searching for: " + query);
         if (TextUtils.isEmpty(query)) {
-            mAdapter.animateTo(getDeepCopy(mModels));
+            mAdapter.resetFilter();
         } else {
-            final List<ContactListItemModel> filteredModelList = filter(getDeepCopy(mModels), query);
-            mAdapter.animateTo(filteredModelList);
-            mRecyclerView.scrollToPosition(0);
+            mAdapter.getFilter().filter(query);
         }
-        showNoResultsView();
     }
 
     @Override
@@ -190,20 +182,6 @@ public class SelectContactsActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             mSearchView.setQuery(query, false);
         }
-    }
-
-    private List<ContactListItemModel> filter(List<ContactListItemModel> models, String query) {
-        query = query.toLowerCase();
-
-        final List<ContactListItemModel> filteredModelList = new ArrayList<>();
-        for (ContactListItemModel model : models) {
-            final String text = model.getContact().getDisplayName().toLowerCase();
-            if (text.contains(query)) {
-                model.setSeparator(Separator.NONE);
-                filteredModelList.add(model);
-            }
-        }
-        return filteredModelList;
     }
 
     private void showNoResultsView() {

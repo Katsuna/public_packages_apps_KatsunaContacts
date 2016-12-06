@@ -46,10 +46,8 @@ import com.katsuna.contacts.ui.adapters.ContactsRecyclerViewAdapter;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.katsuna.contacts.utils.ContactArranger;
-import com.katsuna.contacts.utils.Separator;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
@@ -167,12 +165,10 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mAdapter.animateTo(getDeepCopy(mModels));
-                showNoResultsView();
+                mAdapter.resetFilter();
                 return false;
             }
         });
-
 
         return true;
     }
@@ -279,8 +275,15 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsProcessed(contactList);
-        mAdapter = new ContactsRecyclerViewAdapter(getDeepCopy(mModels), this, mProfile);
+        mAdapter = new ContactsRecyclerViewAdapter(mModels, this, mProfile);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                showNoResultsView();
+            }
+        });
         showNoResultsView();
     }
 
@@ -404,32 +407,12 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
     }
 
-    private List<ContactListItemModel> filter(List<ContactListItemModel> models, String query) {
-        query = query.toLowerCase();
-
-        final List<ContactListItemModel> filteredModelList = new ArrayList<>();
-        for (ContactListItemModel model : models) {
-            final String text = model.getContact().getDisplayName().toLowerCase();
-            if (text.contains(query)) {
-                //exclude premium contacts
-                if (!model.isPremium()) {
-                    model.setSeparator(Separator.NONE);
-                    filteredModelList.add(model);
-                }
-            }
-        }
-        return filteredModelList;
-    }
-
     private void search(String query) {
         if (TextUtils.isEmpty(query)) {
-            mAdapter.animateTo(getDeepCopy(mModels));
+            mAdapter.resetFilter();
         } else {
-            final List<ContactListItemModel> filteredModelList = filter(getDeepCopy(mModels), query);
-            mAdapter.animateTo(filteredModelList);
-            mRecyclerView.scrollToPosition(0);
+            mAdapter.getFilter().filter(query);
         }
-        showNoResultsView();
     }
 
     private void showNoResultsView() {
@@ -440,13 +423,5 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             mNoResultsView.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         }
-    }
-
-    private List<ContactListItemModel> getDeepCopy(List<ContactListItemModel> contactListItemModels) {
-        List<ContactListItemModel> output = new ArrayList<>();
-        for (ContactListItemModel model : contactListItemModels) {
-            output.add(new ContactListItemModel(model));
-        }
-        return output;
     }
 }

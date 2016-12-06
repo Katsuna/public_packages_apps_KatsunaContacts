@@ -6,8 +6,6 @@ public final class Constants {
         // restrict instantiation
     }
 
-    public final static long PRESSURE_SENSITIVITY_TIMEOUT = 300;
-
     public static final String DISPLAY_SORT_KEY = "display_sort";
     public static final String DISPLAY_SORT_SURNAME = "1";
     public static final String DISPLAY_SORT_NAME = "2";

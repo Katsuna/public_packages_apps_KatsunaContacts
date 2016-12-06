@@ -3,6 +3,7 @@ package com.katsuna.contacts.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -18,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import com.katsuna.contacts.R;
 
 public class FileChooserDialog {
     private String m_sdcardDirectory = "";
@@ -177,8 +176,9 @@ public class FileChooserDialog {
     private ArrayAdapter<String> createListAdapter(List<String> items) {
         return new ArrayAdapter<String>(m_context, android.R.layout.select_dialog_item,
                 android.R.id.text1, items) {
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
                 if (v instanceof TextView) {

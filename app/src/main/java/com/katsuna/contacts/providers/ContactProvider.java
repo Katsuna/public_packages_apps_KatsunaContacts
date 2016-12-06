@@ -13,17 +13,22 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.katsuna.contacts.domain.Address;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Email;
 import com.katsuna.contacts.domain.Name;
 import com.katsuna.contacts.domain.Phone;
+import com.katsuna.contacts.providers.queries.ContactAddressQuery;
+import com.katsuna.contacts.providers.queries.ContactEmailQuery;
+import com.katsuna.contacts.providers.queries.ContactNameQuery;
+import com.katsuna.contacts.providers.queries.ContactPhotoQuery;
+import com.katsuna.contacts.providers.queries.ContactQuery;
 import com.katsuna.contacts.utils.Constants;
 import com.katsuna.contacts.utils.ImageHelper;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactProvider {
 
@@ -41,123 +46,92 @@ public class ContactProvider {
         List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE,
-                ContactsContract.Contacts.TIMES_CONTACTED,
-                ContactsContract.Contacts.LAST_TIME_CONTACTED,
-                ContactsContract.Contacts.STARRED
-        };
         String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
         String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
-        String displaySort = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+        Cursor cursor = cr.query(baseUri, ContactQuery._PROJECTION, selection, null, orderBy);
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int displayNameIndex = getDisplayNameIndex();
 
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
-            int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
-
-            int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE);
-            if (displaySort.equals(Constants.DISPLAY_SORT_NAME)) {
-                displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+                    do {
+                        Contact contact = new Contact();
+                        contact.setId(cursor.getString(ContactQuery._ID));
+                        contact.setDisplayName(cursor.getString(displayNameIndex));
+                        contact.setTimesContacted(cursor.getInt(ContactQuery.TIMES_CONTACTED));
+                        contact.setLastTimeContacted(cursor.getLong(ContactQuery.LAST_TIME_CONTACTED));
+                        int starred = cursor.getInt(ContactQuery.STARRED);
+                        contact.setStarred(starred == 1);
+                        contacts.add(contact);
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                cursor.close();
             }
-
-            int timesContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED);
-            int lastTimeContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED);
-            int starredIndex = cursor.getColumnIndex(ContactsContract.Contacts.STARRED);
-
-            do {
-                Contact contact = new Contact();
-
-                contact.setId(cursor.getString(idIndex));
-                contact.setDisplayName(cursor.getString(displayNameIndex));
-                contact.setTimesContacted(cursor.getInt(timesContactedIndex));
-                contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
-                int starred = cursor.getInt(starredIndex);
-                contact.setStarred(starred == 1);
-                contacts.add(contact);
-            } while (cursor.moveToNext());
-
-            cursor.close();
         }
 
         return contacts;
+    }
+
+    private int getDisplayNameIndex() {
+        String displaySort = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+
+        return displaySort.equals(Constants.DISPLAY_SORT_NAME) ?
+                ContactQuery.DISPLAY_NAME_PRIMARY : ContactQuery.DISPLAY_NAME_ALTERNATIVE;
     }
 
     public List<Contact> getContactsForExport() {
         List<Contact> contacts = new ArrayList<>();
 
         Uri baseUri = ContactsContract.Contacts.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE,
-                ContactsContract.Contacts.TIMES_CONTACTED,
-                ContactsContract.Contacts.LAST_TIME_CONTACTED,
-                ContactsContract.Contacts.STARRED
-        };
         String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
         String orderBy = ContactsContract.Contacts.DISPLAY_NAME + " ASC";
 
-        String displaySort = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+        Cursor cursor = cr.query(baseUri, ContactQuery._PROJECTION, selection, null, orderBy);
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int displayNameIndex = getDisplayNameIndex();
 
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
+                    do {
+                        Contact contact = new Contact();
 
-            int idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+                        contact.setId(cursor.getString(ContactQuery._ID));
+                        contact.setDisplayName(cursor.getString(displayNameIndex));
+                        contact.setTimesContacted(cursor.getInt(ContactQuery.TIMES_CONTACTED));
+                        contact.setLastTimeContacted(cursor.getLong(ContactQuery.LAST_TIME_CONTACTED));
+                        int starred = cursor.getInt(ContactQuery.STARRED);
+                        contact.setStarred(starred == 1);
 
-            int displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE);
-            if (displaySort.equals(Constants.DISPLAY_SORT_NAME)) {
-                displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY);
+
+                        //name
+                        String contactId = contact.getId();
+                        contact.setName(getName(contactId));
+                        contact.setPhones(getPhones(contactId));
+                        contact.setPhoto(getImage(contactId, true));
+
+                        //use default email or first found
+                        List<Email> emails = getEmails(contactId);
+                        if (emails.size() > 0) {
+                            contact.setEmail(emails.get(0));
+                        }
+
+                        //use default address or first found
+                        List<Address> addresses = getAddresses(contactId);
+                        if (addresses.size() > 0) {
+                            contact.setAddress(addresses.get(0));
+                        }
+
+                        contacts.add(contact);
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                cursor.close();
             }
-
-            int timesContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED);
-            int lastTimeContactedIndex = cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED);
-            int starredIndex = cursor.getColumnIndex(ContactsContract.Contacts.STARRED);
-
-            do {
-                Contact contact = new Contact();
-
-                contact.setId(cursor.getString(idIndex));
-                contact.setDisplayName(cursor.getString(displayNameIndex));
-                contact.setTimesContacted(cursor.getInt(timesContactedIndex));
-                contact.setLastTimeContacted(cursor.getLong(lastTimeContactedIndex));
-                int starred = cursor.getInt(starredIndex);
-                contact.setStarred(starred == 1);
-
-
-                //name
-                String contactId = contact.getId();
-                contact.setName(getName(contactId));
-                contact.setPhones(getPhones(contactId));
-                contact.setPhoto(getImage(contactId, true));
-
-                //use default email or first found
-                List<Email> emails = getEmails(contactId);
-                if (emails.size() > 0) {
-                    contact.setEmail(emails.get(0));
-                }
-
-                //use default address or first found
-                List<Address> addresses = getAddresses(contactId);
-                if (addresses.size() > 0) {
-                    contact.setAddress(addresses.get(0));
-                }
-
-                contacts.add(contact);
-            } while (cursor.moveToNext());
-
-            cursor.close();
         }
 
         return contacts;
@@ -199,27 +173,24 @@ public class ContactProvider {
         List<Phone> phones = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.CommonDataKinds.Phone._ID,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.TYPE
-        };
         String selection = ContactsContract.Data.CONTACT_ID + "=" + contactId;
         String orderBy = ContactsContract.CommonDataKinds.Phone.IS_PRIMARY + " DESC";
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor != null && cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
-            int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-            int typeIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
-            do {
-                Phone phone = new Phone();
-                phone.setId(cursor.getString(idIndex));
-                phone.setNumber(cursor.getString(numberIndex));
-                phone.setType(cursor.getString(typeIndex));
-                phones.add(phone);
-            } while (cursor.moveToNext());
-            cursor.close();
+        Cursor cursor = cr.query(baseUri, ContactPhotoQuery._PROJECTION, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Phone phone = new Phone();
+                        phone.setId(cursor.getString(ContactPhotoQuery._ID));
+                        phone.setNumber(cursor.getString(ContactPhotoQuery.NUMBER));
+                        phone.setType(cursor.getString(ContactPhotoQuery.TYPE));
+                        phones.add(phone);
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                cursor.close();
+            }
         }
 
         return phones;
@@ -229,24 +200,23 @@ public class ContactProvider {
         List<Email> emails = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.CommonDataKinds.Email._ID,
-                ContactsContract.CommonDataKinds.Email.ADDRESS
-        };
         String selection = ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + contactId;
         String orderBy = ContactsContract.CommonDataKinds.Email.IS_PRIMARY + " DESC";
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor != null && cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email._ID);
-            int addressIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
-            do {
-                Email email = new Email();
-                email.setId(cursor.getString(idIndex));
-                email.setAddress(cursor.getString(addressIndex));
-                emails.add(email);
-            } while (cursor.moveToNext());
-            cursor.close();
+        Cursor cursor = cr.query(baseUri, ContactEmailQuery._PROJECTION, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Email email = new Email();
+                        email.setId(cursor.getString(ContactEmailQuery._ID));
+                        email.setAddress(cursor.getString(ContactEmailQuery.ADDRESS));
+                        emails.add(email);
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                cursor.close();
+            }
         }
 
         return emails;
@@ -256,24 +226,23 @@ public class ContactProvider {
         List<Address> addresses = new ArrayList<>();
 
         Uri baseUri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
-        String[] projection = {
-                ContactsContract.CommonDataKinds.StructuredPostal._ID,
-                ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
-        };
         String selection = ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + "=" + contactId;
         String orderBy = ContactsContract.CommonDataKinds.StructuredPostal.IS_PRIMARY + " DESC";
 
-        Cursor cursor = cr.query(baseUri, projection, selection, null, orderBy);
-        if (cursor != null && cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal._ID);
-            int addressIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS);
-            do {
-                Address address = new Address();
-                address.setId(cursor.getString(idIndex));
-                address.setFormattedAddress(cursor.getString(addressIndex));
-                addresses.add(address);
-            } while (cursor.moveToNext());
-            cursor.close();
+        Cursor cursor = cr.query(baseUri, ContactAddressQuery._PROJECTION, selection, null, orderBy);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Address address = new Address();
+                        address.setId(cursor.getString(ContactAddressQuery._ID));
+                        address.setFormattedAddress(cursor.getString(ContactAddressQuery.FORMATTED_ADDRESS));
+                        addresses.add(address);
+                    } while (cursor.moveToNext());
+                }
+            } finally {
+                cursor.close();
+            }
         }
 
         return addresses;
@@ -284,24 +253,22 @@ public class ContactProvider {
 
         Uri baseUri = ContactsContract.Data.CONTENT_URI;
 
-        String[] projection = new String[]{
-                ContactsContract.CommonDataKinds.StructuredName._ID,
-                ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
-                ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
-        };
-
         String selection = ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?";
         String[] selectionParameters = new String[]{contactId, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE};
 
-        Cursor cursor = cr.query(baseUri, projection, selection, selectionParameters, null);
+        Cursor cursor = cr.query(baseUri, ContactNameQuery._PROJECTION, selection, selectionParameters, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            name = new Name();
-            name.setId(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName._ID)));
-            name.setName(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME)));
-            name.setSurname(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME)));
-
-            cursor.close();
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    name = new Name();
+                    name.setId(cursor.getString(ContactNameQuery._ID));
+                    name.setName(cursor.getString(ContactNameQuery.GIVEN_NAME));
+                    name.setSurname(cursor.getString(ContactNameQuery.FAMILY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
         }
 
         return name;

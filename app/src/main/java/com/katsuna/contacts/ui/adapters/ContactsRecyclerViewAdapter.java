@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.katsuna.commons.entities.Profile;
 import com.katsuna.contacts.R;
@@ -13,19 +13,27 @@ import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactViewHolder;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.katsuna.contacts.utils.Separator;
 
-public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements Filterable {
 
     private static final int CONTACT_NOT_SELECTED = 1;
     private static final int CONTACT_SELECTED = 2;
 
-    private final List<ContactListItemModel> mModels;
+    private final List<ContactListItemModel> mOriginalContacts;
     private final IContactInteractionListener mListener;
-    private int mSelectedContactPosition = -1;
     private final Profile mProfile;
+    private final ContactFilter mFilter = new ContactFilter();
+    private List<ContactListItemModel> mFilteredContacts;
+    private int mSelectedContactPosition = -1;
 
     public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener, Profile profile) {
-        mModels = models;
+        mOriginalContacts = models;
+        mFilteredContacts = models;
         mListener = listener;
         mProfile = profile;
     }
@@ -58,7 +66,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final ContactListItemModel model = mModels.get(position);
+        final ContactListItemModel model = mFilteredContacts.get(position);
 
         switch (viewHolder.getItemViewType()) {
 
@@ -76,7 +84,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        return mModels.size();
+        return mFilteredContacts.size();
     }
 
     public void selectContactAtPosition(int position) {
@@ -86,8 +94,8 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public int getPositionByContactId(String contactId) {
         int position = -1;
-        for (int i = 0; i < mModels.size(); i++) {
-            if (mModels.get(i).getContact().getId().equals(contactId)) {
+        for (int i = 0; i < mFilteredContacts.size(); i++) {
+            if (mFilteredContacts.get(i).getContact().getId().equals(contactId)) {
                 position = i;
                 break;
             }
@@ -95,55 +103,49 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return position;
     }
 
-    public void animateTo(List<ContactListItemModel> models) {
-        mSelectedContactPosition = -1;
-        applyAndAnimateRemovals(models);
-        applyAndAnimateAdditions(models);
-        applyAndAnimateMovedItems(models);
+    @Override
+    public Filter getFilter() {
+        return mFilter;
     }
 
-    private void applyAndAnimateRemovals(List<ContactListItemModel> newModels) {
-        for (int i = mModels.size() - 1; i >= 0; i--) {
-            final ContactListItemModel model = mModels.get(i);
-            if (!newModels.contains(model)) {
-                removeItem(i);
+    public void resetFilter() {
+        mFilteredContacts = mOriginalContacts;
+        notifyDataSetChanged();
+    }
+
+    private class ContactFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ContactListItemModel> filteredContacts = filter(mOriginalContacts, constraint);
+            FilterResults results = new FilterResults();
+            results.values = filteredContacts;
+            results.count = filteredContacts.size();
+            return results;
+        }
+
+        private List<ContactListItemModel> filter(List<ContactListItemModel> models,
+                                                  CharSequence query) {
+            query = query.toString().toLowerCase();
+
+            final List<ContactListItemModel> filteredModelList = new ArrayList<>();
+            for (ContactListItemModel model : models) {
+                final String text = model.getContact().getDisplayName().toLowerCase();
+                if (text.contains(query)) {
+                    //exclude premium contacts
+                    if (!model.isPremium()) {
+                        model.setSeparator(Separator.NONE);
+                        filteredModelList.add(model);
+                    }
+                }
             }
+            return filteredModelList;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mFilteredContacts = (ArrayList<ContactListItemModel>) results.values;
+            notifyDataSetChanged();
         }
     }
-
-    private void applyAndAnimateAdditions(List<ContactListItemModel> newModels) {
-        for (int i = 0, count = newModels.size(); i < count; i++) {
-            final ContactListItemModel model = newModels.get(i);
-            if (!mModels.contains(model)) {
-                addItem(i, model);
-            }
-        }
-    }
-
-    private void applyAndAnimateMovedItems(List<ContactListItemModel> newModels) {
-        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final ContactListItemModel model = newModels.get(toPosition);
-            final int fromPosition = mModels.indexOf(model);
-            if (fromPosition >= 0 && fromPosition != toPosition) {
-                moveItem(fromPosition, toPosition);
-            }
-        }
-    }
-
-    private void removeItem(int position) {
-        mModels.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    private void addItem(int position, ContactListItemModel model) {
-        mModels.add(position, model);
-        notifyItemInserted(position);
-    }
-
-    private void moveItem(int fromPosition, int toPosition) {
-        final ContactListItemModel model = mModels.remove(fromPosition);
-        mModels.add(toPosition, model);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
 }

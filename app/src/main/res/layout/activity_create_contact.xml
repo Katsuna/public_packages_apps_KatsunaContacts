@@ -59,9 +59,9 @@
             android:gravity="center"
             android:hint="@string/name"
             android:imeOptions="actionNext"
-            android:singleLine="true"
             android:textColor="@color/pink"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -78,9 +78,9 @@
             android:gravity="center"
             android:hint="@string/surname"
             android:imeOptions="actionNext"
-            android:singleLine="true"
             android:textColor="@color/pink"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
