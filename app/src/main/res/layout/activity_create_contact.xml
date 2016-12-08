@@ -61,6 +61,7 @@
             android:imeOptions="actionNext"
             android:textColor="@color/pink"
             android:textSize="20sp"
+            android:inputType="text"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
@@ -80,6 +81,7 @@
             android:imeOptions="actionNext"
             android:textColor="@color/pink"
             android:textSize="20sp"
+            android:inputType="text"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 

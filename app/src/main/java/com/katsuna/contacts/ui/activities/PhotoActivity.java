@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -76,10 +77,23 @@ public abstract class PhotoActivity extends AppCompatActivity {
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                mUri = Uri.fromFile(photoFile);
+                mUri = getUriFromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    private Uri getUriFromFile(File photoFile) {
+
+        if (android.os.Build.VERSION.SDK_INT >= 24)
+        {
+            return FileProvider.getUriForFile(PhotoActivity.this, "com.katsuna.contacts.provider",
+                    photoFile);
+        }
+        else
+        {
+            return Uri.fromFile(photoFile);
         }
     }
 
