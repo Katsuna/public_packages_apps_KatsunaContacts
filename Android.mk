@@ -41,6 +41,8 @@ LOCAL_AAPT_FLAGS += --extra-packages com.makeramen.roundedimageview
 
 LOCAL_PACKAGE_NAME := KatsunaContacts
 LOCAL_CERTIFICATE := shared
+LOCAL_PRIVILEGED_MODULE := true
+
 #LOCAL_PROGUARD_FLAG_FILES := app/proguard-rules.pro
 
 LOCAL_PROGUARD_ENABLED := disabled
