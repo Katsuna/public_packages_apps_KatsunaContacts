@@ -18,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -32,12 +31,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.katsuna.commons.KatsunaConstants;
-import com.katsuna.commons.entities.Profile;
-import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.entities.UserProfileContainer;
+import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.commons.utils.Log;
-import com.katsuna.commons.utils.ProfileReader;
-import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Phone;
@@ -50,7 +46,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IContactInteractionListener {
+public class MainActivity extends KatsunaActivity implements IContactInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
@@ -65,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     private SearchView mSearchView;
 
     private Contact mSelectedContact;
-    private Profile mProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,45 +77,9 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
     protected void onResume() {
         super.onResume();
 
-        boolean profileChanged;
-        Profile freshProfileFromContentProvider = ProfileReader.getProfile(this);
-        Profile profileFromPreferences = getProfileFromPreferences();
-        if (freshProfileFromContentProvider == null) {
-            profileChanged = setSelectedProfile(profileFromPreferences);
-        } else {
-            if (profileFromPreferences.getType() == ProfileType.AUTO.getNumVal()) {
-                profileChanged = setSelectedProfile(freshProfileFromContentProvider);
-            } else {
-                profileChanged = setSelectedProfile(profileFromPreferences);
-            }
-        }
-
-        if (isChanged() || profileChanged) {
+        if (isChanged() || mUserProfileChanged) {
             loadContacts();
         }
-    }
-
-    private boolean setSelectedProfile(Profile profile) {
-        boolean profileChanged = false;
-        if (mProfile == null) {
-            mProfile = profile;
-            profileChanged = true;
-        } else {
-            if (mProfile.getType() != profile.getType()) {
-                profileChanged = true;
-                mProfile.setType(profile.getType());
-            }
-        }
-        return profileChanged;
-    }
-
-    private Profile getProfileFromPreferences() {
-        Profile profile = new Profile();
-        int profileType = SettingsManager.readSetting(this, KatsunaConstants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
-
-        profile.setType(profileType);
-
-        return profile;
     }
 
     private void initControls() {
@@ -275,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsProcessed(contactList);
-        mAdapter = new ContactsRecyclerViewAdapter(mModels, this, mProfile);
+        mAdapter = new ContactsRecyclerViewAdapter(mModels, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -401,6 +360,11 @@ public class MainActivity extends AppCompatActivity implements IContactInteracti
             });
         }
 
+    }
+
+    @Override
+    public UserProfileContainer getUserProfileContainer() {
+        return mUserProfileContainer;
     }
 
     private void sendSmsToNumber(String number) {

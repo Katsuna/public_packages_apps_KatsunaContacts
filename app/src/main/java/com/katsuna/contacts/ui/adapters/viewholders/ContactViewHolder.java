@@ -7,9 +7,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.katsuna.commons.entities.UserProfileContainer;
 import com.squareup.picasso.Picasso;
 
-import com.katsuna.commons.entities.Profile;
 import com.katsuna.commons.entities.ProfileType;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
@@ -25,9 +25,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mPhoto;
     private final ImageView mSeparatorImage;
     private final IContactInteractionListener mListener;
-    private final Profile mProfile;
+    private final UserProfileContainer mUserProfileContainer;
 
-    public ContactViewHolder(View view, IContactInteractionListener listener, Profile profile) {
+    public ContactViewHolder(View view, IContactInteractionListener listener) {
         super(view);
         mView = view;
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
@@ -37,7 +37,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mContentView = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
-        mProfile = profile;
+        mUserProfileContainer = listener.getUserProfileContainer();
         adjustProfile();
     }
 
@@ -85,11 +85,13 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void adjustProfile() {
-        if (mProfile != null) {
+        ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
+
+        if (opticalSizeProfile != null) {
             int size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
-            if (mProfile.getType() == ProfileType.ADVANCED.getNumVal()) {
+            if (opticalSizeProfile == ProfileType.ADVANCED) {
                 size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
-            } else if (mProfile.getType() == ProfileType.SIMPLE.getNumVal()) {
+            } else if (opticalSizeProfile == ProfileType.SIMPLE) {
                 size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
             }
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);

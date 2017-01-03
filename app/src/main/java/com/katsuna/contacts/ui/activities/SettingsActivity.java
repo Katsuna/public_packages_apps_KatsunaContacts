@@ -20,7 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.katsuna.commons.KatsunaConstants;
+import com.katsuna.commons.entities.PreferenceKey;
 import com.katsuna.commons.entities.ProfileType;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
@@ -137,12 +137,15 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         Spinner mProfileTypes = (Spinner) findViewById(R.id.profiles);
-        int profileSetting = SettingsManager.readSetting(SettingsActivity.this, KatsunaConstants.PROFILE_KEY, ProfileType.INTERMEDIATE.getNumVal());
-        mProfileTypes.setSelection(profileSetting);
+        String profileSetting =  SettingsManager.readSetting(SettingsActivity.this,
+                PreferenceKey.OPTICAL_SIZE_PROFILE,
+                String.valueOf(ProfileType.INTERMEDIATE.getNumVal()));
+        mProfileTypes.setSelection(Integer.parseInt(profileSetting));
         mProfileTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SettingsManager.setSetting(SettingsActivity.this, KatsunaConstants.PROFILE_KEY, i);
+                SettingsManager.setSetting(SettingsActivity.this,
+                        PreferenceKey.OPTICAL_SIZE_PROFILE, String.valueOf(i));
             }
 
             @Override

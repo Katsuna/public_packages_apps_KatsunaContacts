@@ -7,13 +7,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import com.katsuna.commons.entities.Profile;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.squareup.picasso.Picasso;
 
 public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
@@ -23,9 +22,9 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     private final Button mMessageButton;
     private final ImageView mPhoto;
     private final IContactInteractionListener mListener;
-    private final Profile mProfile;
+    private final UserProfileContainer mUserProfileContainer;
 
-    public ContactSelectedViewHolder(View view, IContactInteractionListener listener, Profile profile) {
+    public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
         super(view);
         mView = view;
         mContactName = (TextView) view.findViewById(R.id.contact_name);
@@ -34,7 +33,7 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
         mCallButton = (Button) view.findViewById(R.id.call_button);
         mMessageButton = (Button) view.findViewById(R.id.message_button);
         mListener = listener;
-        mProfile = profile;
+        mUserProfileContainer = listener.getUserProfileContainer();
         adjustProfile();
     }
 
@@ -68,14 +67,16 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void adjustProfile() {
-        if (mProfile != null) {
+        ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
+
+        if (opticalSizeProfile != null) {
             int photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
             int actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_intemediate);
 
-            if (mProfile.getType() == ProfileType.ADVANCED.getNumVal()) {
+            if (opticalSizeProfile == ProfileType.ADVANCED) {
                 photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
                 actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_advanced);
-            } else if (mProfile.getType() == ProfileType.SIMPLE.getNumVal()) {
+            } else if (opticalSizeProfile == ProfileType.SIMPLE) {
                 photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
                 actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
             }

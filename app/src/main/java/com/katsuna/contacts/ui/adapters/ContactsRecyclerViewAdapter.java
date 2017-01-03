@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.katsuna.commons.entities.Profile;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
@@ -26,16 +25,14 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private final List<ContactListItemModel> mOriginalContacts;
     private final IContactInteractionListener mListener;
-    private final Profile mProfile;
     private final ContactFilter mFilter = new ContactFilter();
     private List<ContactListItemModel> mFilteredContacts;
     private int mSelectedContactPosition = -1;
 
-    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener, Profile profile) {
+    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener) {
         mOriginalContacts = models;
         mFilteredContacts = models;
         mListener = listener;
-        mProfile = profile;
     }
 
     @Override
@@ -54,11 +51,11 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (viewType) {
             case CONTACT_NOT_SELECTED:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
-                viewHolder = new ContactViewHolder(view, mListener, mProfile);
+                viewHolder = new ContactViewHolder(view, mListener);
                 break;
             case CONTACT_SELECTED:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
-                viewHolder = new ContactSelectedViewHolder(view, mListener, mProfile);
+                viewHolder = new ContactSelectedViewHolder(view, mListener);
                 break;
         }
         return viewHolder;

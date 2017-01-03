@@ -11,15 +11,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-permission android:name="com.katsuna.datastore.permission.errors" />
-    <uses-permission android:name="com.katsuna.datastore.permission.profiles" />
+    <uses-permission android:name="com.katsuna.datastore.permission.preferences" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
     <application
-        android:name=".ContactsApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
         android:icon="@mipmap/ic_launcher"
