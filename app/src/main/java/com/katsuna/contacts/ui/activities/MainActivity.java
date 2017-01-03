@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +63,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private SearchView mSearchView;
 
     private Contact mSelectedContact;
+    private FloatingActionButton mNewContactFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +80,23 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     protected void onResume() {
         super.onResume();
 
+        if (mUserProfileChanged) {
+            adjustFabPosition();
+        }
+
         if (isChanged() || mUserProfileChanged) {
             loadContacts();
+        }
+    }
+
+    private void adjustFabPosition() {
+        CoordinatorLayout.LayoutParams lp =   (CoordinatorLayout.LayoutParams)
+                mNewContactFab.getLayoutParams();
+        if (mUserProfileContainer.isRightHanded()) {
+            lp.gravity = Gravity.END | Gravity.BOTTOM;
+        }
+        else {
+            lp.gravity = Gravity.START | Gravity.BOTTOM;
         }
     }
 
@@ -212,7 +230,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     private void setupFab() {
-        FloatingActionButton mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         assert mNewContactFab != null;
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override

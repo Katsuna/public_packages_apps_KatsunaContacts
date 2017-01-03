@@ -48,4 +48,6 @@
     <string name="folder_creation_failed">Failed to create \'%1$s\' folder.</string>
     <string name="invalid_vcf">Invalid vcf.</string>
 
+    <string name="right_hand_setting">Right handed</string>
+
 </resources>

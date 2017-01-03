@@ -9,12 +9,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.katsuna.commons.entities.PreferenceKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
@@ -40,7 +42,7 @@ import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends KatsunaActivity {
 
     private static final String TAG = "SettingsActivity";
 
@@ -50,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
+    private CheckBox mRightHand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,24 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         initToolbar();
         initControls();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mUserProfileChanged) {
+            if (!mUserProfileContainer.hasKatsunaServices()) {
+                //enable app right hand setting
+                boolean isRightHanded = SettingsManager.readSetting(SettingsActivity.this,
+                        PreferenceKey.RIGHT_HAND, true);
+                mRightHand.setChecked(isRightHanded);
+                mRightHand.setVisibility(View.VISIBLE);
+            } else {
+                mRightHand.setVisibility(View.GONE);
+            }
+
+        }
     }
 
     private void initToolbar() {
@@ -137,7 +158,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         Spinner mProfileTypes = (Spinner) findViewById(R.id.profiles);
-        String profileSetting =  SettingsManager.readSetting(SettingsActivity.this,
+        String profileSetting = SettingsManager.readSetting(SettingsActivity.this,
                 PreferenceKey.OPTICAL_SIZE_PROFILE,
                 String.valueOf(ProfileType.INTERMEDIATE.getNumVal()));
         mProfileTypes.setSelection(Integer.parseInt(profileSetting));
@@ -151,6 +172,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        mRightHand = (CheckBox) findViewById(R.id.right_hand);
+        mRightHand.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SettingsManager.setSetting(SettingsActivity.this,
+                        PreferenceKey.RIGHT_HAND, isChecked);
             }
         });
     }
