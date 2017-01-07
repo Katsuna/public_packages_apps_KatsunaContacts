@@ -3,6 +3,7 @@
     <color name="grey50">#FAFAFA</color>
     <color name="grey100">#F5F5F5</color>
     <color name="grey300">#E0E0E0</color>
+    <color name="black50">#B2000000</color>
     <color name="black87">#de000000</color>
     <color name="teala40087">#1de9b6</color>
 
@@ -18,4 +19,7 @@
     <color name="grey">#48484a</color>
     <color name="grey200">#E3E3DC</color>
     <color name="grey800">#292527</color>
+
+    <color name="katsuna_blue">#134a9a</color>
+    <color name="katsuna_pink">#ffcdd0</color>
 </resources>

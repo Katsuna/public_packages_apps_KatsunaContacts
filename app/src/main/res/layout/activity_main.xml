@@ -36,6 +36,77 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/contact" />
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+            <FrameLayout
+                android:id="@+id/popup_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black50"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/fab_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:gravity="center|end"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/new_contact_button"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/popup_button"
+                        android:text="@string/add_contact"
+                        android:visibility="gone" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/new_contact_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:src="@drawable/ic_add_grey50_36dp"
+                        app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/search_button"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/popup_button"
+                        android:text="@string/common_search"
+                        android:visibility="gone" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/search_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:src="@drawable/ic_search_black87_36dp"
+                        app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/no_results"
             android:layout_width="match_parent"
@@ -45,15 +116,6 @@
             android:text="@string/common_no_contacts"
             android:textSize="20sp"
             android:visibility="gone" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/new_contact_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:src="@drawable/ic_person_add_black87_24dp"
-            app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

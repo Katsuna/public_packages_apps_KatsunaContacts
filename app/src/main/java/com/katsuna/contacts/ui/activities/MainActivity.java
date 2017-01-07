@@ -7,14 +7,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -30,7 +32,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.katsuna.commons.entities.UserProfileContainer;
@@ -54,16 +60,25 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
-
+    private static final int POPUP_INACTIVITY_THRESHOLD = 10000;
+    private static final int POPUP_HANDLER_DELAY = 1000;
     private List<ContactListItemModel> mModels;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
     private SearchView mSearchView;
-
     private Contact mSelectedContact;
     private FloatingActionButton mNewContactFab;
+    private FloatingActionButton mSearchFab;
+    private FrameLayout mPopupFrame;
+    private long mLastTouchTimestamp;
+    private Handler mPopupActionHandler;
+    private boolean mPopupVisible;
+    private boolean mSearchMode;
+    private LinearLayout mFabContainer;
+    private Button mNewContactButton;
+    private Button mSearchContactsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +95,9 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     protected void onResume() {
         super.onResume();
 
+        showPopup(false);
         if (mUserProfileChanged) {
-            adjustFabPosition();
+            adjustFabPosition(false);
         }
 
         if (isChanged() || mUserProfileChanged) {
@@ -89,21 +105,85 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         }
     }
 
-    private void adjustFabPosition() {
-        CoordinatorLayout.LayoutParams lp =   (CoordinatorLayout.LayoutParams)
-                mNewContactFab.getLayoutParams();
+    private void adjustFabPosition(boolean verticalCenter) {
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabContainer.getLayoutParams();
+
+        int verticalCenterGravity = verticalCenter ? Gravity.CENTER : Gravity.BOTTOM;
+
         if (mUserProfileContainer.isRightHanded()) {
-            lp.gravity = Gravity.END | Gravity.BOTTOM;
-        }
-        else {
-            lp.gravity = Gravity.START | Gravity.BOTTOM;
+            lp.gravity = Gravity.END | verticalCenterGravity;
+        } else {
+            lp.gravity = Gravity.START | verticalCenterGravity;
         }
     }
 
     private void initControls() {
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mLastTouchTimestamp = System.currentTimeMillis();
+        initPopupActionHandler();
+
         mNoResultsView = (TextView) findViewById(R.id.no_results);
+
+        mPopupFrame = (FrameLayout) findViewById(R.id.popup_frame);
+        mPopupFrame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                showPopup(false);
+                return true;
+            }
+        });
+        mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
+
+        mNewContactButton = (Button) findViewById(R.id.new_contact_button);
+        mNewContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createContact();
+            }
+        });
+        mSearchContactsButton = (Button) findViewById(R.id.search_button);
+    }
+
+    private void showPopup(boolean show) {
+        if (show) {
+            //don't show popup if menu drawer is open or toolbar search is enabled
+            if (!drawerLayout.isDrawerOpen(GravityCompat.START) && !mSearchMode) {
+                mPopupFrame.setVisibility(View.VISIBLE);
+                mNewContactButton.setVisibility(View.VISIBLE);
+                mSearchContactsButton.setVisibility(View.VISIBLE);
+                adjustFabPosition(true);
+                mPopupVisible = true;
+            }
+        } else {
+            mPopupFrame.setVisibility(View.GONE);
+            mNewContactButton.setVisibility(View.GONE);
+            mSearchContactsButton.setVisibility(View.GONE);
+            adjustFabPosition(false);
+            mPopupVisible = false;
+            mLastTouchTimestamp = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        mLastTouchTimestamp = System.currentTimeMillis();
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private void initPopupActionHandler() {
+        mPopupActionHandler = new Handler();
+        mPopupActionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                if (now - POPUP_INACTIVITY_THRESHOLD > mLastTouchTimestamp && !mPopupVisible) {
+                    showPopup(true);
+                }
+                mPopupActionHandler.postDelayed(this, POPUP_HANDLER_DELAY);
+            }
+        }, POPUP_HANDLER_DELAY);
     }
 
     private void initToolbar() {
@@ -135,6 +215,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                showPopup(false);
                 search(newText);
                 return false;
             }
@@ -142,8 +223,16 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                mSearchMode = false;
                 mAdapter.resetFilter();
                 return false;
+            }
+        });
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchMode = true;
+                showPopup(false);
             }
         });
 
@@ -190,6 +279,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                showPopup(false);
                 return true;
         }
 
@@ -235,10 +325,21 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
-                startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
+                createContact();
             }
         });
+
+        int colorBlue = ContextCompat.getColor(this, R.color.katsuna_blue);
+        mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(colorBlue));
+
+        mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
+        int colorPink = ContextCompat.getColor(this, R.color.katsuna_pink);
+        mSearchFab.setBackgroundTintList(ColorStateList.valueOf(colorPink));
+    }
+
+    private void createContact() {
+        Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
+        startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
     }
 
     private void loadContacts() {

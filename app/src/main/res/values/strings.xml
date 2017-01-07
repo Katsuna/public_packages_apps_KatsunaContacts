@@ -27,6 +27,7 @@
     <string name="select_file">Select file</string>
 
     <!-- Contact manipulation -->
+    <string name="add_contact">Add contact</string>
     <string name="no_contacts_selected">No contacts selected.</string>
     <string name="delete_contacts">Delete contacts</string>
     <string name="contacts_deleted">Deletion succeeded.</string>
