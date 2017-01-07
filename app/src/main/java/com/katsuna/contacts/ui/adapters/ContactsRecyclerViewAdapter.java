@@ -74,7 +74,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
             case CONTACT_SELECTED:
                 ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;
-                contactSelectedViewHolder.bind(model.getContact());
+                contactSelectedViewHolder.bind(model, position);
                 break;
         }
     }

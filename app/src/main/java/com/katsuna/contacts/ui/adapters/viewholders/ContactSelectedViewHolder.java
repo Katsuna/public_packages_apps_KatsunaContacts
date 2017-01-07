@@ -1,49 +1,32 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.katsuna.commons.entities.ProfileType;
-import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
+import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
-import com.squareup.picasso.Picasso;
 
-public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
-    private final View mView;
-    private final TextView mContactName;
+public class ContactSelectedViewHolder extends ContactViewHolder {
     private final Button mEditButton;
     private final Button mCallButton;
     private final Button mMessageButton;
-    private final ImageView mPhoto;
-    private final IContactInteractionListener mListener;
-    private final UserProfileContainer mUserProfileContainer;
 
     public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
-        super(view);
-        mView = view;
-        mContactName = (TextView) view.findViewById(R.id.contact_name);
-        mPhoto = (ImageView) view.findViewById(R.id.photo);
-        mEditButton = (Button) view.findViewById(R.id.edit_button);
-        mCallButton = (Button) view.findViewById(R.id.call_button);
-        mMessageButton = (Button) view.findViewById(R.id.message_button);
-        mListener = listener;
-        mUserProfileContainer = listener.getUserProfileContainer();
+        super(view, listener);
+        mEditButton = (Button) itemView.findViewById(R.id.edit_button);
+        mCallButton = (Button) itemView.findViewById(R.id.call_button);
+        mMessageButton = (Button) itemView.findViewById(R.id.message_button);
         adjustProfile();
     }
 
-    public void bind(final Contact contact) {
-        Picasso.with(mView.getContext())
-                .load(contact.getPhotoUri())
-                .fit()
-                .into(mPhoto);
+    public void bind(final ContactListItemModel model, int position) {
+        super.bind(model, position);
 
-        mContactName.setText(contact.getDisplayName());
+        final Contact contact = model.getContact();
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,15 +53,15 @@ public class ContactSelectedViewHolder extends RecyclerView.ViewHolder {
         ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
-            int photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
-            int actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_intemediate);
+            int photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
+            int actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_intemediate);
 
             if (opticalSizeProfile == ProfileType.ADVANCED) {
-                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
-                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_advanced);
+                photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
+                actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_advanced);
             } else if (opticalSizeProfile == ProfileType.SIMPLE) {
-                photoSize = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
-                actionButtonHeight = mView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
+                photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
+                actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
             }
             ViewGroup.LayoutParams layoutParams = mPhoto.getLayoutParams();
             layoutParams.height = photoSize;

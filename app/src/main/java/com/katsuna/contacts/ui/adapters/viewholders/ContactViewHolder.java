@@ -3,33 +3,31 @@ package com.katsuna.contacts.ui.adapters.viewholders;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.katsuna.commons.entities.UserProfileContainer;
-import com.squareup.picasso.Picasso;
-
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.squareup.picasso.Picasso;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder {
-    private final View mView;
+    protected final ImageView mPhoto;
+    protected final IContactInteractionListener mListener;
+    protected final UserProfileContainer mUserProfileContainer;
     private final LinearLayout mContactBasicContainer;
     private final LinearLayout mSeparatorWrapper;
     private final TextView mSeparatorView;
     private final TextView mContentView;
-    private final ImageView mPhoto;
     private final ImageView mSeparatorImage;
-    private final IContactInteractionListener mListener;
-    private final UserProfileContainer mUserProfileContainer;
 
     public ContactViewHolder(View view, IContactInteractionListener listener) {
         super(view);
-        mView = view;
         mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
@@ -47,7 +45,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         final Contact contact = model.getContact();
 
         //load photo
-        Picasso.with(mView.getContext())
+        Picasso.with(itemView.getContext())
                 .load(contact.getPhotoUri())
                 .fit()
                 .into(mPhoto);
@@ -61,7 +59,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;
             case STARRED:
-                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(mView.getContext(), R.drawable.ic_star_grey800_24dp));
+                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_star_grey800_24dp));
                 mSeparatorImage.setVisibility(View.VISIBLE);
                 mSeparatorWrapper.setVisibility(View.VISIBLE);
                 break;
@@ -88,14 +86,16 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
-            int size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
+            int size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
             if (opticalSizeProfile == ProfileType.ADVANCED) {
-                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
+                size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
             } else if (opticalSizeProfile == ProfileType.SIMPLE) {
-                size = mView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
+                size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
             }
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);
-            mPhoto.setLayoutParams(layoutParams);
+
+            ViewGroup.LayoutParams lp = mPhoto.getLayoutParams();
+            lp.width = size;
+            lp.height = size;
         }
     }
 
