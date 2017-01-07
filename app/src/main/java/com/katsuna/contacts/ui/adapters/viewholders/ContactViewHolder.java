@@ -79,7 +79,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void initialize() {
-        mSeparatorWrapper.setVisibility(View.GONE);
+        mSeparatorWrapper.setVisibility(View.INVISIBLE);
         mSeparatorView.setVisibility(View.GONE);
         mSeparatorImage.setVisibility(View.GONE);
     }
