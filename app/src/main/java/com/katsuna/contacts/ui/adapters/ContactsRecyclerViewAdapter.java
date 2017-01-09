@@ -20,6 +20,7 @@ import java.util.List;
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements Filterable {
 
+    private static final int NO_CONTACT_POSITION = -1;
     private static final int CONTACT_NOT_SELECTED = 1;
     private static final int CONTACT_SELECTED = 2;
 
@@ -27,7 +28,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private final IContactInteractionListener mListener;
     private final ContactFilter mFilter = new ContactFilter();
     private List<ContactListItemModel> mFilteredContacts;
-    private int mSelectedContactPosition = -1;
+    private int mSelectedContactPosition = NO_CONTACT_POSITION;
 
     public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener) {
         mOriginalContacts = models;
@@ -87,6 +88,10 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void selectContactAtPosition(int position) {
         mSelectedContactPosition = position;
         notifyItemChanged(position);
+    }
+
+    public void deselectContact() {
+        selectContactAtPosition(NO_CONTACT_POSITION);
     }
 
     public int getPositionByContactId(String contactId) {

@@ -79,6 +79,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private LinearLayout mFabContainer;
     private Button mNewContactButton;
     private Button mSearchContactsButton;
+    private boolean mContactSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +150,10 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private void showPopup(boolean show) {
         if (show) {
             //don't show popup if menu drawer is open or toolbar search is enabled
-            if (!drawerLayout.isDrawerOpen(GravityCompat.START) && !mSearchMode) {
+            // or contact is selected
+            if (!drawerLayout.isDrawerOpen(GravityCompat.START)
+                    && !mSearchMode
+                    && !mContactSelected) {
                 mPopupFrame.setVisibility(View.VISIBLE);
                 mNewContactButton.setVisibility(View.VISIBLE);
                 mSearchContactsButton.setVisibility(View.VISIBLE);
@@ -337,6 +341,20 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mSearchFab.setBackgroundTintList(ColorStateList.valueOf(colorPink));
     }
 
+    private void tintFabs(boolean flag) {
+        int addContactColor;
+        int searchContactsColor;
+        if (flag) {
+            addContactColor = ContextCompat.getColor(this, R.color.katsuna_blue_tinted);
+            searchContactsColor = ContextCompat.getColor(this, R.color.katsuna_pink_tinted);
+        } else {
+            addContactColor = ContextCompat.getColor(this, R.color.katsuna_blue);
+            searchContactsColor = ContextCompat.getColor(this, R.color.katsuna_pink);
+        }
+        mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(addContactColor));
+        mSearchFab.setBackgroundTintList(ColorStateList.valueOf(searchContactsColor));
+    }
+
     private void createContact() {
         Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
@@ -409,8 +427,22 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
     @Override
     public void selectContact(int position) {
-        mAdapter.selectContactAtPosition(position);
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 130);
+        if (mContactSelected) {
+            mContactSelected = false;
+            mAdapter.deselectContact();
+            tintFabs(false);
+        } else {
+            mContactSelected = true;
+            mAdapter.selectContactAtPosition(position);
+
+            RecyclerView.LayoutManager lm = mRecyclerView.getLayoutManager();
+            int height = lm.findViewByPosition(position).getMeasuredHeight();
+
+            ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - height);
+
+            tintFabs(true);
+        }
     }
 
     @Override
