@@ -114,6 +114,68 @@
 
             </LinearLayout>
 
+            <io.codetail.widget.RevealFrameLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end">
+
+                <RelativeLayout
+                    android:id="@+id/fab_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible">
+
+                    <LinearLayout
+                        android:id="@+id/page_buttons_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:paddingBottom="16dp"
+                        android:background="@color/katsuna_pink"
+                        android:gravity="end">
+
+                        <ImageButton
+                            android:id="@+id/prev_page_button"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/prev_button"
+                            android:visibility="invisible"/>
+
+                        <ImageButton
+                            android:id="@+id/next_page_button"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/next_button"
+                            android:visibility="invisible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/letters_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@id/page_buttons_container"
+                        android:layout_alignParentEnd="true"
+                        android:background="@color/katsuna_pink"
+                        android:orientation="vertical"
+                        android:paddingTop="?attr/actionBarSize">
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/viewpager"
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+            </io.codetail.widget.RevealFrameLayout>
+
         </FrameLayout>
 
     </android.support.design.widget.CoordinatorLayout>

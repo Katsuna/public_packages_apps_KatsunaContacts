@@ -95,9 +95,20 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public int getPositionByContactId(String contactId) {
-        int position = -1;
+        int position = NO_CONTACT_POSITION;
         for (int i = 0; i < mFilteredContacts.size(); i++) {
             if (mFilteredContacts.get(i).getContact().getId().equals(contactId)) {
+                position = i;
+                break;
+            }
+        }
+        return position;
+    }
+
+    public int getPositionByStartingLetter(String letter) {
+        int position = NO_CONTACT_POSITION;
+        for (int i = 0; i < mFilteredContacts.size(); i++) {
+            if (mFilteredContacts.get(i).getContact().getDisplayName().startsWith(letter)) {
                 position = i;
                 break;
             }

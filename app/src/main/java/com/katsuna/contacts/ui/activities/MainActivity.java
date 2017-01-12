@@ -16,8 +16,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -36,7 +38,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.katsuna.commons.entities.UserProfileContainer;
@@ -47,14 +51,20 @@ import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Phone;
 import com.katsuna.contacts.providers.ContactProvider;
 import com.katsuna.contacts.ui.adapters.ContactsRecyclerViewAdapter;
+import com.katsuna.contacts.ui.adapters.TabsPagerAdapter;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
+import com.katsuna.contacts.ui.fragments.SearchBarFragment;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.katsuna.contacts.utils.ContactArranger;
+import com.katsuna.contacts.utils.Separator;
+import com.konifar.fab_transformation.FabTransformation;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends KatsunaActivity implements IContactInteractionListener {
+public class MainActivity extends KatsunaActivity implements IContactInteractionListener,
+        SearchBarFragment.OnFragmentInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
@@ -80,6 +90,24 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private Button mNewContactButton;
     private Button mSearchContactsButton;
     private boolean mContactSelected;
+    private RelativeLayout mFabToolbar;
+    private boolean mFabToolbarOn;
+    private ImageButton mPrevButton;
+    private ImageButton mNextButton;
+    private ViewPager mViewPager;
+    private TabsPagerAdapter mLetterAdapter;
+
+    // chops a list into non-view sublists of length L
+    static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
+        List<ArrayList<T>> parts = new ArrayList<>();
+        final int N = list.size();
+        for (int i = 0; i < N; i += L) {
+            parts.add(new ArrayList<>(
+                    list.subList(i, Math.min(N, i + L)))
+            );
+        }
+        return parts;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +118,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         initToolbar();
         setupDrawerLayout();
         setupFab();
+
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
     }
 
     @Override
@@ -145,15 +175,36 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
         mSearchContactsButton = (Button) findViewById(R.id.search_button);
+
+        mFabToolbar = (RelativeLayout) findViewById(R.id.fab_toolbar);
+        mNextButton = (ImageButton) findViewById(R.id.next_page_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                adjustFabToolbarNavButtonsVisibility();
+            }
+        });
+
+        mPrevButton = (ImageButton) findViewById(R.id.prev_page_button);
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+                adjustFabToolbarNavButtonsVisibility();
+            }
+        });
+
     }
 
     private void showPopup(boolean show) {
         if (show) {
             //don't show popup if menu drawer is open or toolbar search is enabled
-            // or contact is selected
+            // or contact is selected or search with letters is shown.
             if (!drawerLayout.isDrawerOpen(GravityCompat.START)
                     && !mSearchMode
-                    && !mContactSelected) {
+                    && !mContactSelected
+                    && !mFabToolbarOn) {
                 mPopupFrame.setVisibility(View.VISIBLE);
                 mNewContactButton.setVisibility(View.VISIBLE);
                 mSearchContactsButton.setVisibility(View.VISIBLE);
@@ -260,8 +311,33 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mFabToolbarOn) {
+            showFabToolbar(false);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void showFabToolbar(boolean show) {
+        if (show) {
+            FabTransformation.with(mSearchFab)
+                    .transformTo(mFabToolbar);
+
+            if (mPopupVisible) {
+                showPopup(false);
+            }
+        } else {
+            FabTransformation.with(mSearchFab)
+                    .transformFrom(mFabToolbar);
+        }
+        mFabToolbarOn = show;
+    }
+
+    @Override
+    public void selectContactByStartingLetter(String letter) {
+        if (mAdapter != null) {
+            int position = mAdapter.getPositionByStartingLetter(letter);
+            focusOnContact(position);
         }
     }
 
@@ -339,6 +415,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
         int colorPink = ContextCompat.getColor(this, R.color.katsuna_pink);
         mSearchFab.setBackgroundTintList(ColorStateList.valueOf(colorPink));
+        mSearchFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFabToolbar(true);
+            }
+        });
     }
 
     private void tintFabs(boolean flag) {
@@ -380,7 +462,51 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 showNoResultsView();
             }
         });
+
+        initializeFabToolbar();
+
         showNoResultsView();
+    }
+
+    private void initializeFabToolbar() {
+        List<String> letters = new ArrayList<>();
+
+        for (ContactListItemModel contactListItemModel : mModels) {
+            if (!contactListItemModel.isPremium()) {
+                if (contactListItemModel.getSeparator() == Separator.FIRST_LETTER) {
+                    letters.add(contactListItemModel.getContact().getDisplayName().substring(0, 1));
+                }
+            }
+        }
+
+        List<ArrayList<String>> lettersLists = chopped(letters, 20);
+
+        ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
+        for (ArrayList<String> lettersList : lettersLists) {
+            fragmentArrayList.add(SearchBarFragment.newInstance(lettersList));
+        }
+
+        mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
+        mViewPager.setAdapter(mLetterAdapter);
+
+        adjustFabToolbarNavButtonsVisibility();
+    }
+
+    private void adjustFabToolbarNavButtonsVisibility() {
+        int pages = mViewPager.getChildCount();
+        int currentPage = mViewPager.getCurrentItem();
+
+        if (pages == currentPage + 1) {
+            mNextButton.setVisibility(View.INVISIBLE);
+        } else {
+            mNextButton.setVisibility(View.VISIBLE);
+        }
+
+        if (currentPage == 0) {
+            mPrevButton.setVisibility(View.INVISIBLE);
+        } else {
+            mPrevButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -432,17 +558,22 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             mAdapter.deselectContact();
             tintFabs(false);
         } else {
-            mContactSelected = true;
-            mAdapter.selectContactAtPosition(position);
-
-            RecyclerView.LayoutManager lm = mRecyclerView.getLayoutManager();
-            int height = lm.findViewByPosition(position).getMeasuredHeight();
-
-            ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - height);
-
-            tintFabs(true);
+            focusOnContact(position);
         }
+    }
+
+    private void focusOnContact(int position) {
+        mAdapter.selectContactAtPosition(position);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 170);
+
+        tintFabs(true);
+
+        //hide fabToolbar if shown
+        if (mFabToolbarOn) {
+            showFabToolbar(false);
+        }
+        mContactSelected = true;
     }
 
     @Override
