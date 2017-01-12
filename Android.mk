@@ -17,6 +17,9 @@ LOCAL_STATIC_JAVA_LIBRARIES := KatsunaCommon
 # Include KatsunaCommon resources
 LOCAL_RESOURCE_DIR += frameworks/KatsunaCommon/commons/src/main/res
 
+# Set KatsunaContacts as a default contacts for the ROM
+LOCAL_REQUIRED_MODULES := preferred-contacts.xml
+
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v4
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-appcompat
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-recyclerview
@@ -56,6 +59,11 @@ include $(CLEAR_VARS)
 # These should reside inside aosp/libs of this app
 LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ezvcard:aosp/libs/ezvcard-0.9.9.jar
 
-include $(BUILD_MULTI_PREBUILT)
+LOCAL_MODULE := preferred-contacts.xml
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_ETC)/preferred-apps
+LOCAL_SRC_FILES := aosp/etc/$(LOCAL_MODULE)
+
+include $(BUILD_PREBUILT)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
