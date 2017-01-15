@@ -30,7 +30,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin">
+                android:layout_marginTop="@dimen/common_activity_margin">
 
                 <EditText
                     android:id="@+id/name"
@@ -118,7 +118,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_margin="@dimen/common_fab_margin"
         android:src="@drawable/done" />
 
 </android.support.design.widget.CoordinatorLayout>

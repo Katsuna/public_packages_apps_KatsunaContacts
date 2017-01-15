@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tap_to_add_photo"
             android:textColor="@color/black87"
-            android:textSize="20sp" />
+            android:textSize="@dimen/common_text_size" />
 
     </LinearLayout>
 
@@ -38,7 +38,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/common_activity_margin"
         android:background="@drawable/circle_grey"
         android:contentDescription="@string/contact_photo"
         android:visibility="gone"
@@ -49,18 +49,18 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_marginTop="@dimen/common_activity_margin">
 
         <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_margin="@dimen/common_activity_margin"
             android:gravity="center"
             android:hint="@string/name"
             android:imeOptions="actionNext"
             android:textColor="@color/pink"
-            android:textSize="20sp"
+            android:textSize="@dimen/common_text_size"
             android:inputType="text"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
@@ -75,12 +75,12 @@
             android:id="@+id/surname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_margin="@dimen/common_activity_margin"
             android:gravity="center"
             android:hint="@string/surname"
             android:imeOptions="actionNext"
             android:textColor="@color/pink"
-            android:textSize="20sp"
+            android:textSize="@dimen/common_text_size"
             android:inputType="text"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
@@ -95,13 +95,13 @@
             android:id="@+id/telephone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_margin="@dimen/common_activity_margin"
             android:gravity="center"
             android:hint="@string/telephone"
             android:imeOptions="actionDone"
             android:inputType="phone"
             android:textColor="@color/pink"
-            android:textSize="20sp" />
+            android:textSize="@dimen/common_text_size" />
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

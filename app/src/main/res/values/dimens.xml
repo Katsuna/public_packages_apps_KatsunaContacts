@@ -1,17 +1,6 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="edit_contact_margin">5dp</dimen>
     <dimen name="text_margin_top_bottom">5dp</dimen>
     <dimen name="text_margin_left_right">14dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <!-- profile dimens -->
-    <dimen name="contact_photo_size_intemediate">56dp</dimen>
-    <dimen name="contact_photo_size_advanced">40dp</dimen>
-    <dimen name="contact_photo_size_simple">80dp</dimen>
-    <dimen name="action_button_height_intemediate">74dp</dimen>
-    <dimen name="action_button_height_advanced">52dp</dimen>
-    <dimen name="action_button_height_simple">94dp</dimen>
-    <!-- eof profile dimens -->
 </resources>

@@ -53,15 +53,21 @@ public class ContactSelectedViewHolder extends ContactViewHolder {
         ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
-            int photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
-            int actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_intemediate);
+            int photoSize = itemView.getResources()
+                    .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
+            int actionButtonHeight = itemView.getResources()
+                    .getDimensionPixelSize(R.dimen.common_action_button_height_intemediate);
 
             if (opticalSizeProfile == ProfileType.ADVANCED) {
-                photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
-                actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_advanced);
+                photoSize = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
+                actionButtonHeight = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_action_button_height_advanced);
             } else if (opticalSizeProfile == ProfileType.SIMPLE) {
-                photoSize = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
-                actionButtonHeight = itemView.getResources().getDimensionPixelSize(R.dimen.action_button_height_simple);
+                photoSize = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
+                actionButtonHeight = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_action_button_height_simple);
             }
             ViewGroup.LayoutParams layoutParams = mPhoto.getLayoutParams();
             layoutParams.height = photoSize;

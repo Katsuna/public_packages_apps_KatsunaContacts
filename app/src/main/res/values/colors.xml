@@ -19,9 +19,4 @@
     <color name="grey">#48484a</color>
     <color name="grey200">#E3E3DC</color>
     <color name="grey800">#292527</color>
-
-    <color name="katsuna_blue">#134a9a</color>
-    <color name="katsuna_blue_tinted">#a4a4a4</color>
-    <color name="katsuna_pink">#ffcdd0</color>
-    <color name="katsuna_pink_tinted">#eeede9</color>
 </resources>

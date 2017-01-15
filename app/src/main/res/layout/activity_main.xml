@@ -43,7 +43,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/common_no_contacts"
-            android:textSize="20sp"
+            android:textSize="@dimen/common_text_size"
             android:visibility="gone" />
 
         <FrameLayout
@@ -83,7 +83,7 @@
                         android:id="@+id/new_contact_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:layout_margin="@dimen/common_fab_margin"
                         android:src="@drawable/ic_add_grey50_36dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
@@ -106,7 +106,7 @@
                         android:id="@+id/search_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:layout_margin="@dimen/common_fab_margin"
                         android:src="@drawable/ic_search_black87_36dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:paddingBottom="16dp"
-                        android:background="@color/katsuna_pink"
+                        android:background="@color/common_pink"
                         android:gravity="end">
 
                         <ImageButton
@@ -160,7 +160,7 @@
                         android:layout_height="match_parent"
                         android:layout_above="@id/page_buttons_container"
                         android:layout_alignParentEnd="true"
-                        android:background="@color/katsuna_pink"
+                        android:background="@color/common_pink"
                         android:orientation="vertical"
                         android:paddingTop="?attr/actionBarSize">
 

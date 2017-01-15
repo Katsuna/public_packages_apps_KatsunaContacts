@@ -175,6 +175,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
         mSearchContactsButton = (Button) findViewById(R.id.search_button);
+        mSearchContactsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFabToolbar(true);
+            }
+        });
 
         mFabToolbar = (RelativeLayout) findViewById(R.id.fab_toolbar);
         mNextButton = (ImageButton) findViewById(R.id.next_page_button);
@@ -409,11 +415,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
-        int colorBlue = ContextCompat.getColor(this, R.color.katsuna_blue);
+        int colorBlue = ContextCompat.getColor(this, R.color.common_blue);
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(colorBlue));
 
         mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        int colorPink = ContextCompat.getColor(this, R.color.katsuna_pink);
+        int colorPink = ContextCompat.getColor(this, R.color.common_pink);
         mSearchFab.setBackgroundTintList(ColorStateList.valueOf(colorPink));
         mSearchFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -427,11 +433,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         int addContactColor;
         int searchContactsColor;
         if (flag) {
-            addContactColor = ContextCompat.getColor(this, R.color.katsuna_blue_tinted);
-            searchContactsColor = ContextCompat.getColor(this, R.color.katsuna_pink_tinted);
+            addContactColor = ContextCompat.getColor(this, R.color.common_blue_tinted);
+            searchContactsColor = ContextCompat.getColor(this, R.color.common_pink_tinted);
         } else {
-            addContactColor = ContextCompat.getColor(this, R.color.katsuna_blue);
-            searchContactsColor = ContextCompat.getColor(this, R.color.katsuna_pink);
+            addContactColor = ContextCompat.getColor(this, R.color.common_blue);
+            searchContactsColor = ContextCompat.getColor(this, R.color.common_pink);
         }
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(addContactColor));
         mSearchFab.setBackgroundTintList(ColorStateList.valueOf(searchContactsColor));

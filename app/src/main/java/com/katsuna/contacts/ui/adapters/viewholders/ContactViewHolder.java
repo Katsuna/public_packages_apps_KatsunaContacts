@@ -86,11 +86,14 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
-            int size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_intemediate);
+            int size = itemView.getResources()
+                    .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
             if (opticalSizeProfile == ProfileType.ADVANCED) {
-                size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_advanced);
+                size = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
             } else if (opticalSizeProfile == ProfileType.SIMPLE) {
-                size = itemView.getResources().getDimensionPixelSize(R.dimen.contact_photo_size_simple);
+                size = itemView.getResources()
+                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
             }
 
             ViewGroup.LayoutParams lp = mPhoto.getLayoutParams();
