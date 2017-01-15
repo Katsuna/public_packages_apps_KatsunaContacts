@@ -108,6 +108,12 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public int getPositionByStartingLetter(String letter) {
         int position = NO_CONTACT_POSITION;
         for (int i = 0; i < mFilteredContacts.size(); i++) {
+            //don't focus on premium contacts
+            ContactListItemModel model = mFilteredContacts.get(i);
+            if (model.isPremium()) {
+                continue;
+            }
+
             if (mFilteredContacts.get(i).getContact().getDisplayName().startsWith(letter)) {
                 position = i;
                 break;
