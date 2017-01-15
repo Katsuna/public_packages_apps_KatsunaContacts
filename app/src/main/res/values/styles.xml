@@ -45,9 +45,4 @@
         <item name="actionMenuTextColor">@color/black87</item>
     </style>
 
-    <style name="RobotoBold">
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 </resources>

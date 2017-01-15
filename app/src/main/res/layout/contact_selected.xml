@@ -74,7 +74,7 @@
 
             <TextView
                 android:id="@+id/contact_name"
-                style="@style/RobotoBold"
+                style="@style/CommonRobotoBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
