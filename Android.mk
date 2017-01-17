@@ -17,6 +17,9 @@ LOCAL_STATIC_JAVA_LIBRARIES := KatsunaCommon
 # Include KatsunaCommon resources
 LOCAL_RESOURCE_DIR += frameworks/KatsunaCommon/commons/src/main/res
 
+# Set KatsunaContacts as a default contacts for the ROM
+LOCAL_REQUIRED_MODULES := preferred-contacts.xml
+
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v4
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-appcompat
 LOCAL_STATIC_JAVA_LIBRARIES += android-support-v7-recyclerview
@@ -26,6 +29,8 @@ LOCAL_STATIC_JAVA_LIBRARIES += ezvcard
 # Include the specified aar/jar (s), DEFINED in KatsunaCommon's Android.mk!
 LOCAL_STATIC_JAVA_LIBRARIES += picasso
 LOCAL_STATIC_JAVA_AAR_LIBRARIES := roundedimageview
+
+LOCAL_STATIC_JAVA_AAR_LIBRARIES += fabtransformation
 
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 LOCAL_AAPT_FLAGS := --auto-add-overlay
@@ -38,6 +43,7 @@ LOCAL_AAPT_FLAGS += --extra-packages android.support.design
 # This is to include the aar's RESOURCES into this app
 # Notice the full packagename
 LOCAL_AAPT_FLAGS += --extra-packages com.makeramen.roundedimageview
+LOCAL_AAPT_FLAGS += --extra-packages com.konifar.fab_transformation
 
 LOCAL_PACKAGE_NAME := KatsunaContacts
 LOCAL_CERTIFICATE := shared
@@ -51,10 +57,20 @@ include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
 
+LOCAL_MODULE := preferred-contacts.xml
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_ETC)/preferred-apps
+LOCAL_SRC_FILES := aosp/etc/$(LOCAL_MODULE)
+
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+
 # Define here, which extra jar/aar this app needs
 # These should NOT be included in KatsunaCommon
 # These should reside inside aosp/libs of this app
 LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ezvcard:aosp/libs/ezvcard-0.9.9.jar
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES += fabtransformation:aosp/libs/fabtransformation-1.0.0.aar
 
 include $(BUILD_MULTI_PREBUILT)
 
