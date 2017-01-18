@@ -23,6 +23,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int NO_CONTACT_POSITION = -1;
     private static final int CONTACT_NOT_SELECTED = 1;
     private static final int CONTACT_SELECTED = 2;
+    private static final int CONTACT_GREYED_OUT = 3;
 
     private final List<ContactListItemModel> mOriginalContacts;
     private final IContactInteractionListener mListener;
@@ -41,6 +42,8 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         int viewType = CONTACT_NOT_SELECTED;
         if (position == mSelectedContactPosition) {
             viewType = CONTACT_SELECTED;
+        } else if (mSelectedContactPosition != NO_CONTACT_POSITION) {
+            viewType = CONTACT_GREYED_OUT;
         }
         return viewType;
     }
@@ -58,6 +61,9 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
                 viewHolder = new ContactSelectedViewHolder(view, mListener);
                 break;
+            case CONTACT_GREYED_OUT:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_greyed, parent, false);
+                viewHolder = new ContactViewHolder(view, mListener);
         }
         return viewHolder;
     }
@@ -69,6 +75,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (viewHolder.getItemViewType()) {
 
             case CONTACT_NOT_SELECTED:
+            case CONTACT_GREYED_OUT:
                 ContactViewHolder imageViewHolder = (ContactViewHolder) viewHolder;
                 imageViewHolder.bind(model, position);
                 break;

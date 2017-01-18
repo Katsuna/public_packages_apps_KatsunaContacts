@@ -5,7 +5,7 @@
     android:id="@+id/contact_basic_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey50"
+    android:background="@color/common_white"
     android:clipToPadding="false"
     android:elevation="@dimen/common_selection_elevation"
     android:orientation="vertical"
@@ -132,7 +132,7 @@
             android:paddingStart="16dp"
             android:text="@string/common_message"
             android:textAllCaps="true"
-            android:textColor="@color/grey50"
+            android:textColor="@color/common_grey50"
             android:textSize="18sp" />
 
     </LinearLayout>

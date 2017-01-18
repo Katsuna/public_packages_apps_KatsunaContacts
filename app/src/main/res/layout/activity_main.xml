@@ -21,7 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/ToolBarStyle" />
         </android.support.design.widget.AppBarLayout>
 
@@ -31,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="80dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/contact" />
@@ -60,8 +58,7 @@
             <LinearLayout
                 android:id="@+id/fab_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
+                android:layout_height="match_parent"
                 android:gravity="center|end"
                 android:orientation="vertical">
 
@@ -72,11 +69,14 @@
 
                     <Button
                         android:id="@+id/new_contact_button"
-                        android:layout_width="130dp"
+                        android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/popup_button"
+                        android:background="@drawable/common_action_button_blue"
                         android:text="@string/add_contact"
+                        android:textAllCaps="false"
+                        android:textColor="@color/common_grey50"
+                        android:textSize="18sp"
                         android:visibility="gone" />
 
                     <android.support.design.widget.FloatingActionButton
@@ -95,11 +95,14 @@
 
                     <Button
                         android:id="@+id/search_button"
-                        android:layout_width="130dp"
+                        android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/popup_button"
+                        android:background="@drawable/common_action_button_pink"
                         android:text="@string/common_search"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black87"
+                        android:textSize="18sp"
                         android:visibility="gone" />
 
                     <android.support.design.widget.FloatingActionButton
@@ -130,24 +133,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:paddingBottom="16dp"
                         android:background="@color/common_pink"
-                        android:gravity="end">
+                        android:gravity="end"
+                        android:paddingBottom="16dp">
 
                         <ImageButton
                             android:id="@+id/prev_page_button"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@null"
                             android:src="@drawable/prev_button"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
 
                         <ImageButton
                             android:id="@+id/next_page_button"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@null"
                             android:src="@drawable/next_button"
                             android:visibility="invisible" />

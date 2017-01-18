@@ -17,10 +17,10 @@ import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.squareup.picasso.Picasso;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder {
-    protected final ImageView mPhoto;
-    protected final IContactInteractionListener mListener;
-    protected final UserProfileContainer mUserProfileContainer;
-    private final LinearLayout mContactBasicContainer;
+    final ImageView mPhoto;
+    final IContactInteractionListener mListener;
+    final UserProfileContainer mUserProfileContainer;
+    private final View mContactBasicContainer;
     private final LinearLayout mSeparatorWrapper;
     private final TextView mSeparatorView;
     private final TextView mContentView;
@@ -28,7 +28,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
     public ContactViewHolder(View view, IContactInteractionListener listener) {
         super(view);
-        mContactBasicContainer = (LinearLayout) view.findViewById(R.id.contact_basic_container);
+        mContactBasicContainer = view.findViewById(R.id.contact_basic_container);
         mSeparatorView = (TextView) view.findViewById(R.id.separator);
         mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
         mSeparatorWrapper = (LinearLayout) view.findViewById(R.id.separator_wrapper);

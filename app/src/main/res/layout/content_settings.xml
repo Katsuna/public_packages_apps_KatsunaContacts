@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/delete_contacts"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/common_white"
         android:textSize="18sp" />
 
     <Button
@@ -31,7 +31,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/import_contacts"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/common_white"
         android:textSize="18sp" />
 
     <Button
@@ -43,7 +43,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/export_contacts"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/common_white"
         android:textSize="18sp" />
 
     <View

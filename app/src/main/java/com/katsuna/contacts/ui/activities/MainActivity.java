@@ -1,6 +1,7 @@
 package com.katsuna.contacts.ui.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -28,7 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +39,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -86,7 +85,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private Handler mPopupActionHandler;
     private boolean mPopupVisible;
     private boolean mSearchMode;
-    private LinearLayout mFabContainer;
     private Button mNewContactButton;
     private Button mSearchContactsButton;
     private boolean mContactSelected;
@@ -98,7 +96,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private TabsPagerAdapter mLetterAdapter;
 
     // chops a list into non-view sublists of length L
-    static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
+    private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
         List<ArrayList<T>> parts = new ArrayList<>();
         final int N = list.size();
         for (int i = 0; i < N; i += L) {
@@ -127,24 +125,9 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         super.onResume();
 
         showPopup(false);
-        if (mUserProfileChanged) {
-            adjustFabPosition(false);
-        }
 
         if (isChanged() || mUserProfileChanged) {
             loadContacts();
-        }
-    }
-
-    private void adjustFabPosition(boolean verticalCenter) {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabContainer.getLayoutParams();
-
-        int verticalCenterGravity = verticalCenter ? Gravity.CENTER : Gravity.BOTTOM;
-
-        if (mUserProfileContainer.isRightHanded()) {
-            lp.gravity = Gravity.END | verticalCenterGravity;
-        } else {
-            lp.gravity = Gravity.START | verticalCenterGravity;
         }
     }
 
@@ -165,7 +148,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 return true;
             }
         });
-        mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
 
         mNewContactButton = (Button) findViewById(R.id.new_contact_button);
         mNewContactButton.setOnClickListener(new View.OnClickListener() {
@@ -214,14 +196,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 mPopupFrame.setVisibility(View.VISIBLE);
                 mNewContactButton.setVisibility(View.VISIBLE);
                 mSearchContactsButton.setVisibility(View.VISIBLE);
-                adjustFabPosition(true);
                 mPopupVisible = true;
             }
         } else {
             mPopupFrame.setVisibility(View.GONE);
             mNewContactButton.setVisibility(View.GONE);
             mSearchContactsButton.setVisibility(View.GONE);
-            adjustFabPosition(false);
             mPopupVisible = false;
             mLastTouchTimestamp = System.currentTimeMillis();
         }
@@ -325,15 +305,16 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     private void showFabToolbar(boolean show) {
+        int duration = 550;
         if (show) {
-            FabTransformation.with(mSearchFab)
+            FabTransformation.with(mSearchFab).duration(duration)
                     .transformTo(mFabToolbar);
 
             if (mPopupVisible) {
                 showPopup(false);
             }
         } else {
-            FabTransformation.with(mSearchFab)
+            FabTransformation.with(mSearchFab).duration(duration)
                     .transformFrom(mFabToolbar);
         }
         mFabToolbarOn = show;
@@ -622,7 +603,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.alert_title, null);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.alert_title, null);
         builder.setCustomTitle(view);
         builder.setItems(phonesArray, listener);
         builder.show();

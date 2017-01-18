@@ -5,6 +5,7 @@
     android:id="@+id/contact_basic_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/common_grey50"
     android:orientation="horizontal"
     android:paddingBottom="4dp"
     android:paddingEnd="16dp"
