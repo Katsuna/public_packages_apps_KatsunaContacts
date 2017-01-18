@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Contacts</string>
     <!-- AndroidManifest doesn't work with common_ strings, so use this workaround -->
-    <string name="title_activity_settings">@string/common_settings</string>
-    <string name="title_activity_select_contacts">@string/delete_contacts</string>
-
+    <string name="title_activity_settings" translatable="false">@string/common_settings</string>
+    <string name="title_activity_select_contacts" translatable="false">@string/delete_contacts</string>
     <!-- Contact details -->
     <string name="contact_photo">Contact photo</string>
     <string name="telephone">Telephone</string>

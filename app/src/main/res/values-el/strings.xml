@@ -3,8 +3,6 @@
 <resources>
   <string name="app_name">Επαφές</string>
   <!-- AndroidManifest doesn't work with common_ strings, so use this workaround -->
-  <string name="title_activity_settings">@string/common_settings</string>
-  <string name="title_activity_select_contacts">@string/delete_contacts</string>
   <!-- Contact details -->
   <string name="contact_photo">Φωτογραφία επαφής</string>
   <string name="telephone">Τηλέφωνο</string>
@@ -25,6 +23,7 @@
   <string name="remove_photo">Αφαίρεση</string>
   <string name="select_file">Επιλέξτε αρχείο</string>
   <!-- Contact manipulation -->
+  <string name="add_contact">Add contact</string>
   <string name="no_contacts_selected">Δεν έχουν επιλεγεί επαφές.</string>
   <string name="delete_contacts">Διαγραφή επαφών</string>
   <string name="contacts_deleted">Διαγραφή επιτυχής.</string>
@@ -43,4 +42,5 @@
   <string name="new_folder_name">Όνομα νέου φακέλου.</string>
   <string name="folder_creation_failed">Απέτυχε η δημιουργία φακέλου \'%1$s\'.</string>
   <string name="invalid_vcf">Μη έγκυρο αρχείο vcf.</string>
+  <string name="right_hand_setting">Right handed</string>
 </resources>

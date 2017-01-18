@@ -3,8 +3,6 @@
 <resources>
   <string name="app_name">Kontakte</string>
   <!-- AndroidManifest doesn't work with common_ strings, so use this workaround -->
-  <string name="title_activity_settings">@string/common_settings</string>
-  <string name="title_activity_select_contacts">@string/delete_contacts</string>
   <!-- Contact details -->
   <string name="contact_photo">Kontaktfoto</string>
   <string name="telephone">Telefon</string>
@@ -25,6 +23,7 @@
   <string name="remove_photo">Entfernen</string>
   <string name="select_file">Datei auswählen</string>
   <!-- Contact manipulation -->
+  <string name="add_contact">Add contact</string>
   <string name="no_contacts_selected">Keine Kontakte ausgewählt.</string>
   <string name="delete_contacts">Kontakte löschen</string>
   <string name="contacts_deleted">Löschung erfolgreich.</string>
@@ -43,4 +42,5 @@
   <string name="new_folder_name">Neuer Ordnernamen</string>
   <string name="folder_creation_failed">Fehler beim Erstellen des \"%1$s\" Ordners.</string>
   <string name="invalid_vcf">Ungültige Vcf.</string>
+  <string name="right_hand_setting">Right handed</string>
 </resources>
