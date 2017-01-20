@@ -28,8 +28,6 @@ public class SearchBarFragment extends Fragment {
     private List<String> mLetters;
 
     private OnFragmentInteractionListener mListener;
-    private LinearLayout mLettersContainerA;
-    private LinearLayout mLettersContainerB;
 
     public SearchBarFragment() {
         // Required empty public constructor
@@ -64,8 +62,8 @@ public class SearchBarFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_search_bar, container, false);
 
-        mLettersContainerA = (LinearLayout) layout.findViewById(R.id.letters_container_a);
-        mLettersContainerB = (LinearLayout) layout.findViewById(R.id.letters_container_b);
+        LinearLayout mLettersContainerA = (LinearLayout) layout.findViewById(R.id.letters_container_a);
+        LinearLayout mLettersContainerB = (LinearLayout) layout.findViewById(R.id.letters_container_b);
 
         int lettersAdded = 0;
 

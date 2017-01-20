@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.view.KeyEvent;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -29,9 +26,7 @@ public class CreateContactActivity extends PhotoActivity {
 
     private RoundedImageView mPhoto;
     private EditText mName;
-    private TextInputLayout mSurnameLayout;
     private EditText mSurname;
-    private TextInputLayout mTelephoneLayout;
     private EditText mTelephone;
     private LinearLayout mNoPhotoContainer;
 
@@ -51,12 +46,6 @@ public class CreateContactActivity extends PhotoActivity {
 
     private void initControls() {
         mPhoto = (RoundedImageView) findViewById(R.id.photo);
-        mName = (EditText) findViewById(R.id.name);
-        mSurnameLayout = (TextInputLayout) findViewById(R.id.surnameLayout);
-        mSurname = (EditText) findViewById(R.id.surname);
-        mTelephoneLayout = (TextInputLayout) findViewById(R.id.telephoneLayout);
-        mTelephone = (EditText) findViewById(R.id.telephone);
-
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,62 +53,37 @@ public class CreateContactActivity extends PhotoActivity {
             }
         });
 
-        mName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    mSurnameLayout.setVisibility(View.VISIBLE);
-                    return false;
-                }
-                return true;
-            }
-        });
+        mName = (EditText) findViewById(R.id.name);
+        mSurname = (EditText) findViewById(R.id.surname);
+        mTelephone = (EditText) findViewById(R.id.telephone);
 
-        mSurname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        FloatingActionButton mNewContactButton = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mNewContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
-                        mSurname.setError(getResources().getString(R.string.name_validation));
-                    } else {
-                        mSurname.setError(null);
-                        mTelephoneLayout.setVisibility(View.VISIBLE);
-                        return false;
+            public void onClick(View v) {
+                if (inputIsValid()) {
+                    Contact c = new Contact();
+                    c.setDisplayName(mName.getText() + " " + mSurname.getText());
+
+                    List<Phone> phones = new ArrayList<>();
+                    phones.add(new Phone(mTelephone.getText().toString()));
+                    c.setPhones(phones);
+
+                    if (mPhoto.getDrawable() != null) {
+                        Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
+                        c.setPhoto(bitmap);
                     }
+
+                    ContactProvider contactProvider = new ContactProvider(CreateContactActivity.this);
+                    contactProvider.addContact(c);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("contactId", c.getId());
+                    intent.putExtra("number", mTelephone.getText());
+                    setResult(RESULT_OK, intent);
+
+                    finish();
                 }
-                return true;
-            }
-        });
-
-        mTelephone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (inputIsValid()) {
-                        Contact c = new Contact();
-                        c.setDisplayName(mName.getText() + " " + mSurname.getText());
-
-                        List<Phone> phones = new ArrayList<>();
-                        phones.add(new Phone(mTelephone.getText().toString()));
-                        c.setPhones(phones);
-
-                        if (mPhoto.getDrawable() != null) {
-                            Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
-                            c.setPhoto(bitmap);
-                        }
-
-                        ContactProvider contactProvider = new ContactProvider(CreateContactActivity.this);
-                        contactProvider.addContact(c);
-
-                        Intent intent = new Intent();
-                        intent.putExtra("contactId", c.getId());
-                        intent.putExtra("number", mTelephone.getText());
-                        setResult(RESULT_OK, intent);
-
-                        finish();
-                    }
-                }
-                return false;
             }
         });
 

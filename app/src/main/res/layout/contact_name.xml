@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="@dimen/text_margin_top_bottom"
+    android:layout_marginEnd="@dimen/text_margin_left_right"
+    android:layout_marginStart="@dimen/text_margin_left_right"
+    android:layout_marginTop="@dimen/text_margin_top_bottom"
+    android:fontFamily="sans-serif-medium"
+    android:textColor="@color/black87"
+    android:textSize="@dimen/common_text_size" />

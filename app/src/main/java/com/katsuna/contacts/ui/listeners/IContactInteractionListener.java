@@ -6,6 +6,8 @@ import com.katsuna.contacts.domain.Contact;
 public interface IContactInteractionListener {
     void selectContact(int position);
 
+    void focusContact(int position);
+
     void editContact(String contactId);
 
     void callContact(Contact contact);

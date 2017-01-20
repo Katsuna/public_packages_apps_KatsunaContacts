@@ -10,14 +10,14 @@ import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
-public class ContactSelectedViewHolder extends ContactViewHolder {
-    private final Button mEditButton;
+public class ContactSelectedViewHolder extends ContactViewHolderBase {
+    private final View mEditButton;
     private final Button mCallButton;
     private final Button mMessageButton;
 
     public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
         super(view, listener);
-        mEditButton = (Button) itemView.findViewById(R.id.edit_button);
+        mEditButton = itemView.findViewById(R.id.edit_button);
         mCallButton = (Button) itemView.findViewById(R.id.call_button);
         mMessageButton = (Button) itemView.findViewById(R.id.message_button);
         adjustProfile();

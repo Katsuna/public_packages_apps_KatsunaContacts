@@ -93,7 +93,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private ImageButton mPrevButton;
     private ImageButton mNextButton;
     private ViewPager mViewPager;
-    private TabsPagerAdapter mLetterAdapter;
 
     // chops a list into non-view sublists of length L
     private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
@@ -473,7 +472,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             fragmentArrayList.add(SearchBarFragment.newInstance(lettersList));
         }
 
-        mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
+        TabsPagerAdapter mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
         mViewPager.setAdapter(mLetterAdapter);
 
         adjustFabToolbarNavButtonsVisibility();
@@ -532,7 +531,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
                 int position = mAdapter.getPositionByContactId(contactId);
                 if (position != -1) {
-                    selectContact(position);
+                    focusOnContact(position);
                 }
             }
         }
@@ -547,6 +546,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         } else {
             focusOnContact(position);
         }
+    }
+
+    @Override
+    public void focusContact(int position) {
+        focusOnContact(position);
     }
 
     private void focusOnContact(int position) {

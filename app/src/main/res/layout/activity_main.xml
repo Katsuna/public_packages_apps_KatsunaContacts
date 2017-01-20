@@ -56,7 +56,6 @@
                 android:visibility="gone" />
 
             <LinearLayout
-                android:id="@+id/fab_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center|end"
@@ -118,7 +117,7 @@
             </LinearLayout>
 
             <io.codetail.widget.RevealFrameLayout
-                android:layout_width="120dp"
+                android:layout_width="128dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="end">
 
@@ -126,6 +125,7 @@
                     android:id="@+id/fab_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/search_bar_bg"
                     android:visibility="invisible">
 
                     <LinearLayout
@@ -133,9 +133,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/common_pink"
-                        android:gravity="end"
-                        android:paddingBottom="16dp">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="8dp"
+                        android:gravity="end">
 
                         <ImageButton
                             android:id="@+id/prev_page_button"
@@ -144,7 +145,8 @@
                             android:layout_weight="1"
                             android:background="@null"
                             android:src="@drawable/prev_button"
-                            android:visibility="invisible" />
+                            android:visibility="invisible"
+                            tools:ignore="ContentDescription" />
 
                         <ImageButton
                             android:id="@+id/next_page_button"
@@ -153,29 +155,36 @@
                             android:layout_weight="1"
                             android:background="@null"
                             android:src="@drawable/next_button"
-                            android:visibility="invisible" />
+                            android:visibility="invisible"
+                            tools:ignore="ContentDescription" />
 
                     </LinearLayout>
 
+                    <View
+                        android:id="@+id/horizontal_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_above="@id/page_buttons_container"
+                        android:layout_marginStart="8dp"
+                        android:background="@color/black12" />
+
                     <LinearLayout
-                        android:id="@+id/letters_container"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_above="@id/page_buttons_container"
+                        android:layout_above="@id/horizontal_line"
                         android:layout_alignParentEnd="true"
-                        android:background="@color/common_pink"
+                        android:layout_marginStart="8dp"
                         android:orientation="vertical"
                         android:paddingTop="?attr/actionBarSize">
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/viewpager"
-                            android:layout_width="120dp"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent" />
 
                     </LinearLayout>
 
                 </RelativeLayout>
-
 
             </io.codetail.widget.RevealFrameLayout>
 

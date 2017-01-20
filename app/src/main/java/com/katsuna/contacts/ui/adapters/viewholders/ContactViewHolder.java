@@ -1,104 +1,71 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.katsuna.commons.entities.ProfileType;
-import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
-import com.squareup.picasso.Picasso;
 
-public class ContactViewHolder extends RecyclerView.ViewHolder {
-    final ImageView mPhoto;
-    final IContactInteractionListener mListener;
-    final UserProfileContainer mUserProfileContainer;
-    private final View mContactBasicContainer;
-    private final LinearLayout mSeparatorWrapper;
-    private final TextView mSeparatorView;
-    private final TextView mContentView;
-    private final ImageView mSeparatorImage;
+public class ContactViewHolder extends ContactViewHolderBase {
+
+    private final View mGroupDivider;
 
     public ContactViewHolder(View view, IContactInteractionListener listener) {
-        super(view);
-        mContactBasicContainer = view.findViewById(R.id.contact_basic_container);
-        mSeparatorView = (TextView) view.findViewById(R.id.separator);
-        mSeparatorImage = (ImageView) view.findViewById(R.id.separator_image);
-        mSeparatorWrapper = (LinearLayout) view.findViewById(R.id.separator_wrapper);
-        mContentView = (TextView) view.findViewById(R.id.contact_name);
-        mPhoto = (ImageView) view.findViewById(R.id.photo);
-        mListener = listener;
-        mUserProfileContainer = listener.getUserProfileContainer();
+        super(view, listener);
+        mGroupDivider = view.findViewById(R.id.group_divider);
         adjustProfile();
     }
 
     public void bind(final ContactListItemModel model, final int position) {
+        super.bind(model, position);
+
         initialize();
-
-        final Contact contact = model.getContact();
-
-        //load photo
-        Picasso.with(itemView.getContext())
-                .load(contact.getPhotoUri())
-                .fit()
-                .into(mPhoto);
-
-        mContentView.setText(contact.getDisplayName());
-
         switch (model.getSeparator()) {
             case FIRST_LETTER:
-                mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
-                mSeparatorView.setVisibility(View.VISIBLE);
-                mSeparatorWrapper.setVisibility(View.VISIBLE);
+                // show group divider
+                mGroupDivider.setVisibility(View.VISIBLE);
                 break;
             case STARRED:
-                mSeparatorImage.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_star_grey800_24dp));
-                mSeparatorImage.setVisibility(View.VISIBLE);
-                mSeparatorWrapper.setVisibility(View.VISIBLE);
-                break;
             case NONE:
-                mSeparatorView.setVisibility(View.GONE);
                 break;
         }
 
-        mContactBasicContainer.setOnClickListener(new View.OnClickListener() {
+        // direct focus on non selected contact if photo or name is clicked
+        View.OnClickListener focusContact = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.selectContact(position);
+                mListener.focusContact(position);
             }
-        });
+        };
+        mPhoto.setOnClickListener(focusContact);
+        mDisplayName.setOnClickListener(focusContact);
     }
 
     private void initialize() {
-        mSeparatorWrapper.setVisibility(View.INVISIBLE);
-        mSeparatorView.setVisibility(View.GONE);
-        mSeparatorImage.setVisibility(View.GONE);
+        mGroupDivider.setVisibility(View.GONE);
     }
 
     private void adjustProfile() {
         ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
-            int size = itemView.getResources()
+            int photoSize = itemView.getResources()
                     .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
             if (opticalSizeProfile == ProfileType.ADVANCED) {
-                size = itemView.getResources()
+                photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
             } else if (opticalSizeProfile == ProfileType.SIMPLE) {
-                size = itemView.getResources()
+                photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
             }
 
-            ViewGroup.LayoutParams lp = mPhoto.getLayoutParams();
-            lp.width = size;
-            lp.height = size;
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) mGroupDivider.getLayoutParams();
+            int currentMargin = lp.getMarginStart();
+            int halfPhotoSize = photoSize / 2;
+            lp.setMarginStart(currentMargin + halfPhotoSize);
         }
     }
 
