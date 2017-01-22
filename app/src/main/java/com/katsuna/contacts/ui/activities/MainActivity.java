@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -93,6 +95,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private ImageButton mPrevButton;
     private ImageButton mNextButton;
     private ViewPager mViewPager;
+    private LinearLayout mFabContainer;
 
     // chops a list into non-view sublists of length L
     private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
@@ -125,9 +128,18 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
         showPopup(false);
 
+        if (mUserProfileChanged) {
+            adjustFabPosition(true);
+        }
+
         if (isChanged() || mUserProfileChanged) {
             loadContacts();
         }
+    }
+
+    private void adjustFabPosition(boolean verticalCenter) {
+        int verticalCenterGravity = verticalCenter ? Gravity.CENTER : Gravity.BOTTOM;
+        mFabContainer.setGravity(verticalCenterGravity | Gravity.END);
     }
 
     private void initControls() {
@@ -147,6 +159,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 return true;
             }
         });
+        mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
 
         mNewContactButton = (Button) findViewById(R.id.new_contact_button);
         mNewContactButton.setOnClickListener(new View.OnClickListener() {
@@ -543,6 +556,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             mContactSelected = false;
             mAdapter.deselectContact();
             tintFabs(false);
+            adjustFabPosition(true);
         } else {
             focusOnContact(position);
         }
@@ -564,6 +578,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (mFabToolbarOn) {
             showFabToolbar(false);
         }
+        adjustFabPosition(false);
         mContactSelected = true;
     }
 
