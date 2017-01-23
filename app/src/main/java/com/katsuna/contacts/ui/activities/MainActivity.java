@@ -126,8 +126,10 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         super.onResume();
 
         showPopup(false);
-        adjustFabPosition(true);
-        tintFabs(false);
+        if (!mContactSelected) {
+            adjustFabPosition(true);
+            tintFabs(false);
+        }
 
         if (mUserProfileChanged) {
             // color profile adjustments
@@ -138,6 +140,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (isChanged() || mUserProfileChanged) {
             loadContacts();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mContactSelected = false;
     }
 
     private void adjustFabPosition(boolean verticalCenter) {
