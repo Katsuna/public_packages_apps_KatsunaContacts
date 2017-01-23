@@ -11,8 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.katsuna.commons.ui.KatsunaActivity;
+import com.katsuna.contacts.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.katsuna.contacts.R;
-
-public abstract class PhotoActivity extends AppCompatActivity {
+public abstract class PhotoActivity extends KatsunaActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_FILE = 2;
@@ -86,13 +86,10 @@ public abstract class PhotoActivity extends AppCompatActivity {
 
     private Uri getUriFromFile(File photoFile) {
 
-        if (android.os.Build.VERSION.SDK_INT >= 24)
-        {
+        if (android.os.Build.VERSION.SDK_INT >= 24) {
             return FileProvider.getUriForFile(PhotoActivity.this, "com.katsuna.contacts.provider",
                     photoFile);
-        }
-        else
-        {
+        } else {
             return Uri.fromFile(photoFile);
         }
     }

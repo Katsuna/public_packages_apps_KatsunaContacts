@@ -9,18 +9,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.katsuna.contacts.R;
+import com.katsuna.contacts.domain.Contact;
+import com.katsuna.contacts.domain.Phone;
+import com.katsuna.contacts.providers.ContactProvider;
+import com.katsuna.contacts.utils.Constants;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.katsuna.contacts.R;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Phone;
-import com.katsuna.contacts.utils.Constants;
 
 public class CreateContactActivity extends PhotoActivity {
 
@@ -57,8 +56,8 @@ public class CreateContactActivity extends PhotoActivity {
         mSurname = (EditText) findViewById(R.id.surname);
         mTelephone = (EditText) findViewById(R.id.telephone);
 
-        FloatingActionButton mNewContactButton = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        mNewContactButton.setOnClickListener(new View.OnClickListener() {
+        mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (inputIsValid()) {

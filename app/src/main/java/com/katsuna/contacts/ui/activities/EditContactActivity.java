@@ -10,21 +10,21 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+
+import com.katsuna.contacts.R;
+import com.katsuna.contacts.domain.Address;
+import com.katsuna.contacts.domain.Contact;
+import com.katsuna.contacts.domain.Email;
+import com.katsuna.contacts.domain.Name;
+import com.katsuna.contacts.domain.Phone;
+import com.katsuna.contacts.providers.ContactProvider;
+import com.katsuna.contacts.utils.DataAction;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.katsuna.contacts.R;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.domain.Address;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Email;
-import com.katsuna.contacts.domain.Name;
-import com.katsuna.contacts.domain.Phone;
-import com.katsuna.contacts.utils.DataAction;
 
 public class EditContactActivity extends PhotoActivity {
 
@@ -105,10 +105,9 @@ public class EditContactActivity extends PhotoActivity {
     }
 
     private void setupFab() {
-        FloatingActionButton mEditContactFab = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
-        assert mEditContactFab != null;
-        mEditContactFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
-        mEditContactFab.setOnClickListener(new View.OnClickListener() {
+        mFab2 = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
+        mFab2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateContact();
