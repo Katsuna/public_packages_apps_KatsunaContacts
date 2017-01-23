@@ -6,12 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.providers.ContactProvider;
@@ -29,7 +27,7 @@ import com.katsuna.contacts.utils.ContactArranger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectContactsActivity extends AppCompatActivity {
+public class SelectContactsActivity extends KatsunaActivity {
 
     private RecyclerView mRecyclerView;
     private SearchView mSearchView;
@@ -47,15 +45,13 @@ public class SelectContactsActivity extends AppCompatActivity {
     }
 
     private void initControls() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initToolbar();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
                 final List<Contact> selectedContacts = getSelectedContacts();
                 if (selectedContacts.size() > 0) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectContactsActivity.this);
@@ -88,11 +84,6 @@ public class SelectContactsActivity extends AppCompatActivity {
                 }
             }
         });
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mNoResultsView = (TextView) findViewById(R.id.no_results);

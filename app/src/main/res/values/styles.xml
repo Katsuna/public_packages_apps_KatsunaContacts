@@ -2,23 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/common_grey300</item>
-        <item name="colorAccent">@color/common_blue</item>
-        <item name="colorButtonNormal">@color/green</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
-        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:colorPrimary">@color/common_grey300</item>
+        <item name="android:textColor">@color/common_black87</item>
+        <item name="android:textColorPrimary">@color/common_black87</item>
+        <item name="android:textColorSecondary">@color/common_black87</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
     </style>
 
     <style name="drawer">
         <item name="android:textSize">@dimen/common_text_size</item>
-    </style>
-
-    <style name="BoldText" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">@dimen/common_text_size</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:typeface">sans</item>
     </style>
 
     <style name="editContactField">
@@ -30,20 +22,8 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="ActivitiesBackground">
         <item name="android:background">@color/common_grey50</item>
-    </style>
-
-    <!-- ToolBar -->
-    <style name="ToolBarStyle" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/common_grey100</item>
-        <item name="android:textColorPrimary">@color/black87</item>
-        <item name="android:textColorSecondary">@color/black87</item>
-        <item name="actionMenuTextColor">@color/black87</item>
     </style>
 
 </resources>

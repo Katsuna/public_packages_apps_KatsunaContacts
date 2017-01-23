@@ -5,12 +5,8 @@
     <color name="black87">#de000000</color>
 
     <color name="colorPrimary">#9E9E9E</color>
-    <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#727272</color>
-    <color name="black">#000000</color>
     <color name="indigo_blue">#448AFF</color>
     <color name="pink">#FF4081</color>
-    <color name="green">#1b9b8d</color>
     <color name="greenLight">#3cbbae</color>
     <color name="grey">#48484a</color>
     <color name="grey200">#E3E3DC</color>

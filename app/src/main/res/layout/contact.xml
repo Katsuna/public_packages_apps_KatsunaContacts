@@ -3,7 +3,6 @@
     android:id="@+id/contact_basic_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_grey50"
     android:orientation="vertical">
 
     <include layout="@layout/horizontal_divider" />

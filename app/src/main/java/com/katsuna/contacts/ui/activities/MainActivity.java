@@ -22,12 +22,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -44,9 +42,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.KatsunaActivity;
+import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.Log;
+import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Phone;
@@ -115,7 +117,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         setContentView(R.layout.activity_main);
 
         initControls();
-        initToolbar();
         setupDrawerLayout();
         setupFab();
 
@@ -127,9 +128,14 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         super.onResume();
 
         showPopup(false);
+        adjustFabPosition(true);
+        tintFabs(false);
 
         if (mUserProfileChanged) {
-            adjustFabPosition(true);
+            // color profile adjustments
+            ColorProfile profile = mUserProfileContainer.getColorProfile();
+            adjustFabColors(profile);
+            adjustPopupButtons(profile);
         }
 
         if (isChanged() || mUserProfileChanged) {
@@ -142,7 +148,24 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mFabContainer.setGravity(verticalCenterGravity | Gravity.END);
     }
 
+    private void adjustFabColors(ColorProfile profile) {
+        int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, profile);
+        int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, profile);
+        setFabBackgroundColor(mSearchFab, color1);
+        setFabBackgroundColor(mNewContactFab, color2);
+    }
+
+    private void adjustPopupButtons(ColorProfile profile) {
+        int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, profile);
+        Shape.setRoundedBackground(mSearchContactsButton, ContextCompat.getColor(this, color1));
+
+        int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, profile);
+        Shape.setRoundedBackground(mNewContactButton, ContextCompat.getColor(this, color2));
+    }
+
     private void initControls() {
+        initToolbar(R.drawable.ic_menu_black87_24dp);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -237,17 +260,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 mPopupActionHandler.postDelayed(this, POPUP_HANDLER_DELAY);
             }
         }, POPUP_HANDLER_DELAY);
-    }
-
-    private void initToolbar() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black87_24dp);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override
@@ -400,7 +412,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
     private void setupFab() {
         mNewContactFab = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        assert mNewContactFab != null;
         mNewContactFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -408,18 +419,18 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
-        int colorBlue = ContextCompat.getColor(this, R.color.common_blue);
-        mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(colorBlue));
-
         mSearchFab = (FloatingActionButton) findViewById(R.id.search_fab);
-        int colorPink = ContextCompat.getColor(this, R.color.common_pink);
-        mSearchFab.setBackgroundTintList(ColorStateList.valueOf(colorPink));
         mSearchFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFabToolbar(true);
             }
         });
+    }
+
+    private void setFabBackgroundColor(FloatingActionButton fab, int resId) {
+        int color = ContextCompat.getColor(this, resId);
+        fab.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     private void tintFabs(boolean flag) {
@@ -429,8 +440,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             addContactColor = ContextCompat.getColor(this, R.color.common_blue_tinted);
             searchContactsColor = ContextCompat.getColor(this, R.color.common_pink_tinted);
         } else {
-            addContactColor = ContextCompat.getColor(this, R.color.common_blue);
-            searchContactsColor = ContextCompat.getColor(this, R.color.common_pink);
+            ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
+            int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, colorProfile);
+            int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, colorProfile);
+            searchContactsColor = ContextCompat.getColor(this, color1);
+            addContactColor = ContextCompat.getColor(this, color2);
         }
         mNewContactFab.setBackgroundTintList(ColorStateList.valueOf(addContactColor));
         mSearchFab.setBackgroundTintList(ColorStateList.valueOf(searchContactsColor));

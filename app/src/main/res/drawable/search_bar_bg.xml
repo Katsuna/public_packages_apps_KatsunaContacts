@@ -15,7 +15,7 @@
         android:right="0dp"
         android:top="0dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/common_pink" />
+            <solid android:color="@color/common_sundown" />
         </shape>
     </item>
 

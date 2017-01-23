@@ -11,22 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:theme="@style/ToolBarStyle" />
-        </android.support.design.widget.AppBarLayout>
+        <include layout="@layout/common_toolbar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_list"
-            style="@style/ActivitiesBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -72,7 +60,6 @@
                         android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/common_action_button_blue"
                         android:text="@string/add_contact"
                         android:textAllCaps="false"
                         android:textColor="@color/common_grey50"
@@ -98,7 +85,6 @@
                         android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/common_action_button_pink"
                         android:text="@string/common_search"
                         android:textAllCaps="false"
                         android:textColor="@color/black87"

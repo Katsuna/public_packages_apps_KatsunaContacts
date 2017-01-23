@@ -8,8 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,9 +19,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.PreferenceKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.entities.SpinnerItem;
 import com.katsuna.commons.ui.KatsunaActivity;
+import com.katsuna.commons.ui.adapters.SpinnerItemAdapter;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
@@ -58,7 +59,6 @@ public class SettingsActivity extends KatsunaActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        initToolbar();
         initControls();
     }
 
@@ -80,17 +80,8 @@ public class SettingsActivity extends KatsunaActivity {
         }
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     private void initControls() {
+        initToolbar();
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
@@ -181,6 +172,38 @@ public class SettingsActivity extends KatsunaActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SettingsManager.setSetting(SettingsActivity.this,
                         PreferenceKey.RIGHT_HAND, isChecked);
+            }
+        });
+
+        initColorProfiles();
+    }
+
+    private void initColorProfiles() {
+        Spinner mProfileColor = (Spinner) findViewById(R.id.profiles_optical_color);
+
+        List<SpinnerItem> spinnerArray = new ArrayList<>();
+        for (ColorProfile colorProfile : ColorProfile.values()) {
+            spinnerArray.add(new SpinnerItem(colorProfile.name(), colorProfile.getResId()));
+        }
+        SpinnerItemAdapter mColorProfilesAdapter = new SpinnerItemAdapter(this, spinnerArray);
+        mProfileColor.setAdapter(mColorProfilesAdapter);
+
+
+        String value = SettingsManager.readSetting(SettingsActivity.this,
+                PreferenceKey.COLOR_PROFILE, ColorProfile.AUTO.name());
+        mProfileColor.setSelection(mColorProfilesAdapter.getPosition(new SpinnerItem(value)));
+
+        mProfileColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = ((SpinnerItem) adapterView.getItemAtPosition(i)).getValue();
+                SettingsManager.setSetting(SettingsActivity.this, PreferenceKey.COLOR_PROFILE,
+                        value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }

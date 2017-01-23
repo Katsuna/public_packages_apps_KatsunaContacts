@@ -1,10 +1,15 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
@@ -83,5 +88,18 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
             mCallButton.setLayoutParams(callButtonParams);
             mMessageButton.setLayoutParams(messageButtonParams);
         }
+
+        adjustColorProfile();
+    }
+
+    private void adjustColorProfile() {
+        ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
+        int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, colorProfile);
+        Shape.setRoundedBackground(mCallButton, ContextCompat.getColor(itemView.getContext(),
+                color1));
+
+        int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, colorProfile);
+        Shape.setRoundedBackground(mMessageButton, ContextCompat.getColor(itemView.getContext(),
+                color2));
     }
 }
