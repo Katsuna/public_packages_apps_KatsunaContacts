@@ -47,9 +47,8 @@ public class SelectContactsActivity extends KatsunaActivity {
     private void initControls() {
         initToolbar();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab2 = (FloatingActionButton) findViewById(R.id.fab);
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final List<Contact> selectedContacts = getSelectedContacts();
