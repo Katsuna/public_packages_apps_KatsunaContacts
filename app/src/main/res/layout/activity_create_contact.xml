@@ -2,13 +2,11 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ActivitiesBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activities.CreateContactActivity">
 
     <LinearLayout
-        style="@style/ActivitiesBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,7 +15,7 @@
             android:id="@+id/noPhotoContainer"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@color/grey200"
+            android:background="@color/common_grey300"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="20dp">
@@ -33,7 +31,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tap_to_add_photo"
-                android:textColor="@color/black87"
                 android:textSize="@dimen/common_text_size" />
 
         </LinearLayout>
@@ -66,7 +63,6 @@
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColor="@color/black87"
                 android:textSize="@dimen/common_text_size" />
         </android.support.design.widget.TextInputLayout>
 
@@ -84,7 +80,6 @@
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColor="@color/black87"
                 android:textSize="@dimen/common_text_size" />
         </android.support.design.widget.TextInputLayout>
 
@@ -101,7 +96,6 @@
                 android:hint="@string/telephone"
                 android:imeOptions="actionDone"
                 android:inputType="phone"
-                android:textColor="@color/black87"
                 android:textSize="@dimen/common_text_size" />
         </android.support.design.widget.TextInputLayout>
 

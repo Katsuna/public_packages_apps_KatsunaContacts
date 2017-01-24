@@ -96,6 +96,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private ImageButton mNextButton;
     private ViewPager mViewPager;
     private LinearLayout mFabContainer;
+    private View mSearchBarHorizontalLine;
+    private TabsPagerAdapter mLetterAdapter;
 
     // chops a list into non-view sublists of length L
     private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
@@ -126,26 +128,28 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         super.onResume();
 
         showPopup(false);
-        if (!mContactSelected) {
-            adjustFabPosition(true);
-            tintFabs(false);
+
+        if (isChanged() || mUserProfileChanged) {
+            loadContacts();
         }
 
         if (mUserProfileChanged) {
             // color profile adjustments
             ColorProfile profile = mUserProfileContainer.getColorProfile();
             adjustPopupButtons(profile);
+            adjustSearchBar(profile);
         }
+    }
 
-        if (isChanged() || mUserProfileChanged) {
-            loadContacts();
-        }
+    private void adjustSearchBar(ColorProfile profile) {
+        int color = ColorCalc.getColor(this, ColorProfileKey.DIVIDERS_OPACITY, profile);
+        mSearchBarHorizontalLine.setBackgroundColor(color);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mContactSelected = false;
+        deselectContact();
     }
 
     private void adjustFabPosition(boolean verticalCenter) {
@@ -154,11 +158,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     private void adjustPopupButtons(ColorProfile profile) {
-        int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, profile);
-        Shape.setRoundedBackground(mSearchContactsButton, ContextCompat.getColor(this, color1));
+        int color1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, profile);
+        Shape.setRoundedBackground(mSearchContactsButton, color1);
 
-        int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, profile);
-        Shape.setRoundedBackground(mNewContactButton, ContextCompat.getColor(this, color2));
+        int color2 = ColorCalc.getColor(this, ColorProfileKey.ACCENT2_COLOR, profile);
+        Shape.setRoundedBackground(mNewContactButton, color2);
     }
 
     private void initControls() {
@@ -216,6 +220,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
+        mSearchBarHorizontalLine = findViewById(R.id.horizontal_line);
     }
 
     private void showPopup(boolean show) {
@@ -434,10 +439,10 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             searchContactsColor = ContextCompat.getColor(this, R.color.common_pink_tinted);
         } else {
             ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
-            int color1 = ColorCalc.getColor(ColorProfileKey.ACCENT1_COLOR, colorProfile);
-            int color2 = ColorCalc.getColor(ColorProfileKey.ACCENT2_COLOR, colorProfile);
-            searchContactsColor = ContextCompat.getColor(this, color1);
-            addContactColor = ContextCompat.getColor(this, color2);
+            int color1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, colorProfile);
+            int color2 = ColorCalc.getColor(this, ColorProfileKey.ACCENT2_COLOR, colorProfile);
+            searchContactsColor = color1;
+            addContactColor = color2;
         }
         mFab1.setBackgroundTintList(ColorStateList.valueOf(searchContactsColor));
         mFab2.setBackgroundTintList(ColorStateList.valueOf(addContactColor));
@@ -492,7 +497,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             fragmentArrayList.add(SearchBarFragment.newInstance(lettersList));
         }
 
-        TabsPagerAdapter mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
+        TabsPagerAdapter mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
+                fragmentArrayList);
         mViewPager.setAdapter(mLetterAdapter);
 
         adjustFabToolbarNavButtonsVisibility();
@@ -560,13 +566,17 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     @Override
     public void selectContact(int position) {
         if (mContactSelected) {
-            mContactSelected = false;
-            mAdapter.deselectContact();
-            tintFabs(false);
-            adjustFabPosition(true);
+            deselectContact();
         } else {
             focusOnContact(position);
         }
+    }
+
+    private void deselectContact() {
+        mContactSelected = false;
+        mAdapter.deselectContact();
+        tintFabs(false);
+        adjustFabPosition(true);
     }
 
     @Override

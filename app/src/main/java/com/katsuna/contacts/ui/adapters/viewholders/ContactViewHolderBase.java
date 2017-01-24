@@ -21,7 +21,7 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
     final IContactInteractionListener mListener;
     final UserProfileContainer mUserProfileContainer;
     final TextView mDisplayName;
-    private final View mContactBasicContainer;
+    final View mContactBasicContainer;
     private final LinearLayout mSeparatorWrapper;
     private final TextView mSeparatorView;
     private final ImageView mSeparatorImage;

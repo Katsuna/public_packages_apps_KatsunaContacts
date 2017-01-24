@@ -4,7 +4,6 @@
     android:id="@+id/contact_basic_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_white"
     android:clipToPadding="false"
     android:elevation="@dimen/common_selection_elevation"
     android:orientation="vertical"
@@ -52,7 +51,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="start"
                 android:maxLines="5"
-                android:textColor="@color/black87"
                 android:textSize="@dimen/common_text_size" />
         </RelativeLayout>
 
@@ -82,7 +80,7 @@
             android:paddingStart="30dp"
             android:text="@string/common_call"
             android:textAllCaps="true"
-            android:textColor="@color/black87"
+            android:textColor="@color/common_black87"
             android:textSize="18sp" />
 
         <Button

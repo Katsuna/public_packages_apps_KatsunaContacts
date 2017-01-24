@@ -40,7 +40,7 @@
                 android:id="@+id/popup_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black50"
+                android:background="@color/common_black38"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -87,7 +87,7 @@
                         android:layout_gravity="center"
                         android:text="@string/common_search"
                         android:textAllCaps="false"
-                        android:textColor="@color/black87"
+                        android:textColor="@color/common_black87"
                         android:textSize="18sp"
                         android:visibility="gone" />
 
@@ -153,7 +153,7 @@
                         android:layout_height="1dp"
                         android:layout_above="@id/page_buttons_container"
                         android:layout_marginStart="8dp"
-                        android:background="@color/black12" />
+                        android:background="@color/common_black12" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -185,7 +185,7 @@
         android:layout_height="190dp"
         android:layout_gravity="start"
         app:menu="@menu/drawer"
-        app:theme="@style/drawer" />
+        app:theme="@style/CommonDrawer" />
 
 </android.support.v4.widget.DrawerLayout>
 

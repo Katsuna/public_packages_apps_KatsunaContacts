@@ -9,6 +9,7 @@ import android.widget.Filterable;
 
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
+import com.katsuna.contacts.ui.adapters.viewholders.ContactGreyedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactViewHolder;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
@@ -63,7 +64,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 break;
             case CONTACT_GREYED_OUT:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_greyed, parent, false);
-                viewHolder = new ContactViewHolder(view, mListener);
+                viewHolder = new ContactGreyedViewHolder(view, mListener);
         }
         return viewHolder;
     }
@@ -73,13 +74,14 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         final ContactListItemModel model = mFilteredContacts.get(position);
 
         switch (viewHolder.getItemViewType()) {
-
             case CONTACT_NOT_SELECTED:
-            case CONTACT_GREYED_OUT:
-                ContactViewHolder imageViewHolder = (ContactViewHolder) viewHolder;
-                imageViewHolder.bind(model, position);
+                ContactViewHolder contactViewHolder = (ContactViewHolder) viewHolder;
+                contactViewHolder.bind(model, position);
                 break;
-
+            case CONTACT_GREYED_OUT:
+                ContactGreyedViewHolder greyedViewHolder = (ContactGreyedViewHolder) viewHolder;
+                greyedViewHolder.bind(model, position);
+                break;
             case CONTACT_SELECTED:
                 ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;
                 contactSelectedViewHolder.bind(model, position);

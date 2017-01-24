@@ -3,7 +3,10 @@ package com.katsuna.contacts.ui.adapters.viewholders;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
@@ -67,6 +70,11 @@ public class ContactViewHolder extends ContactViewHolderBase {
             int halfPhotoSize = photoSize / 2;
             lp.setMarginStart(currentMargin + halfPhotoSize);
         }
+
+        ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
+        int dividerColor = ColorCalc.getColor(itemView.getContext(),
+                ColorProfileKey.DIVIDERS_OPACITY, colorProfile);
+        mGroupDivider.setBackgroundColor(dividerColor);
     }
 
 }

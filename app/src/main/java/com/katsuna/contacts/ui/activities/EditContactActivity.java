@@ -1,12 +1,10 @@
 package com.katsuna.contacts.ui.activities;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -106,7 +104,6 @@ public class EditContactActivity extends PhotoActivity {
 
     private void setupFab() {
         mFab2 = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
-        mFab2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.greenLight)));
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

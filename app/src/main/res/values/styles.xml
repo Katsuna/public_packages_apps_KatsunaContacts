@@ -1,29 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/common_grey300</item>
-        <item name="android:textColor">@color/common_black87</item>
-        <item name="android:textColorPrimary">@color/common_black87</item>
-        <item name="android:textColorSecondary">@color/common_black87</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
-    </style>
-
-    <style name="drawer">
-        <item name="android:textSize">@dimen/common_text_size</item>
-    </style>
+<resources>
 
     <style name="editContactField">
         <item name="android:textSize">@dimen/common_text_size</item>
-        <item name="android:textColor">@color/grey</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/edit_contact_margin</item>
         <item name="android:gravity">left</item>
-    </style>
-
-    <style name="ActivitiesBackground">
-        <item name="android:background">@color/common_grey50</item>
     </style>
 
 </resources>

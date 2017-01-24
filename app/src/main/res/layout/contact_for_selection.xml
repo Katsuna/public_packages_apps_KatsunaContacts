@@ -13,7 +13,6 @@
         android:layout_centerVertical="true"
         android:gravity="center"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/pink"
         android:textSize="18sp" />
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -24,8 +23,7 @@
         android:layout_margin="8dp"
         android:layout_toEndOf="@id/separator"
         android:background="@drawable/ic_person_grey_50px"
-        app:riv_border_color="@color/pink"
-        app:riv_border_width="2dp"
+        app:riv_border_width="0dp"
         app:riv_corner_radius="50dp"
         app:riv_mutate_background="true"
         app:riv_oval="false"

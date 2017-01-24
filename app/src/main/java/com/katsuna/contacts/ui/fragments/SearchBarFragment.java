@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKey;
+import com.katsuna.commons.entities.UserProfileContainer;
+import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.contacts.R;
 
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class SearchBarFragment extends Fragment {
     private List<String> mLetters;
 
     private OnFragmentInteractionListener mListener;
+    private View mVerticalDivider;
 
     public SearchBarFragment() {
         // Required empty public constructor
@@ -64,6 +69,7 @@ public class SearchBarFragment extends Fragment {
 
         LinearLayout mLettersContainerA = (LinearLayout) layout.findViewById(R.id.letters_container_a);
         LinearLayout mLettersContainerB = (LinearLayout) layout.findViewById(R.id.letters_container_b);
+        mVerticalDivider = layout.findViewById(R.id.vertical_divider);
 
         int lettersAdded = 0;
 
@@ -96,6 +102,12 @@ public class SearchBarFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        applyColorProfile();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -112,6 +124,14 @@ public class SearchBarFragment extends Fragment {
         mListener = null;
     }
 
+    private void applyColorProfile() {
+        if (mListener != null) {
+            ColorProfile profile = mListener.getUserProfileContainer().getColorProfile();
+            int color = ColorCalc.getColor(getActivity(), ColorProfileKey.DIVIDERS_OPACITY, profile);
+            mVerticalDivider.setBackgroundColor(color);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -120,5 +140,7 @@ public class SearchBarFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void selectContactByStartingLetter(String letter);
+
+        UserProfileContainer getUserProfileContainer();
     }
 }

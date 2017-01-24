@@ -31,8 +31,9 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/popup_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black50" />
+        android:background="@color/common_black38" />
 
 </FrameLayout>

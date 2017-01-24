@@ -9,5 +9,4 @@
     android:layout_marginStart="@dimen/text_margin_left_right"
     android:layout_marginTop="@dimen/text_margin_top_bottom"
     android:fontFamily="sans-serif-medium"
-    android:textColor="@color/black87"
     android:textSize="@dimen/common_text_size" />

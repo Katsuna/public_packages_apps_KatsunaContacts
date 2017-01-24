@@ -14,9 +14,10 @@
         android:orientation="vertical" />
 
     <View
+        android:id="@+id/vertical_divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/black12" />
+        android:background="@color/common_black12" />
 
     <LinearLayout
         android:id="@+id/letters_container_b"

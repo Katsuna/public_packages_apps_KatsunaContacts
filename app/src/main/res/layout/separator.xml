@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textColor="@color/grey800"
         android:textSize="@dimen/common_text_size"
         android:visibility="gone" />
 
