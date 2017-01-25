@@ -39,7 +39,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.katsuna.commons.entities.ColorProfile;
@@ -90,14 +89,16 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private Button mNewContactButton;
     private Button mSearchContactsButton;
     private boolean mContactSelected;
-    private RelativeLayout mFabToolbar;
+    private View mFabToolbar;
     private boolean mFabToolbarOn;
     private ImageButton mPrevButton;
     private ImageButton mNextButton;
     private ViewPager mViewPager;
     private LinearLayout mFabContainer;
-    private View mSearchBarHorizontalLine;
-    private TabsPagerAdapter mLetterAdapter;
+    private LinearLayout mViewPagerContainer;
+    private LinearLayout mNewContactButtonsContainer;
+    private LinearLayout mSearchButtonsContainer;
+    private FrameLayout mFabToolbarContainer;
 
     // chops a list into non-view sublists of length L
     private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
@@ -138,12 +139,58 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             ColorProfile profile = mUserProfileContainer.getColorProfile();
             adjustPopupButtons(profile);
             adjustSearchBar(profile);
+
+            adjustRightHand();
+        }
+    }
+
+    private void adjustRightHand() {
+        if (mUserProfileContainer.isRightHanded()) {
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
+            lp.gravity = Gravity.END;
+            mFabContainer.setGravity(Gravity.END | Gravity.CENTER);
+
+            //set shadow
+            mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg));
+            int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
+            mFabToolbar.setPadding(shadowPixels, 0, 0, 0);
+
+            positionFabsToLeft(false);
+        } else {
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
+            lp.gravity = Gravity.START;
+            mFabContainer.setGravity(Gravity.START | Gravity.CENTER);
+
+            mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg_left_handed));
+            int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
+            mFabToolbar.setPadding(0, 0, shadowPixels, 0);
+
+            positionFabsToLeft(true);
+        }
+    }
+
+    private void positionFabsToLeft(boolean flag) {
+        mNewContactButtonsContainer.removeAllViews();
+        mSearchButtonsContainer.removeAllViews();
+
+        if (flag) {
+            mNewContactButtonsContainer.addView(mFab2);
+            mNewContactButtonsContainer.addView(mNewContactButton);
+
+            mSearchButtonsContainer.addView(mFab1);
+            mSearchButtonsContainer.addView(mSearchContactsButton);
+        } else {
+            mNewContactButtonsContainer.addView(mNewContactButton);
+            mNewContactButtonsContainer.addView(mFab2);
+
+            mSearchButtonsContainer.addView(mSearchContactsButton);
+            mSearchButtonsContainer.addView(mFab1);
         }
     }
 
     private void adjustSearchBar(ColorProfile profile) {
-        int color = ColorCalc.getColor(this, ColorProfileKey.DIVIDERS_OPACITY, profile);
-        mSearchBarHorizontalLine.setBackgroundColor(color);
+        int accentColor1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, profile);
+        mViewPagerContainer.setBackgroundColor(accentColor1);
     }
 
     @Override
@@ -154,7 +201,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
     private void adjustFabPosition(boolean verticalCenter) {
         int verticalCenterGravity = verticalCenter ? Gravity.CENTER : Gravity.BOTTOM;
-        mFabContainer.setGravity(verticalCenterGravity | Gravity.END);
+        if (mUserProfileContainer.isRightHanded()) {
+            mFabContainer.setGravity(verticalCenterGravity | Gravity.END);
+        } else {
+            mFabContainer.setGravity(verticalCenterGravity | Gravity.START);
+        }
     }
 
     private void adjustPopupButtons(ColorProfile profile) {
@@ -201,7 +252,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
-        mFabToolbar = (RelativeLayout) findViewById(R.id.fab_toolbar);
+        mFabToolbar = findViewById(R.id.fab_toolbar);
         mNextButton = (ImageButton) findViewById(R.id.next_page_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,7 +271,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
-        mSearchBarHorizontalLine = findViewById(R.id.horizontal_line);
+        mViewPagerContainer = (LinearLayout) findViewById(R.id.viewpager_container);
+        mNewContactButtonsContainer = (LinearLayout)
+                findViewById(R.id.new_contact_buttons_container);
+        mSearchButtonsContainer = (LinearLayout) findViewById(R.id.search_buttons_container);
+        mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
     }
 
     private void showPopup(boolean show) {
@@ -500,6 +555,22 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         TabsPagerAdapter mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
                 fragmentArrayList);
         mViewPager.setAdapter(mLetterAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                adjustFabToolbarNavButtonsVisibility();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         adjustFabToolbarNavButtonsVisibility();
     }
