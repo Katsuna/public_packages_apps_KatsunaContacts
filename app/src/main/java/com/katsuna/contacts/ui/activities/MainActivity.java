@@ -217,7 +217,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     private void initControls() {
-        initToolbar(R.drawable.ic_menu_black87_24dp);
+        initToolbar(R.drawable.common_ic_menu_black_24dp);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

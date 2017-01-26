@@ -42,5 +42,4 @@
   <string name="new_folder_name">Neuer Ordnernamen</string>
   <string name="folder_creation_failed">Fehler beim Erstellen des \"%1$s\" Ordners.</string>
   <string name="invalid_vcf">Ungültige Vcf.</string>
-  <string name="right_hand_setting">Right handed</string>
 </resources>

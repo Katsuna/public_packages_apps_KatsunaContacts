@@ -4,5 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_marginStart="72dp"
-    android:background="@color/common_black12"
     android:visibility="gone" />

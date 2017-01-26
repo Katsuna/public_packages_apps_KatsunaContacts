@@ -86,64 +86,10 @@
         android:layout_marginTop="16dp"
         android:background="@color/common_black12" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:orientation="horizontal">
+    <include layout="@layout/common_size_profile_selector" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/common_select_profile"
-            android:textStyle="bold" />
+    <include layout="@layout/common_color_profile_selector" />
 
-        <Spinner
-            android:id="@+id/profiles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:entries="@array/common_array_profiles"
-            android:entryValues="@array/common_array_profiles_values" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginStart="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/common_profile_color" />
-
-        <Spinner
-            android:id="@+id/profiles_optical_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/right_hand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:text="@string/right_hand_setting"
-        android:visibility="gone" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/common_black12" />
+    <include layout="@layout/common_right_hand" />
 
 </LinearLayout>

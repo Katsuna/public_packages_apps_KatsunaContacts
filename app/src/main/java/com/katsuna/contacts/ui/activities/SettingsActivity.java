@@ -10,21 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.katsuna.commons.entities.ColorProfile;
-import com.katsuna.commons.entities.PreferenceKey;
-import com.katsuna.commons.entities.ProfileType;
-import com.katsuna.commons.entities.SpinnerItem;
-import com.katsuna.commons.ui.KatsunaActivity;
-import com.katsuna.commons.ui.adapters.SpinnerItemAdapter;
+import com.katsuna.commons.ui.SettingsKatsunaActivity;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
@@ -43,7 +34,7 @@ import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 
-public class SettingsActivity extends KatsunaActivity {
+public class SettingsActivity extends SettingsKatsunaActivity {
 
     private static final String TAG = "SettingsActivity";
 
@@ -53,31 +44,12 @@ public class SettingsActivity extends KatsunaActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
-    private CheckBox mRightHand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         initControls();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mUserProfileChanged) {
-            if (!mUserProfileContainer.hasKatsunaServices()) {
-                //enable app right hand setting
-                boolean isRightHanded = SettingsManager.readSetting(SettingsActivity.this,
-                        PreferenceKey.RIGHT_HAND, true);
-                mRightHand.setChecked(isRightHanded);
-                mRightHand.setVisibility(View.VISIBLE);
-            } else {
-                mRightHand.setVisibility(View.GONE);
-            }
-
-        }
     }
 
     private void initControls() {
@@ -147,65 +119,9 @@ public class SettingsActivity extends KatsunaActivity {
                 break;
         }
 
-
-        Spinner mProfileTypes = (Spinner) findViewById(R.id.profiles);
-        String profileSetting = SettingsManager.readSetting(SettingsActivity.this,
-                PreferenceKey.OPTICAL_SIZE_PROFILE,
-                String.valueOf(ProfileType.INTERMEDIATE.getNumVal()));
-        mProfileTypes.setSelection(Integer.parseInt(profileSetting));
-        mProfileTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SettingsManager.setSetting(SettingsActivity.this,
-                        PreferenceKey.OPTICAL_SIZE_PROFILE, String.valueOf(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        mRightHand = (CheckBox) findViewById(R.id.right_hand);
-        mRightHand.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SettingsManager.setSetting(SettingsActivity.this,
-                        PreferenceKey.RIGHT_HAND, isChecked);
-            }
-        });
-
+        initSizeProfiles();
         initColorProfiles();
-    }
-
-    private void initColorProfiles() {
-        Spinner mProfileColor = (Spinner) findViewById(R.id.profiles_optical_color);
-
-        List<SpinnerItem> spinnerArray = new ArrayList<>();
-        for (ColorProfile colorProfile : ColorProfile.values()) {
-            spinnerArray.add(new SpinnerItem(colorProfile.name(), colorProfile.getResId()));
-        }
-        SpinnerItemAdapter mColorProfilesAdapter = new SpinnerItemAdapter(this, spinnerArray);
-        mProfileColor.setAdapter(mColorProfilesAdapter);
-
-
-        String value = SettingsManager.readSetting(SettingsActivity.this,
-                PreferenceKey.COLOR_PROFILE, ColorProfile.AUTO.name());
-        mProfileColor.setSelection(mColorProfilesAdapter.getPosition(new SpinnerItem(value)));
-
-        mProfileColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String value = ((SpinnerItem) adapterView.getItemAtPosition(i)).getValue();
-                SettingsManager.setSetting(SettingsActivity.this, PreferenceKey.COLOR_PROFILE,
-                        value);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        initRightHand();
     }
 
     private void importContacts() {

@@ -42,5 +42,4 @@
   <string name="new_folder_name">Όνομα νέου φακέλου.</string>
   <string name="folder_creation_failed">Απέτυχε η δημιουργία φακέλου \'%1$s\'.</string>
   <string name="invalid_vcf">Μη έγκυρο αρχείο vcf.</string>
-  <string name="right_hand_setting">Right handed</string>
 </resources>
