@@ -47,7 +47,6 @@ import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.Log;
-import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.domain.Contact;
 import com.katsuna.contacts.domain.Phone;
@@ -86,18 +85,13 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private Handler mPopupActionHandler;
     private boolean mPopupVisible;
     private boolean mSearchMode;
-    private Button mNewContactButton;
-    private Button mSearchContactsButton;
     private boolean mContactSelected;
     private View mFabToolbar;
     private boolean mFabToolbarOn;
     private ImageButton mPrevButton;
     private ImageButton mNextButton;
     private ViewPager mViewPager;
-    private LinearLayout mFabContainer;
     private LinearLayout mViewPagerContainer;
-    private LinearLayout mNewContactButtonsContainer;
-    private LinearLayout mSearchButtonsContainer;
     private FrameLayout mFabToolbarContainer;
 
     // chops a list into non-view sublists of length L
@@ -148,9 +142,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (mUserProfileContainer.isRightHanded()) {
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
             lp.gravity = Gravity.END;
-            mFabContainer.setGravity(Gravity.END | Gravity.CENTER);
 
-            //set shadow
+            //set shadow properly
             mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg));
             int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
             mFabToolbar.setPadding(shadowPixels, 0, 0, 0);
@@ -159,32 +152,13 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         } else {
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
             lp.gravity = Gravity.START;
-            mFabContainer.setGravity(Gravity.START | Gravity.CENTER);
 
+            //set shadow properly
             mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg_left_handed));
             int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
             mFabToolbar.setPadding(0, 0, shadowPixels, 0);
 
             positionFabsToLeft(true);
-        }
-    }
-
-    private void positionFabsToLeft(boolean flag) {
-        mNewContactButtonsContainer.removeAllViews();
-        mSearchButtonsContainer.removeAllViews();
-
-        if (flag) {
-            mNewContactButtonsContainer.addView(mFab2);
-            mNewContactButtonsContainer.addView(mNewContactButton);
-
-            mSearchButtonsContainer.addView(mFab1);
-            mSearchButtonsContainer.addView(mSearchContactsButton);
-        } else {
-            mNewContactButtonsContainer.addView(mNewContactButton);
-            mNewContactButtonsContainer.addView(mFab2);
-
-            mSearchButtonsContainer.addView(mSearchContactsButton);
-            mSearchButtonsContainer.addView(mFab1);
         }
     }
 
@@ -197,23 +171,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     protected void onStop() {
         super.onStop();
         deselectContact();
-    }
-
-    private void adjustFabPosition(boolean verticalCenter) {
-        int verticalCenterGravity = verticalCenter ? Gravity.CENTER : Gravity.BOTTOM;
-        if (mUserProfileContainer.isRightHanded()) {
-            mFabContainer.setGravity(verticalCenterGravity | Gravity.END);
-        } else {
-            mFabContainer.setGravity(verticalCenterGravity | Gravity.START);
-        }
-    }
-
-    private void adjustPopupButtons(ColorProfile profile) {
-        int color1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, profile);
-        Shape.setRoundedBackground(mSearchContactsButton, color1);
-
-        int color2 = ColorCalc.getColor(this, ColorProfileKey.ACCENT2_COLOR, profile);
-        Shape.setRoundedBackground(mNewContactButton, color2);
     }
 
     private void initControls() {
@@ -237,18 +194,19 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         });
         mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
 
-        mNewContactButton = (Button) findViewById(R.id.new_contact_button);
-        mNewContactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createContact();
-            }
-        });
-        mSearchContactsButton = (Button) findViewById(R.id.search_button);
-        mSearchContactsButton.setOnClickListener(new View.OnClickListener() {
+        mPopupButton1 = (Button) findViewById(R.id.search_button);
+        mPopupButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFabToolbar(true);
+            }
+        });
+
+        mPopupButton2 = (Button) findViewById(R.id.new_contact_button);
+        mPopupButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createContact();
             }
         });
 
@@ -272,9 +230,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         });
 
         mViewPagerContainer = (LinearLayout) findViewById(R.id.viewpager_container);
-        mNewContactButtonsContainer = (LinearLayout)
-                findViewById(R.id.new_contact_buttons_container);
-        mSearchButtonsContainer = (LinearLayout) findViewById(R.id.search_buttons_container);
+        mButtonsContainer1 = (LinearLayout) findViewById(R.id.search_buttons_container);
+        mButtonsContainer2 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
         mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
     }
 
@@ -287,14 +244,14 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                     && !mContactSelected
                     && !mFabToolbarOn) {
                 mPopupFrame.setVisibility(View.VISIBLE);
-                mNewContactButton.setVisibility(View.VISIBLE);
-                mSearchContactsButton.setVisibility(View.VISIBLE);
+                mPopupButton1.setVisibility(View.VISIBLE);
+                mPopupButton2.setVisibility(View.VISIBLE);
                 mPopupVisible = true;
             }
         } else {
             mPopupFrame.setVisibility(View.GONE);
-            mNewContactButton.setVisibility(View.GONE);
-            mSearchContactsButton.setVisibility(View.GONE);
+            mPopupButton1.setVisibility(View.GONE);
+            mPopupButton2.setVisibility(View.GONE);
             mPopupVisible = false;
             mLastTouchTimestamp = System.currentTimeMillis();
         }
