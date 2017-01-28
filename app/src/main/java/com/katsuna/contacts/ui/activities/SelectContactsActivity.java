@@ -88,6 +88,11 @@ public class SelectContactsActivity extends KatsunaActivity {
         mNoResultsView = (TextView) findViewById(R.id.no_results);
     }
 
+    @Override
+    protected void showPopup(boolean b) {
+        // no op here
+    }
+
     private List<Contact> getSelectedContacts() {
         List<Contact> output = new ArrayList<>();
 

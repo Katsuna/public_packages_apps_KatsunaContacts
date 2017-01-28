@@ -8,17 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -71,8 +68,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
-    private static final int POPUP_INACTIVITY_THRESHOLD = 10000;
-    private static final int POPUP_HANDLER_DELAY = 1000;
     private List<ContactListItemModel> mModels;
     private ContactsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -81,9 +76,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private SearchView mSearchView;
     private Contact mSelectedContact;
     private FrameLayout mPopupFrame;
-    private long mLastTouchTimestamp;
-    private Handler mPopupActionHandler;
-    private boolean mPopupVisible;
     private boolean mSearchMode;
     private boolean mContactSelected;
     private View mFabToolbar;
@@ -131,14 +123,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (mUserProfileChanged) {
             // color profile adjustments
             ColorProfile profile = mUserProfileContainer.getColorProfile();
-            adjustPopupButtons(profile);
             adjustSearchBar(profile);
-
-            adjustRightHand();
+            adjustSearchToolbarRightHand();
         }
     }
 
-    private void adjustRightHand() {
+    private void adjustSearchToolbarRightHand() {
         if (mUserProfileContainer.isRightHanded()) {
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
             lp.gravity = Gravity.END;
@@ -147,8 +137,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg));
             int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
             mFabToolbar.setPadding(shadowPixels, 0, 0, 0);
-
-            positionFabsToLeft(false);
         } else {
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
             lp.gravity = Gravity.START;
@@ -157,8 +145,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg_left_handed));
             int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
             mFabToolbar.setPadding(0, 0, shadowPixels, 0);
-
-            positionFabsToLeft(true);
         }
     }
 
@@ -235,7 +221,8 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
     }
 
-    private void showPopup(boolean show) {
+    @Override
+    protected void showPopup(boolean show) {
         if (show) {
             //don't show popup if menu drawer is open or toolbar search is enabled
             // or contact is selected or search with letters is shown.
@@ -255,26 +242,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             mPopupVisible = false;
             mLastTouchTimestamp = System.currentTimeMillis();
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        mLastTouchTimestamp = System.currentTimeMillis();
-        return super.dispatchTouchEvent(ev);
-    }
-
-    private void initPopupActionHandler() {
-        mPopupActionHandler = new Handler();
-        mPopupActionHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                long now = System.currentTimeMillis();
-                if (now - POPUP_INACTIVITY_THRESHOLD > mLastTouchTimestamp && !mPopupVisible) {
-                    showPopup(true);
-                }
-                mPopupActionHandler.postDelayed(this, POPUP_HANDLER_DELAY);
-            }
-        }, POPUP_HANDLER_DELAY);
     }
 
     @Override
@@ -441,23 +408,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
                 createContact();
             }
         });
-    }
-
-    private void tintFabs(boolean flag) {
-        int addContactColor;
-        int searchContactsColor;
-        if (flag) {
-            addContactColor = ContextCompat.getColor(this, R.color.common_blue_tinted);
-            searchContactsColor = ContextCompat.getColor(this, R.color.common_pink_tinted);
-        } else {
-            ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
-            int color1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, colorProfile);
-            int color2 = ColorCalc.getColor(this, ColorProfileKey.ACCENT2_COLOR, colorProfile);
-            searchContactsColor = color1;
-            addContactColor = color2;
-        }
-        mFab1.setBackgroundTintList(ColorStateList.valueOf(searchContactsColor));
-        mFab2.setBackgroundTintList(ColorStateList.valueOf(addContactColor));
     }
 
     private void createContact() {

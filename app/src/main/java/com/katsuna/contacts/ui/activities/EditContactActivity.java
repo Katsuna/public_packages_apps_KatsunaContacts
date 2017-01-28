@@ -45,6 +45,11 @@ public class EditContactActivity extends PhotoActivity {
         setupFab();
     }
 
+    @Override
+    protected void showPopup(boolean b) {
+        // no op here
+    }
+
     private void initControls() {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);

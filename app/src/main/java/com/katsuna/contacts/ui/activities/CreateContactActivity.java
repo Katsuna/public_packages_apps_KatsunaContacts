@@ -43,6 +43,11 @@ public class CreateContactActivity extends PhotoActivity {
         }
     }
 
+    @Override
+    protected void showPopup(boolean b) {
+        // no op here
+    }
+
     private void initControls() {
         mPhoto = (RoundedImageView) findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
