@@ -312,7 +312,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     private void showFabToolbar(boolean show) {
-        int duration = 550;
+        int duration = 400;
         if (show) {
             FabTransformation.with(mFab1).duration(duration)
                     .transformTo(mFabToolbar);
