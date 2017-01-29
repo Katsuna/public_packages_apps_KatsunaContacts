@@ -15,7 +15,8 @@ public class ContactGreyedViewHolder extends ContactViewHolder {
     public ContactGreyedViewHolder(View view, IContactInteractionListener listener) {
         super(view, listener);
         mPopupFrame = view.findViewById(R.id.popup_frame);
-        adjustProfileLocal();
+        // wait for specs ...
+        // adjustProfileLocal();
     }
 
     private void adjustProfileLocal() {

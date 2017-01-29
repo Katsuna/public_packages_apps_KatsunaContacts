@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -556,6 +557,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         mAdapter.deselectContact();
         tintFabs(false);
         adjustFabPosition(true);
+        mRecyclerView.setBackground(null);
     }
 
     @Override
@@ -575,6 +577,11 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         }
         adjustFabPosition(false);
         mContactSelected = true;
+
+        // set contact list background
+        ColorProfile colorProfile1 = this.mUserProfileContainer.getColorProfile();
+        int color1 = ColorCalc.getColor(this, ColorProfileKey.DISABLED_TEXT_OPACITY, colorProfile1);
+        mRecyclerView.setBackgroundColor(color1);
     }
 
     private int getCenter() {
