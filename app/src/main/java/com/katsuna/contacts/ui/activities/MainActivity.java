@@ -329,8 +329,9 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     @Override
     public void selectContactByStartingLetter(String letter) {
         if (mAdapter != null) {
+            deselectContact();
             int position = mAdapter.getPositionByStartingLetter(letter);
-            focusOnContact(position, 0);
+            scrollToPositionWithOffset(position, 0);
         }
     }
 
