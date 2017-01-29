@@ -330,7 +330,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     public void selectContactByStartingLetter(String letter) {
         if (mAdapter != null) {
             int position = mAdapter.getPositionByStartingLetter(letter);
-            focusOnContact(position);
+            focusOnContact(position, 0);
         }
     }
 
@@ -535,7 +535,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
                 int position = mAdapter.getPositionByContactId(contactId);
                 if (position != -1) {
-                    focusOnContact(position);
+                    focusOnContact(position, getCenter());
                 }
             }
         }
@@ -546,7 +546,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (mContactSelected) {
             deselectContact();
         } else {
-            focusOnContact(position);
+            focusOnContact(position, getCenter());
         }
     }
 
@@ -559,13 +559,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
     @Override
     public void focusContact(int position) {
-        focusOnContact(position);
+        focusOnContact(position, getCenter());
     }
 
-    private void focusOnContact(int position) {
+    private void focusOnContact(int position, int offset) {
         mAdapter.selectContactAtPosition(position);
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                .scrollToPositionWithOffset(position, (mRecyclerView.getHeight() / 2) - 170);
+        scrollToPositionWithOffset(position, offset);
 
         tintFabs(true);
 
@@ -575,6 +574,15 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         }
         adjustFabPosition(false);
         mContactSelected = true;
+    }
+
+    private int getCenter() {
+        return (mRecyclerView.getHeight() / 2) - 170;
+    }
+
+    private void scrollToPositionWithOffset(int position, int offset) {
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .scrollToPositionWithOffset(position, offset);
     }
 
     @Override
