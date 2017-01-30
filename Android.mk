@@ -70,7 +70,6 @@ include $(CLEAR_VARS)
 # These should NOT be included in KatsunaCommon
 # These should reside inside aosp/libs of this app
 LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ezvcard:aosp/libs/ezvcard-0.9.9.jar
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES += fabtransformation:aosp/libs/fabtransformation-1.0.0.aar
 
 include $(BUILD_MULTI_PREBUILT)
 
