@@ -94,72 +94,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/common_fab_margin"
-                        android:src="@drawable/ic_search_black87_36dp"
+                        android:src="@drawable/common_ic_search_black87_24dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <io.codetail.widget.RevealFrameLayout
-                android:id="@+id/fab_toolbar_container"
-                android:layout_width="128dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end">
-
-                <FrameLayout
-                    android:id="@+id/fab_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/viewpager_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:paddingTop="?attr/actionBarSize">
-
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/viewpager"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|bottom"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-                        android:gravity="end">
-
-                        <ImageButton
-                            android:id="@+id/prev_page_button"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:src="@drawable/prev_button"
-                            android:visibility="invisible"
-                            tools:ignore="ContentDescription" />
-
-                        <ImageButton
-                            android:id="@+id/next_page_button"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:src="@drawable/next_button"
-                            android:visibility="invisible"
-                            tools:ignore="ContentDescription" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </io.codetail.widget.RevealFrameLayout>
+            <include layout="@layout/common_search_bar" />
 
         </FrameLayout>
 

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,7 +23,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,31 +36,26 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.UserProfileContainer;
-import com.katsuna.commons.ui.KatsunaActivity;
+import com.katsuna.commons.providers.ContactProvider;
+import com.katsuna.commons.ui.SearchBarActivity;
+import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.commons.utils.Log;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Phone;
-import com.katsuna.contacts.providers.ContactProvider;
 import com.katsuna.contacts.ui.adapters.ContactsRecyclerViewAdapter;
-import com.katsuna.contacts.ui.adapters.TabsPagerAdapter;
-import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
-import com.katsuna.contacts.ui.fragments.SearchBarFragment;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
-import com.katsuna.contacts.utils.ContactArranger;
-import com.katsuna.contacts.utils.Separator;
 import com.konifar.fab_transformation.FabTransformation;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends KatsunaActivity implements IContactInteractionListener,
-        SearchBarFragment.OnFragmentInteractionListener {
+public class MainActivity extends SearchBarActivity implements IContactInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
@@ -79,25 +71,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     private FrameLayout mPopupFrame;
     private boolean mSearchMode;
     private boolean mContactSelected;
-    private View mFabToolbar;
-    private boolean mFabToolbarOn;
-    private ImageButton mPrevButton;
-    private ImageButton mNextButton;
-    private ViewPager mViewPager;
-    private LinearLayout mViewPagerContainer;
-    private FrameLayout mFabToolbarContainer;
-
-    // chops a list into non-view sublists of length L
-    private static <T> List<ArrayList<T>> chopped(List<T> list, final int L) {
-        List<ArrayList<T>> parts = new ArrayList<>();
-        final int N = list.size();
-        for (int i = 0; i < N; i += L) {
-            parts.add(new ArrayList<>(
-                    list.subList(i, Math.min(N, i + L)))
-            );
-        }
-        return parts;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +80,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         initControls();
         setupDrawerLayout();
         setupFab();
-
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
     }
 
     @Override
@@ -120,38 +91,6 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         if (isChanged() || mUserProfileChanged) {
             loadContacts();
         }
-
-        if (mUserProfileChanged) {
-            // color profile adjustments
-            ColorProfile profile = mUserProfileContainer.getColorProfile();
-            adjustSearchBar(profile);
-            adjustSearchToolbarRightHand();
-        }
-    }
-
-    private void adjustSearchToolbarRightHand() {
-        if (mUserProfileContainer.isRightHanded()) {
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
-            lp.gravity = Gravity.END;
-
-            //set shadow properly
-            mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg));
-            int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
-            mFabToolbar.setPadding(shadowPixels, 0, 0, 0);
-        } else {
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabToolbarContainer.getLayoutParams();
-            lp.gravity = Gravity.START;
-
-            //set shadow properly
-            mFabToolbar.setBackground(getDrawable(R.drawable.search_bar_bg_left_handed));
-            int shadowPixels = getResources().getDimensionPixelSize(R.dimen.search_shadow);
-            mFabToolbar.setPadding(0, 0, shadowPixels, 0);
-        }
-    }
-
-    private void adjustSearchBar(ColorProfile profile) {
-        int accentColor1 = ColorCalc.getColor(this, ColorProfileKey.ACCENT1_COLOR, profile);
-        mViewPagerContainer.setBackgroundColor(accentColor1);
     }
 
     @Override
@@ -162,6 +101,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
 
     private void initControls() {
         initToolbar(R.drawable.common_ic_menu_black_24dp);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -438,67 +378,9 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
             }
         });
 
-        initializeFabToolbar();
+        initializeFabToolbar(mModels);
 
         showNoResultsView();
-    }
-
-    private void initializeFabToolbar() {
-        List<String> letters = new ArrayList<>();
-
-        for (ContactListItemModel contactListItemModel : mModels) {
-            if (!contactListItemModel.isPremium()) {
-                if (contactListItemModel.getSeparator() == Separator.FIRST_LETTER) {
-                    letters.add(contactListItemModel.getContact().getDisplayName().substring(0, 1));
-                }
-            }
-        }
-
-        List<ArrayList<String>> lettersLists = chopped(letters, 20);
-
-        ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
-        for (ArrayList<String> lettersList : lettersLists) {
-            fragmentArrayList.add(SearchBarFragment.newInstance(lettersList));
-        }
-
-        TabsPagerAdapter mLetterAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
-                fragmentArrayList);
-        mViewPager.setAdapter(mLetterAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                adjustFabToolbarNavButtonsVisibility();
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        adjustFabToolbarNavButtonsVisibility();
-    }
-
-    private void adjustFabToolbarNavButtonsVisibility() {
-        int pages = mViewPager.getChildCount();
-        int currentPage = mViewPager.getCurrentItem();
-
-        if (pages == currentPage + 1) {
-            mNextButton.setVisibility(View.INVISIBLE);
-        } else {
-            mNextButton.setVisibility(View.VISIBLE);
-        }
-
-        if (currentPage == 0) {
-            mPrevButton.setVisibility(View.INVISIBLE);
-        } else {
-            mPrevButton.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -528,11 +410,12 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_EDIT_CONTACT) {
             if (resultCode == RESULT_OK) {
-                String contactId = data.getStringExtra("contactId");
+                long contactId = data.getLongExtra("contactId", 0);
                 loadContacts();
 
                 //invalidate cached photo
-                Uri photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contactId));
+                Uri photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI,
+                        contactId);
                 Picasso.with(this).invalidate(photoUri);
 
                 int position = mAdapter.getPositionByContactId(contactId);
@@ -594,7 +477,7 @@ public class MainActivity extends KatsunaActivity implements IContactInteraction
     }
 
     @Override
-    public void editContact(String contactId) {
+    public void editContact(long contactId) {
         Intent i = new Intent(this, EditContactActivity.class);
         i.putExtra("contactId", contactId);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);

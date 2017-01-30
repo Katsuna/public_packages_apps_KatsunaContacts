@@ -3,6 +3,9 @@ package com.katsuna.contacts.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Phone;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +19,6 @@ import ezvcard.property.Revision;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Uid;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Phone;
 
 public class VCardHelper {
     public static VCard getVCard(Contact contact) {
@@ -75,7 +76,7 @@ public class VCardHelper {
 
         List<Address> addresses = vCard.getAddresses();
         if (!addresses.isEmpty()) {
-            com.katsuna.contacts.domain.Address address = new com.katsuna.contacts.domain.Address();
+            com.katsuna.commons.domain.Address address = new com.katsuna.commons.domain.Address();
             //we support only one address
             address.setFormattedAddress(addresses.get(0).getLabel());
             contact.setAddress(address);
@@ -83,7 +84,7 @@ public class VCardHelper {
 
         List<Email> emails = vCard.getEmails();
         if (!emails.isEmpty()) {
-            com.katsuna.contacts.domain.Email email = new com.katsuna.contacts.domain.Email();
+            com.katsuna.commons.domain.Email email = new com.katsuna.commons.domain.Email();
             //we support only one email
             email.setAddress(emails.get(0).getValue());
             contact.setEmail(email);

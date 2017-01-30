@@ -4,14 +4,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
 public class ContactSelectedViewHolder extends ContactViewHolderBase {

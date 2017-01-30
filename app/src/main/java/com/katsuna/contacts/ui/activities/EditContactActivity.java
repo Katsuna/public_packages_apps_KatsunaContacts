@@ -9,14 +9,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.katsuna.commons.domain.Address;
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Email;
+import com.katsuna.commons.domain.Name;
+import com.katsuna.commons.domain.Phone;
+import com.katsuna.commons.providers.ContactProvider;
+import com.katsuna.commons.utils.DataAction;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Address;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Email;
-import com.katsuna.contacts.domain.Name;
-import com.katsuna.contacts.domain.Phone;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.utils.DataAction;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -70,7 +70,7 @@ public class EditContactActivity extends PhotoActivity {
     }
 
     private void loadContact() {
-        String contactId = getIntent().getStringExtra("contactId");
+        long contactId = getIntent().getLongExtra("contactId", 0);
         ContactProvider contactProvider = new ContactProvider(this);
 
         mContact = contactProvider.getContact(contactId);

@@ -16,13 +16,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.KatsunaActivity;
+import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.providers.ContactProvider;
 import com.katsuna.contacts.ui.adapters.ContactsSelectionAdapter;
-import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
-import com.katsuna.contacts.utils.ContactArranger;
 
 import java.util.ArrayList;
 import java.util.List;

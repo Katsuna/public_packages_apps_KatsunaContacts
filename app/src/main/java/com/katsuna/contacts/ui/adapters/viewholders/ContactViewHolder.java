@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
 public class ContactViewHolder extends ContactViewHolderBase {

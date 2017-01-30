@@ -6,11 +6,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.ui.adapters.models.ContactListItemModel;
+import com.squareup.picasso.Picasso;
 
 public class ContactForSelectionViewHolder extends RecyclerView.ViewHolder {
 

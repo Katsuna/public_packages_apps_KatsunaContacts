@@ -15,12 +15,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SettingsKatsunaActivity;
+import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.utils.Constants;
 import com.katsuna.contacts.utils.DirectoryChooserDialog;
 import com.katsuna.contacts.utils.FileChooserDialog;
 import com.katsuna.contacts.utils.VCardHelper;

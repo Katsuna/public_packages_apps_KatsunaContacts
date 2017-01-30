@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Phone;
+import com.katsuna.commons.providers.ContactProvider;
+import com.katsuna.commons.utils.Constants;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.domain.Contact;
-import com.katsuna.contacts.domain.Phone;
-import com.katsuna.contacts.providers.ContactProvider;
-import com.katsuna.contacts.utils.Constants;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
