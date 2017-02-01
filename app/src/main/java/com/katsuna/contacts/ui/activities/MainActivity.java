@@ -45,6 +45,7 @@ import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SearchBarActivity;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.commons.utils.Log;
 import com.katsuna.contacts.R;
@@ -252,16 +253,18 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void showFabToolbar(boolean show) {
-        int duration = 400;
         if (show) {
-            FabTransformation.with(mFab1).duration(duration)
+            FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformTo(mFabToolbar);
 
             if (mPopupVisible) {
                 showPopup(false);
             }
+            if (mContactSelected) {
+                deselectContact();
+            }
         } else {
-            FabTransformation.with(mFab1).duration(duration)
+            FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformFrom(mFabToolbar);
         }
         mFabToolbarOn = show;
