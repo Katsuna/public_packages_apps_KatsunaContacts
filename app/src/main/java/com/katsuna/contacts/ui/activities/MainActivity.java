@@ -38,13 +38,10 @@ import android.widget.TextView;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
-import com.katsuna.commons.entities.ColorProfile;
-import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SearchBarActivity;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
-import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.commons.utils.Log;
@@ -105,6 +102,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
+        mRecyclerView.setItemAnimator(null);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mLastTouchTimestamp = System.currentTimeMillis();
@@ -443,7 +442,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         mAdapter.deselectContact();
         tintFabs(false);
         adjustFabPosition(true);
-        mRecyclerView.setBackground(null);
     }
 
     @Override
@@ -463,11 +461,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         }
         adjustFabPosition(false);
         mContactSelected = true;
-
-        // set contact list background
-        ColorProfile colorProfile1 = this.mUserProfileContainer.getColorProfile();
-        int color1 = ColorCalc.getColor(this, ColorProfileKey.DISABLED_TEXT_OPACITY, colorProfile1);
-        mRecyclerView.setBackgroundColor(color1);
     }
 
     private int getCenter() {

@@ -34,7 +34,6 @@
         android:id="@+id/popup_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/common_black38"
-        android:visibility="gone" />
+        android:background="@color/common_white38" />
 
 </FrameLayout>
