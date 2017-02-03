@@ -52,7 +52,7 @@ public class ContactForSelectionViewHolder extends RecyclerView.ViewHolder {
 
         switch (model.getSeparator()) {
             case FIRST_LETTER:
-                mSeparatorView.setText(contact.getDisplayName().subSequence(0, 1).toString());
+                mSeparatorView.setText(contact.getFirstLetterNormalized());
                 mSeparatorView.setVisibility(View.VISIBLE);
                 break;
             case NONE:
