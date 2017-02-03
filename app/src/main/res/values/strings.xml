@@ -24,7 +24,7 @@
     <string name="telephone3">Telephone 3</string>
 
     <!-- Title of the email field (contact details screen) -->
-    <string name="email" ">Email</string>
+    <string name="email">Email</string>
 
     <!-- Title of the address field (contact details screen) -->
     <string name="address">Address</string>
