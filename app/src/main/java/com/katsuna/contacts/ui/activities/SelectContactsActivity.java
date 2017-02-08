@@ -2,11 +2,9 @@ package com.katsuna.contacts.ui.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -21,6 +19,7 @@ import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ContactArranger;
+import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.ContactsSelectionAdapter;
 
@@ -53,31 +52,7 @@ public class SelectContactsActivity extends KatsunaActivity {
             public void onClick(View v) {
                 final List<Contact> selectedContacts = getSelectedContacts();
                 if (selectedContacts.size() > 0) {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SelectContactsActivity.this);
-                    alertDialogBuilder
-                            .setTitle(R.string.delete_contacts)
-                            .setMessage(R.string.delete_contacts_approval)
-                            .setCancelable(false)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    ContactProvider contactProvider = new ContactProvider(SelectContactsActivity.this);
-                                    for (Contact contact : selectedContacts) {
-                                        contactProvider.deleteContact(contact);
-                                        mAdapter.removeItem(contact);
-                                    }
-                                    Toast.makeText(SelectContactsActivity.this, R.string.contacts_deleted, Toast.LENGTH_LONG).show();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // if this button is clicked, just close
-                                    // the dialog box and do nothing
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                    deleteContacts(selectedContacts);
                 } else {
                     Toast.makeText(SelectContactsActivity.this, R.string.no_contacts_selected, Toast.LENGTH_SHORT).show();
                 }
@@ -86,6 +61,35 @@ public class SelectContactsActivity extends KatsunaActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mNoResultsView = (TextView) findViewById(R.id.no_results);
+    }
+
+    private void deleteContacts(final List<Contact> selectedContacts) {
+        KatsunaAlertBuilder builder = new KatsunaAlertBuilder(this);
+        builder.setTitle(R.string.delete_contacts);
+        builder.setMessage(R.string.delete_contacts_approval);
+        builder.setView(R.layout.common_katsuna_alert);
+        builder.setUserProfileContainer(mUserProfileContainer);
+        builder.setOkListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContactProvider contactProvider = new ContactProvider(SelectContactsActivity.this);
+                for (Contact contact : selectedContacts) {
+                    contactProvider.deleteContact(contact);
+                    mAdapter.removeItem(contact);
+                }
+                Toast.makeText(SelectContactsActivity.this, R.string.contacts_deleted,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+        List<String> contactNames = new ArrayList<>();
+        for (Contact contact : selectedContacts) {
+            contactNames.add(contact.getDisplayName());
+        }
+
+        builder.setScrollViewItems(contactNames);
+
+        builder.create().show();
     }
 
     @Override
