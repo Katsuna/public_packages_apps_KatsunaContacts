@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Description;
 import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.utils.Constants;
@@ -26,6 +27,7 @@ public class CreateContactActivity extends PhotoActivity {
     private RoundedImageView mPhoto;
     private EditText mName;
     private EditText mSurname;
+    private EditText mDescription;
     private EditText mTelephone;
     private LinearLayout mNoPhotoContainer;
 
@@ -60,6 +62,7 @@ public class CreateContactActivity extends PhotoActivity {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
         mTelephone = (EditText) findViewById(R.id.telephone);
+        mDescription = (EditText) findViewById(R.id.description);
 
         mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mFab2.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +80,9 @@ public class CreateContactActivity extends PhotoActivity {
                         Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
                         c.setPhoto(bitmap);
                     }
+
+                    Description description = new Description(mDescription.getText().toString());
+                    c.setDescription(description);
 
                     ContactProvider contactProvider = new ContactProvider(CreateContactActivity.this);
                     contactProvider.addContact(c);

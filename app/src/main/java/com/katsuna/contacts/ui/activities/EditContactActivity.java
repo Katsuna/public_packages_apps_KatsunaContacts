@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.katsuna.commons.domain.Address;
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Description;
 import com.katsuna.commons.domain.Email;
 import com.katsuna.commons.domain.Name;
 import com.katsuna.commons.domain.Phone;
@@ -29,6 +30,7 @@ public class EditContactActivity extends PhotoActivity {
     private EditText[] mTelephones;
     private EditText mName;
     private EditText mSurname;
+    private EditText mDescription;
     private EditText mTelephone1;
     private EditText mEmail;
     private EditText mAddress;
@@ -53,6 +55,7 @@ public class EditContactActivity extends PhotoActivity {
     private void initControls() {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
+        mDescription = (EditText) findViewById(R.id.description);
         mTelephone1 = (EditText) findViewById(R.id.telephone1);
         EditText mTelephone2 = (EditText) findViewById(R.id.telephone2);
         EditText mTelephone3 = (EditText) findViewById(R.id.telephone3);
@@ -78,6 +81,9 @@ public class EditContactActivity extends PhotoActivity {
         //set data on fields
         mName.setText(mContact.getName().getName());
         mSurname.setText(mContact.getName().getSurname());
+        if (mContact.getDescription() != null) {
+            mDescription.setText(mContact.getDescription().getDescription());
+        }
 
         loadPhoneNumbers();
         loadEmail();
@@ -123,6 +129,7 @@ public class EditContactActivity extends PhotoActivity {
             mContact.setPhones(getPhonesForUpdate());
             mContact.setEmail(getEmailForUpdate());
             mContact.setAddress(getAddressForUpdate());
+            mContact.setDescription(getDescriptionForUpdate());
             if (mPhoto.getDrawable() != null) {
                 Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
                 mContact.setPhoto(bitmap);
@@ -233,6 +240,27 @@ public class EditContactActivity extends PhotoActivity {
         }
 
         return address;
+    }
+
+    private Description getDescriptionForUpdate() {
+        Description description = null;
+
+        if (mContact.getDescription() == null) {
+            if (!TextUtils.isEmpty(mDescription.getText())) {
+                description = new Description(mDescription.getText().toString());
+                description.setDataAction(DataAction.CREATE);
+            }
+        } else {
+            description = mContact.getDescription();
+            if (TextUtils.isEmpty(mDescription.getText())) {
+                description.setDataAction(DataAction.DELETE);
+            } else {
+                description.setDataAction(DataAction.UPDATE);
+                description.setDescription(mDescription.getText().toString());
+            }
+        }
+
+        return description;
     }
 
     @Override

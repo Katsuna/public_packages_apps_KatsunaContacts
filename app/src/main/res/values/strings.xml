@@ -35,6 +35,9 @@
     <!-- Title of the surname field (contact details screen) -->
     <string name="surname">Surname</string>
 
+    <!-- Title of the description field (contact details screen) -->
+    <string name="description">Description</string>
+
     <!-- Warning shown when the user doesn't input a name or a surname of the contact (contact details screen) -->
     <string name="name_validation">Name or Surname is required</string>
 
