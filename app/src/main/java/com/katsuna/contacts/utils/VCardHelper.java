@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.domain.Description;
 import com.katsuna.commons.domain.Phone;
 
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ import ezvcard.VCard;
 import ezvcard.parameter.ImageType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
+import ezvcard.property.Note;
 import ezvcard.property.Photo;
 import ezvcard.property.Revision;
 import ezvcard.property.StructuredName;
@@ -46,6 +48,11 @@ public class VCardHelper {
         if (contact.getPhoto() != null) {
             Photo photo = new Photo(getPhotoBytes(contact.getPhoto()), ImageType.JPEG);
             vcard.addPhoto(photo);
+        }
+
+        if (contact.getDescription() != null) {
+            Note note = new Note(contact.getDescription().getDescription());
+            vcard.addNote(note);
         }
 
         vcard.setUid(Uid.random());
@@ -94,6 +101,12 @@ public class VCardHelper {
             byte[] bitmapdata = photo.getData();
             Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
             contact.setPhoto(bitmap);
+        }
+
+        List<Note> notes = vCard.getNotes();
+        if (!notes.isEmpty()) {
+            Description description = new Description(notes.get(0).getValue());
+            contact.setDescription(description);
         }
 
         return contact;
