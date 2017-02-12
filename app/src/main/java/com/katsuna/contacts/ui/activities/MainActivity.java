@@ -242,6 +242,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     @Override
     public void onBackPressed() {
+        refreshLastTouchTimestamp();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else if (mFabToolbarOn) {
@@ -450,6 +451,11 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void focusOnContact(int position, int offset) {
+        if (mFabToolbarOn) {
+            showFabToolbar(false);
+            return;
+        }
+
         mAdapter.selectContactAtPosition(position);
         scrollToPositionWithOffset(position, offset);
 
