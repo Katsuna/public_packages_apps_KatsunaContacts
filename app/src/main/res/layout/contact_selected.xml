@@ -41,14 +41,12 @@
 
             <TextView
                 android:id="@+id/contact_name"
-                style="@style/CommonRobotoBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="14dp"
                 android:layout_toEndOf="@id/photo"
                 android:layout_toStartOf="@id/edit_button"
-                android:fontFamily="sans-serif-medium"
                 android:gravity="start"
                 android:maxLines="5"
                 android:textSize="@dimen/common_text_size" />
