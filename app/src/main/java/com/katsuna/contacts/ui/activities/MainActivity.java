@@ -68,7 +68,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     private Contact mSelectedContact;
     private FrameLayout mPopupFrame;
     private boolean mSearchMode;
-    private boolean mContactSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     @Override
     protected void onStop() {
         super.onStop();
-        deselectContact();
+        deselectItem();
     }
 
     private void initControls() {
@@ -108,6 +107,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
         mLastTouchTimestamp = System.currentTimeMillis();
         initPopupActionHandler();
+
+        initDeselectionActionHandler();
 
         mNoResultsView = (TextView) findViewById(R.id.no_results);
 
@@ -169,7 +170,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             // or contact is selected or search with letters is shown.
             if (!drawerLayout.isDrawerOpen(GravityCompat.START)
                     && !mSearchMode
-                    && !mContactSelected
+                    && !mItemSelected
                     && !mFabToolbarOn) {
                 mPopupFrame.setVisibility(View.VISIBLE);
                 mPopupButton1.setVisibility(View.VISIBLE);
@@ -260,8 +261,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             if (mPopupVisible) {
                 showPopup(false);
             }
-            if (mContactSelected) {
-                deselectContact();
+            if (mItemSelected) {
+                deselectItem();
             }
         } else {
             FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
@@ -271,9 +272,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     @Override
-    public void selectContactByStartingLetter(String letter) {
+    public void selectItemByStartingLetter(String letter) {
         if (mAdapter != null) {
-            deselectContact();
+            deselectItem();
             int position = mAdapter.getPositionByStartingLetter(letter);
             scrollToPositionWithOffset(position, 0);
         }
@@ -431,18 +432,22 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     @Override
     public void selectContact(int position) {
-        if (mContactSelected) {
-            deselectContact();
+        if (mItemSelected) {
+            deselectItem();
         } else {
             focusOnContact(position, getCenter());
         }
     }
 
-    private void deselectContact() {
-        mContactSelected = false;
+    @Override
+    protected void deselectItem() {
+        mItemSelected = false;
         mAdapter.deselectContact();
         tintFabs(false);
         adjustFabPosition(true);
+
+        //deselection mechanism
+        refreshLastTouchTimestamp();
     }
 
     @Override
@@ -466,7 +471,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             showFabToolbar(false);
         }
         adjustFabPosition(false);
-        mContactSelected = true;
+        mItemSelected = true;
+        refreshLastSelectionTimestamp();
     }
 
     private int getCenter() {
