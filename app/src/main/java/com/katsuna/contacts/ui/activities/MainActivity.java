@@ -465,11 +465,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         scrollToPositionWithOffset(position, offset);
 
         tintFabs(true);
-
-        //hide fabToolbar if shown
-        if (mFabToolbarOn) {
-            showFabToolbar(false);
-        }
         adjustFabPosition(false);
         mItemSelected = true;
         refreshLastSelectionTimestamp();
