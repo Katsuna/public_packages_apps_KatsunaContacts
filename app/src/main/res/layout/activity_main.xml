@@ -17,8 +17,8 @@
             android:id="@+id/contacts_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="200dp"
             android:clipToPadding="false"
+            android:paddingBottom="200dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/contact" />
@@ -67,7 +67,9 @@
                         android:id="@+id/new_contact_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/common_fab_margin"
+                        android:layout_marginBottom="@dimen/common_fab_vertical_margin"
+                        android:layout_marginEnd="@dimen/common_fab_margin"
+                        android:layout_marginStart="@dimen/common_fab_margin"
                         android:src="@drawable/ic_add_grey50_36dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
@@ -93,7 +95,9 @@
                         android:id="@+id/search_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/common_fab_margin"
+                        android:layout_marginBottom="@dimen/common_fab_margin"
+                        android:layout_marginEnd="@dimen/common_fab_margin"
+                        android:layout_marginStart="@dimen/common_fab_margin"
                         android:src="@drawable/common_ic_search_black87_24dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
