@@ -22,7 +22,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:layout_toEndOf="@id/separator"
-        android:background="@drawable/ic_person_grey_50px"
+        android:background="@drawable/common_ic_account_circle_grey70_40dp"
         app:riv_border_width="0dp"
         app:riv_corner_radius="50dp"
         app:riv_mutate_background="true"

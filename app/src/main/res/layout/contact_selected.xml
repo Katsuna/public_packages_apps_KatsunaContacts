@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include layout="@layout/photo" />
+            <include layout="@layout/common_photo" />
 
             <ImageButton
                 android:id="@+id/edit_button"

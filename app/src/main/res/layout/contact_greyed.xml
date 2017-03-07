@@ -4,27 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/horizontal_divider" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="4dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="4dp">
+        android:orientation="vertical">
 
-        <include layout="@layout/separator" />
+        <include layout="@layout/horizontal_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp">
 
-            <include layout="@layout/photo" />
+            <include layout="@layout/separator" />
 
-            <include layout="@layout/contact_name" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/common_photo" />
+
+                <include layout="@layout/contact_name" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
