@@ -114,8 +114,8 @@ public class EditContactActivity extends PhotoActivity {
     }
 
     private void setupFab() {
-        mFab2 = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
-        mFab2.setOnClickListener(new View.OnClickListener() {
+        mFab1 = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
+        mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateContact();

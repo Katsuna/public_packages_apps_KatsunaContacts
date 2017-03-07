@@ -64,8 +64,8 @@ public class CreateContactActivity extends PhotoActivity {
         mTelephone = (EditText) findViewById(R.id.telephone);
         mDescription = (EditText) findViewById(R.id.description);
 
-        mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        mFab2.setOnClickListener(new View.OnClickListener() {
+        mFab1 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (inputIsValid()) {
