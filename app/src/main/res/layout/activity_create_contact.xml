@@ -50,6 +50,22 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/telephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/common_activity_margin"
+                android:gravity="center"
+                android:hint="@string/telephone"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:textSize="@dimen/common_text_size" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_activity_margin">
 
@@ -94,25 +110,9 @@
                 android:layout_margin="@dimen/common_activity_margin"
                 android:gravity="center"
                 android:hint="@string/description"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textSize="@dimen/common_text_size" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/telephone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/common_activity_margin"
-                android:gravity="center"
-                android:hint="@string/telephone"
-                android:imeOptions="actionDone"
-                android:inputType="phone"
                 android:textSize="@dimen/common_text_size" />
         </android.support.design.widget.TextInputLayout>
 
@@ -124,7 +124,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/common_fab_margin"
-        android:src="@drawable/done" />
+        android:src="@drawable/common_ic_done_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 
