@@ -47,7 +47,7 @@
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible">
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="com.katsuna.contacts.create" />
                 <category android:name="android.intent.category.DEFAULT" />
