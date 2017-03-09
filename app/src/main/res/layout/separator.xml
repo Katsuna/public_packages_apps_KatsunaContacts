@@ -4,15 +4,17 @@
     android:id="@+id/separator_wrapper"
     android:layout_width="56dp"
     android:layout_height="match_parent"
+    android:layout_gravity="start"
     android:gravity="start|center"
     android:orientation="horizontal"
     android:visibility="invisible">
 
     <TextView
         android:id="@+id/separator"
-        android:layout_width="wrap_content"
+        android:layout_width="36dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
+        android:gravity="center"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textSize="@dimen/common_text_size"
         android:visibility="gone" />

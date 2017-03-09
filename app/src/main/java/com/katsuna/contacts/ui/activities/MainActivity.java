@@ -267,6 +267,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         } else {
             FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformFrom(mFabToolbar);
+            mAdapter.unfocusFromSearch();
         }
         mFabToolbarOn = show;
     }
@@ -277,6 +278,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             deselectItem();
             int position = mAdapter.getPositionByStartingLetter(letter);
             scrollToPositionWithOffset(position, 0);
+            mAdapter.focusFromSearch(position);
         }
     }
 

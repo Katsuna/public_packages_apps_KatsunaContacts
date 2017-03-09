@@ -1,5 +1,6 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,9 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKey;
 import com.katsuna.commons.entities.ProfileType;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.squareup.picasso.Picasso;
@@ -22,8 +26,8 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
     final UserProfileContainer mUserProfileContainer;
     final TextView mDisplayName;
     final View mContactBasicContainer;
-    private final LinearLayout mSeparatorWrapper;
     private final TextView mSeparatorView;
+    private final LinearLayout mSeparatorWrapper;
     private final ImageView mSeparatorImage;
 
     ContactViewHolderBase(View view, IContactInteractionListener listener) {
@@ -102,4 +106,24 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
         }
     }
 
+    public void searchFocus(boolean flag) {
+        if (mSeparatorView != null) {
+
+            if (flag) {
+                ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
+                // set action buttons background color
+                int color1 = ColorCalc.getColor(itemView.getContext(),
+                        ColorProfileKey.ACCENT1_COLOR, colorProfile);
+
+                GradientDrawable circle = (GradientDrawable) ContextCompat.getDrawable(
+                        itemView.getContext(), R.drawable.circle_black_36dp);
+                circle.setColor(color1);
+
+                mSeparatorView.setBackground(circle);
+            } else {
+                mSeparatorView.setBackground(null);
+            }
+
+        }
+    }
 }

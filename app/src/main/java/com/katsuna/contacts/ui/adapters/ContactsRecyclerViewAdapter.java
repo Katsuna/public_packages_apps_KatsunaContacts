@@ -68,14 +68,18 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final ContactListItemModel model = mFilteredContacts.get(position);
 
+        boolean focused = position == mSelectedFromSearchPosition;
+
         switch (viewHolder.getItemViewType()) {
             case CONTACT_NOT_SELECTED:
                 ContactViewHolder contactViewHolder = (ContactViewHolder) viewHolder;
                 contactViewHolder.bind(model, position);
+                contactViewHolder.searchFocus(focused);
                 break;
             case CONTACT_GREYED_OUT:
                 ContactGreyedViewHolder greyedViewHolder = (ContactGreyedViewHolder) viewHolder;
                 greyedViewHolder.bind(model, position);
+                greyedViewHolder.searchFocus(focused);
                 break;
             case CONTACT_SELECTED:
                 ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;
