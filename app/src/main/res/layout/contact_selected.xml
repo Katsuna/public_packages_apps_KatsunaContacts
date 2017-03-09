@@ -77,9 +77,9 @@
             android:paddingEnd="0dp"
             android:paddingStart="30dp"
             android:text="@string/common_call"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@color/common_black87"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/message_button"
@@ -93,9 +93,9 @@
             android:paddingEnd="0dp"
             android:paddingStart="16dp"
             android:text="@string/common_message"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@color/common_grey50"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 
