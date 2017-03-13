@@ -205,6 +205,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             @Override
             public boolean onQueryTextChange(String newText) {
                 showPopup(false);
+                showFabToolbar(false);
                 search(newText);
                 return false;
             }
@@ -222,6 +223,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             public void onClick(View v) {
                 mSearchMode = true;
                 showPopup(false);
+                showFabToolbar(false);
             }
         });
 
