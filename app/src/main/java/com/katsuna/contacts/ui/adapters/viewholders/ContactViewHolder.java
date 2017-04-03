@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
-import com.katsuna.commons.entities.ProfileType;
+import com.katsuna.commons.entities.SizeProfile;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.contacts.R;
@@ -51,15 +51,15 @@ public class ContactViewHolder extends ContactViewHolderBase {
     }
 
     private void adjustProfile() {
-        ProfileType opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
+        SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
             int photoSize = itemView.getResources()
                     .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
-            if (opticalSizeProfile == ProfileType.ADVANCED) {
+            if (opticalSizeProfile == SizeProfile.ADVANCED) {
                 photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
-            } else if (opticalSizeProfile == ProfileType.SIMPLE) {
+            } else if (opticalSizeProfile == SizeProfile.SIMPLE) {
                 photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
             }
