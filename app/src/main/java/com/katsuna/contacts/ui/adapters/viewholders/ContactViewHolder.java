@@ -18,7 +18,6 @@ public class ContactViewHolder extends ContactViewHolderBase {
     public ContactViewHolder(View view, IContactInteractionListener listener) {
         super(view, listener);
         mGroupDivider = view.findViewById(R.id.group_divider);
-        adjustProfile();
     }
 
     public void bind(final ContactListItemModel model, final int position) {
@@ -44,13 +43,16 @@ public class ContactViewHolder extends ContactViewHolderBase {
         };
         mPhoto.setOnClickListener(focusContact);
         mDisplayName.setOnClickListener(focusContact);
+
+        adjustProfile();
     }
 
     private void initialize() {
         mGroupDivider.setVisibility(View.GONE);
     }
 
-    private void adjustProfile() {
+    protected void adjustProfile() {
+        super.adjustProfile();
         SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
@@ -64,11 +66,12 @@ public class ContactViewHolder extends ContactViewHolderBase {
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
             }
 
+            int letterDividerMargin = itemView.getResources()
+                    .getDimensionPixelSize(R.dimen.letter_divider_margin);
+            int halfPhotoSize = photoSize / 2;
             ViewGroup.MarginLayoutParams lp =
                     (ViewGroup.MarginLayoutParams) mGroupDivider.getLayoutParams();
-            int currentMargin = lp.getMarginStart();
-            int halfPhotoSize = photoSize / 2;
-            lp.setMarginStart(currentMargin + halfPhotoSize);
+            lp.setMarginStart(letterDividerMargin + halfPhotoSize);
         }
 
         ColorProfile colorProfile = mUserProfileContainer.getColorProfile();

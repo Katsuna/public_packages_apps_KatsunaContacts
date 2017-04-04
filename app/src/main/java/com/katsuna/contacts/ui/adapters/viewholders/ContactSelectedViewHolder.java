@@ -7,10 +7,14 @@ import android.widget.Button;
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
+import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfile;
+import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.Shape;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
@@ -51,41 +55,37 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
                 mListener.sendSMS(contact);
             }
         });
+
+        adjustProfile();
     }
 
-    private void adjustProfile() {
+    protected void adjustProfile() {
+        super.adjustProfile();
         SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
             int photoSize = itemView.getResources()
                     .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
-            int actionButtonHeight = itemView.getResources()
-                    .getDimensionPixelSize(R.dimen.common_action_button_height_intemediate);
 
             if (opticalSizeProfile == SizeProfile.ADVANCED) {
                 photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
-                actionButtonHeight = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_action_button_height_advanced);
             } else if (opticalSizeProfile == SizeProfile.SIMPLE) {
                 photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
-                actionButtonHeight = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_action_button_height_simple);
             }
             ViewGroup.LayoutParams layoutParams = mPhoto.getLayoutParams();
             layoutParams.height = photoSize;
             layoutParams.width = photoSize;
             mPhoto.setLayoutParams(layoutParams);
 
-            ViewGroup.LayoutParams callButtonParams = mCallButton.getLayoutParams();
-            callButtonParams.height = actionButtonHeight;
+            OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.ACTION_BUTTON,
+                    opticalSizeProfile);
+            SizeAdjuster.adjustText(itemView.getContext(), mCallButton, opticalParams);
+            SizeAdjuster.adjustText(itemView.getContext(), mMessageButton, opticalParams);
 
-            ViewGroup.LayoutParams messageButtonParams = mMessageButton.getLayoutParams();
-            messageButtonParams.height = actionButtonHeight;
-
-            mCallButton.setLayoutParams(callButtonParams);
-            mMessageButton.setLayoutParams(messageButtonParams);
+            SizeAdjuster.adjustButton(itemView.getContext(), mCallButton, opticalParams);
+            SizeAdjuster.adjustButton(itemView.getContext(), mMessageButton, opticalParams);
         }
 
         adjustColorProfile();

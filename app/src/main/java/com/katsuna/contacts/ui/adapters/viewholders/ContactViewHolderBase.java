@@ -12,10 +12,14 @@ import android.widget.TextView;
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
+import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfile;
+import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.squareup.picasso.Picasso;
@@ -40,7 +44,6 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
         mPhoto = (ImageView) view.findViewById(R.id.photo);
         mListener = listener;
         mUserProfileContainer = listener.getUserProfileContainer();
-        adjustProfile();
     }
 
     void bind(final ContactListItemModel model, final int position) {
@@ -86,7 +89,7 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
         mSeparatorImage.setVisibility(View.GONE);
     }
 
-    private void adjustProfile() {
+    protected void adjustProfile() {
         SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
@@ -103,6 +106,11 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
             ViewGroup.LayoutParams lp = mPhoto.getLayoutParams();
             lp.width = size;
             lp.height = size;
+
+            // display name
+            OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.TITLE,
+                    opticalSizeProfile);
+            SizeAdjuster.adjustText(itemView.getContext(), mDisplayName, opticalParams);
         }
     }
 
