@@ -64,38 +64,52 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/call_button"
-            style="?android:attr/buttonBarButtonStyle"
+        <FrameLayout
+            android:id="@+id/call_button_container"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_gravity="start"
             android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:drawablePadding="0dp"
-            android:drawableStart="@drawable/common_ic_call_black87_24dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/common_call"
-            android:textAllCaps="false"
-            android:textColor="@color/common_black87"
-            android:textSize="20sp" />
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/message_button"
-            style="?android:attr/buttonBarButtonStyle"
+            <Button
+                android:id="@+id/call_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:drawablePadding="6dp"
+                android:drawableStart="@drawable/common_ic_call_black87_24dp"
+                android:padding="4dp"
+                android:text="@string/common_call"
+                android:textAllCaps="false"
+                android:textColor="@color/common_black87"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/message_button_container"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:drawablePadding="0dp"
-            android:drawableStart="@drawable/common_ic_message_grey50_24dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/common_message"
-            android:textAllCaps="false"
-            android:textColor="@color/common_grey50"
-            android:textSize="20sp" />
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/message_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:drawablePadding="6dp"
+                android:drawableStart="@drawable/common_ic_message_grey50_24dp"
+                android:padding="4dp"
+                android:text="@string/common_message"
+                android:textAllCaps="false"
+                android:textColor="@color/common_grey50"
+                android:textSize="20sp" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
