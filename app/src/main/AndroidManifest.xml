@@ -49,6 +49,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/contact" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="com.katsuna.contacts.create" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

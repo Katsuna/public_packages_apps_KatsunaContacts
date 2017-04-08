@@ -85,8 +85,12 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
         showPopup(false);
 
-        if (isChanged() || mUserProfileChanged) {
+        if (reloadData) {
             loadContacts();
+        } else {
+            // we don't reload after edit contact activity.
+            // set default value to reenable reloading
+            reloadData = true;
         }
     }
 
@@ -413,6 +417,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         }
     }
 
+    private boolean reloadData = true;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -430,6 +436,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
                 if (position != -1) {
                     focusOnContact(position, getCenter());
                 }
+                reloadData = false;
             }
         }
     }

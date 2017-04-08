@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.EditText;
@@ -42,6 +43,11 @@ public class CreateContactActivity extends PhotoActivity {
         if (incomingIntent.getAction() != null &&
                 incomingIntent.getAction().equals(Constants.CREATE_CONTACT_ACTION)) {
             mTelephone.setText(incomingIntent.getStringExtra("number"));
+        }
+        if (incomingIntent.getAction() != null &&
+                incomingIntent.getAction().equals(Intent.ACTION_INSERT)) {
+            mTelephone.setText(incomingIntent.getStringExtra(ContactsContract.Intents.Insert.PHONE));
+            mName.setText(incomingIntent.getStringExtra(ContactsContract.Intents.Insert.NAME));
         }
     }
 
