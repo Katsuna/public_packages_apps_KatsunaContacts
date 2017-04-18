@@ -3,6 +3,7 @@ package com.katsuna.contacts.ui.adapters.viewholders;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
@@ -19,7 +20,7 @@ import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
 public class ContactSelectedViewHolder extends ContactViewHolderBase {
-    private final View mEditButton;
+    private final ImageView mEditButton;
     private final Button mCallButton;
     private final View mCallButtonContainer;
     private final View mMessageButtonContainer;
@@ -27,12 +28,11 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
 
     public ContactSelectedViewHolder(View view, IContactInteractionListener listener) {
         super(view, listener);
-        mEditButton = itemView.findViewById(R.id.edit_button);
+        mEditButton = (ImageView) itemView.findViewById(R.id.edit_button);
         mCallButton = (Button) itemView.findViewById(R.id.call_button);
         mCallButtonContainer = itemView.findViewById(R.id.call_button_container);
         mMessageButton = (Button) itemView.findViewById(R.id.message_button);
         mMessageButtonContainer = itemView.findViewById(R.id.message_button_container);
-        adjustProfile();
     }
 
     public void bind(final ContactListItemModel model, int position) {
@@ -82,6 +82,9 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
         if (opticalSizeProfile != null) {
             int photoSize = itemView.getResources()
                     .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
+            int callButtonDrawable = R.drawable.common_ic_call_black_24dp;
+            int messageButtonDrawable = R.drawable.common_ic_message_white_24dp;
+            int editButtonDrawable = R.drawable.edit_button_24dp;
 
             if (opticalSizeProfile == SizeProfile.ADVANCED) {
                 photoSize = itemView.getResources()
@@ -89,11 +92,18 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
             } else if (opticalSizeProfile == SizeProfile.SIMPLE) {
                 photoSize = itemView.getResources()
                         .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
+                callButtonDrawable = R.drawable.common_ic_call_black_28dp;
+                messageButtonDrawable = R.drawable.common_ic_message_white_28dp;
+                editButtonDrawable = R.drawable.edit_button_28dp;
             }
             ViewGroup.LayoutParams layoutParams = mPhoto.getLayoutParams();
             layoutParams.height = photoSize;
             layoutParams.width = photoSize;
             mPhoto.setLayoutParams(layoutParams);
+
+            mCallButton.setCompoundDrawablesWithIntrinsicBounds(callButtonDrawable, 0, 0, 0);
+            mMessageButton.setCompoundDrawablesWithIntrinsicBounds(messageButtonDrawable, 0, 0, 0);
+            mEditButton.setImageResource(editButtonDrawable);
 
             OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.ACTION_BUTTON,
                     opticalSizeProfile);
