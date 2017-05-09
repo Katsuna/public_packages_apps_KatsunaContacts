@@ -1,5 +1,7 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -128,7 +130,12 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
 
         int color2 = ColorCalc.getColor(itemView.getContext(), ColorProfileKey.ACCENT2_COLOR,
                 colorProfile);
-        Shape.setRoundedBackground(mMessageButtonContainer, color2);
+        Shape.setRoundedBorder(mMessageButtonContainer, color2);
+
+        Drawable[] drawables = mMessageButton.getCompoundDrawables();
+        drawables[0].mutate().setColorFilter( color2, PorterDuff.Mode.MULTIPLY);
+
+        mMessageButton.setTextColor(color2);
 
         // set background color
         int bgColor = ColorCalc.getColor(itemView.getContext(), ColorProfileKey.POP_UP_COLOR,
