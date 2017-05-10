@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -451,6 +452,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     @Override
     protected void deselectItem() {
+        drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_grey50));
         mItemSelected = false;
         mAdapter.deselectContact();
         tintFabs(false);
@@ -466,6 +468,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void focusOnContact(int position, int offset) {
+        drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_black07));
         if (mFabToolbarOn) {
             showFabToolbar(false);
             return;
