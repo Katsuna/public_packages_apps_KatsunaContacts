@@ -69,6 +69,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     private Contact mSelectedContact;
     private FrameLayout mPopupFrame;
     private boolean mSearchMode;
+    private int mSelectedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,13 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             // we don't reload after edit contact activity.
             // set default value to reenable reloading
             reloadData = true;
+        }
+
+        // keep contact selected after an outgoing call
+        if (mItemSelected) {
+            focusContact(mSelectedPosition);
+        } else {
+            deselectItem();
         }
     }
 
@@ -473,6 +481,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             showFabToolbar(false);
             return;
         }
+
+        mSelectedPosition = position;
 
         mAdapter.selectContactAtPosition(position);
         scrollToPositionWithOffset(position, offset);
