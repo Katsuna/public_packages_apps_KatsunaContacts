@@ -1,17 +1,31 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in D:\android\android-sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# This is a configuration file for ProGuard.
+# http://proguard.sourceforge.net/index.html#manual/usage.html
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
 
-# Add any project specific keep options here:
+# Optimization is turned off by default. Dex does not like code run
+# through the ProGuard optimize and preverify steps (and performs some
+# of these optimizations on its own).
+-dontoptimize
+-dontpreverify
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep enough data for stack traces
+-keepnames class **
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable,*Annotation*
+
+# Keep the static fields of referenced inner classes of auto-generated R classes, in case we
+# access those fields by reflection (e.g. EmojiMarkup)
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+# Keep all libraries
+-keep class android.support.** { *; }
+-keep class org.joda.** { *; }
+-keep class io.codetail.** { *; }
+-keep class ezvcard.** { *; }
+-keep class com.makeramen.** { *; }
+-keep class com.squareup.** { *; }
+-keep class com.konifar.** { *; }

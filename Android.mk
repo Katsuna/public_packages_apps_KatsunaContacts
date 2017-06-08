@@ -48,7 +48,9 @@ LOCAL_PRIVILEGED_MODULE := true
 
 #LOCAL_PROGUARD_FLAG_FILES := app/proguard-rules.pro
 
-LOCAL_PROGUARD_ENABLED := disabled
+LOCAL_PROGUARD_FLAGS := -ignorewarnings -include build/core/proguard_basic_keeps.flags
+LOCAL_PROGUARD_ENABLED := nosystem
+LOCAL_PROGUARD_FLAG_FILES := app/proguard-rules.pro
 
 include $(BUILD_PACKAGE)
 
