@@ -462,7 +462,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     protected void deselectItem() {
         drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_grey50));
         mItemSelected = false;
-        mAdapter.deselectContact();
+        if (mAdapter != null) {
+            mAdapter.deselectContact();
+        }
         tintFabs(false);
         adjustFabPosition(true);
 
