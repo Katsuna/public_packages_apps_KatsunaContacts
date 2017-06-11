@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.ui.adapters.ContactsAdapterBase;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.R;
@@ -15,14 +16,23 @@ import java.util.List;
 
 public class ContactsSelectionAdapter extends ContactsAdapterBase {
 
-    public ContactsSelectionAdapter(List<ContactListItemModel> models) {
+    private UserProfile mUserProfile;
+
+    public ContactsSelectionAdapter(List<ContactListItemModel> models, UserProfile userProfile) {
         mOriginalContacts = models;
         mFilteredContacts = models;
+        mUserProfile = userProfile;
     }
 
     @Override
     public ContactForSelectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_for_selection, parent, false);
+        View view;
+        if (mUserProfile.isRightHanded) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_for_selection, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_for_selection_lh, parent, false);
+        }
+
         return new ContactForSelectionViewHolder(view);
     }
 

@@ -33,6 +33,7 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
     private final TextView mSeparatorView;
     private final LinearLayout mSeparatorWrapper;
     private final ImageView mSeparatorImage;
+    private final View mPopupFrame;
 
     ContactViewHolderBase(View view, IContactInteractionListener listener) {
         super(view);
@@ -42,6 +43,7 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
         mSeparatorWrapper = (LinearLayout) view.findViewById(R.id.separator_wrapper);
         mDisplayName = (TextView) view.findViewById(R.id.contact_name);
         mPhoto = (ImageView) view.findViewById(R.id.photo);
+        mPopupFrame = view.findViewById(R.id.popup_frame);
         mListener = listener;
         mUserProfileContainer = listener.getUserProfileContainer();
     }
@@ -133,5 +135,14 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
             }
 
         }
+    }
+
+    public void showPopupFrame(boolean enabled) {
+        if (enabled) {
+            mPopupFrame.setVisibility(View.VISIBLE);
+        } else {
+            mPopupFrame.setVisibility(View.GONE);
+        }
+
     }
 }

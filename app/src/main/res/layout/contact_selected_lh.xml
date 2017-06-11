@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contact_basic_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:elevation="@dimen/common_selection_elevation"
+    android:orientation="vertical"
+    android:paddingBottom="4dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="4dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/separator_wrapper"
+            layout="@layout/separator_lh"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/separator_wrapper">
+
+            <ImageView
+                android:id="@+id/edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="2dp"
+                android:gravity="start"
+                android:padding="10dp"
+                android:src="@drawable/edit_button_24dp"
+                tools:ignore="ContentDescription" />
+
+            <include
+                android:id="@+id/photo"
+                layout="@layout/common_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="14dp"
+                android:layout_toEndOf="@id/edit_button"
+                android:layout_toStartOf="@id/photo"
+                android:gravity="end"
+                android:maxLines="5"
+                android:textSize="@dimen/common_text_size" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/message_button_container"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/message_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:drawablePadding="@dimen/common_drawable_padding"
+                android:drawableStart="@drawable/common_ic_message_white_24dp"
+                android:ellipsize="end"
+                android:gravity="start|center"
+                android:lines="1"
+                android:paddingEnd="@dimen/common_button_padding"
+                android:paddingStart="@dimen/common_button_padding"
+                android:text="@string/common_message"
+                android:textAllCaps="false"
+                android:textColor="@color/common_grey50"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/call_button_container"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/call_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:drawablePadding="@dimen/common_drawable_padding"
+                android:drawableStart="@drawable/common_ic_call_black_24dp"
+                android:ellipsize="end"
+                android:gravity="start|center"
+                android:lines="1"
+                android:paddingEnd="@dimen/common_button_padding"
+                android:paddingStart="@dimen/common_button_padding"
+                android:text="@string/common_call"
+                android:textAllCaps="false"
+                android:textColor="@color/common_black87"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -40,6 +40,11 @@ public class SelectContactsActivity extends KatsunaActivity {
         setContentView(R.layout.activity_select_contacts);
 
         initControls();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadContacts();
     }
 
@@ -117,7 +122,8 @@ public class SelectContactsActivity extends KatsunaActivity {
         List<Contact> contactList = contactProvider.getContacts();
 
         mModels = ContactArranger.sortContactsBySurname(contactList);
-        mAdapter = new ContactsSelectionAdapter(mModels);
+        mAdapter = new ContactsSelectionAdapter(mModels,
+                mUserProfileContainer.getActiveUserProfile());
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

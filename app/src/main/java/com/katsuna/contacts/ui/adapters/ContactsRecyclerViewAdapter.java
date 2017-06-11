@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.katsuna.commons.ui.adapters.ContactsAdapterBase;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.adapters.viewholders.ContactGreyedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactViewHolder;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
@@ -48,18 +47,27 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
 
+        boolean isRightHanded = mListener.getUserProfileContainer().isRightHanded();
+        View view;
+
         switch (viewType) {
             case CONTACT_NOT_SELECTED:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
+            case CONTACT_GREYED_OUT:
+                if (isRightHanded) {
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
+                } else {
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_lh, parent, false);
+                }
                 viewHolder = new ContactViewHolder(view, mListener);
                 break;
             case CONTACT_SELECTED:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
+                if (isRightHanded) {
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
+                } else {
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected_lh, parent, false);
+                }
                 viewHolder = new ContactSelectedViewHolder(view, mListener);
                 break;
-            case CONTACT_GREYED_OUT:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_greyed, parent, false);
-                viewHolder = new ContactGreyedViewHolder(view, mListener);
         }
         return viewHolder;
     }
@@ -75,11 +83,13 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
                 ContactViewHolder contactViewHolder = (ContactViewHolder) viewHolder;
                 contactViewHolder.bind(model, position);
                 contactViewHolder.searchFocus(focused);
+                contactViewHolder.showPopupFrame(false);
                 break;
             case CONTACT_GREYED_OUT:
-                ContactGreyedViewHolder greyedViewHolder = (ContactGreyedViewHolder) viewHolder;
-                greyedViewHolder.bind(model, position);
-                greyedViewHolder.searchFocus(focused);
+                ContactViewHolder greyOutContactViewHolder = (ContactViewHolder) viewHolder;
+                greyOutContactViewHolder.bind(model, position);
+                greyOutContactViewHolder.searchFocus(focused);
+                greyOutContactViewHolder.showPopupFrame(true);
                 break;
             case CONTACT_SELECTED:
                 ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;
