@@ -5,7 +5,6 @@
          <set name="com.android.contacts/.activities.PeopleActivity" />
          <filter>
             <action name="android.intent.action.MAIN" />
-            <cat name="android.intent.category.DEFAULT" />
             <cat name="android.intent.category.APP_CONTACTS" />
          </filter>
      </item>
