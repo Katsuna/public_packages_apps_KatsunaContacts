@@ -135,19 +135,19 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
         mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
 
-        mPopupButton1 = (Button) findViewById(R.id.search_button);
+        mPopupButton1 = (Button) findViewById(R.id.new_contact_button);
         mPopupButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFabToolbar(true);
+                createContact();
             }
         });
 
-        mPopupButton2 = (Button) findViewById(R.id.new_contact_button);
+        mPopupButton2 = (Button) findViewById(R.id.search_button);
         mPopupButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createContact();
+                showFabToolbar(true);
             }
         });
 
@@ -171,8 +171,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
 
         mViewPagerContainer = (LinearLayout) findViewById(R.id.viewpager_container);
-        mButtonsContainer1 = (LinearLayout) findViewById(R.id.search_buttons_container);
-        mButtonsContainer2 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
+        mButtonsContainer1 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
+        mButtonsContainer2 = (LinearLayout) findViewById(R.id.search_buttons_container);
         mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
     }
 
@@ -269,7 +269,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     private void showFabToolbar(boolean show) {
         if (show) {
-            FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
+            FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformTo(mFabToolbar);
 
             if (mPopupVisible) {
@@ -279,7 +279,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
                 deselectItem();
             }
         } else {
-            FabTransformation.with(mFab1).duration(Constants.FAB_TRANSFORMATION_DURATION)
+            FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformFrom(mFabToolbar);
             mAdapter.unfocusFromSearch();
         }
@@ -355,19 +355,19 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void setupFab() {
-        mFab1 = (FloatingActionButton) findViewById(R.id.search_fab);
+        mFab1 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
         mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFabToolbar(true);
+                createContact();
             }
         });
 
-        mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab2 = (FloatingActionButton) findViewById(R.id.search_fab);
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createContact();
+                showFabToolbar(true);
             }
         });
     }

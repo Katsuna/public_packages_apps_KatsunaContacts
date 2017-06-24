@@ -17,6 +17,7 @@ import com.katsuna.commons.entities.SizeProfile;
 import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.utils.ColorAdjuster;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.SizeAdjuster;
 import com.katsuna.commons.utils.SizeCalc;
@@ -118,22 +119,8 @@ abstract class ContactViewHolderBase extends RecyclerView.ViewHolder {
 
     public void searchFocus(boolean flag) {
         if (mSeparatorView != null) {
-
-            if (flag) {
-                ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
-                // set action buttons background color
-                int color1 = ColorCalc.getColor(itemView.getContext(),
-                        ColorProfileKey.ACCENT1_COLOR, colorProfile);
-
-                GradientDrawable circle = (GradientDrawable) ContextCompat.getDrawable(
-                        itemView.getContext(), R.drawable.circle_black_36dp);
-                circle.setColor(color1);
-
-                mSeparatorView.setBackground(circle);
-            } else {
-                mSeparatorView.setBackground(null);
-            }
-
+            ColorAdjuster.adjustStartingLetter(itemView.getContext(),
+                    mUserProfileContainer.getColorProfile(), mSeparatorView, flag);
         }
     }
 

@@ -13,6 +13,7 @@ import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfile;
 import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.utils.ColorAdjuster;
 import com.katsuna.commons.utils.ColorCalc;
 import com.katsuna.commons.utils.DrawUtils;
 import com.katsuna.commons.utils.Shape;
@@ -124,17 +125,8 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
     private void adjustColorProfile() {
         ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
         // set action buttons background color
-        int color1 = ColorCalc.getColor(itemView.getContext(),
-                ColorProfileKey.ACCENT1_COLOR, colorProfile);
-        Shape.setRoundedBackground(mCallButtonContainer, color1);
-
-        int color2 = ColorCalc.getColor(itemView.getContext(), ColorProfileKey.ACCENT2_COLOR,
-                colorProfile);
-        Shape.setRoundedBorder(mMessageButtonContainer, color2);
-
-        Drawable[] drawables = mMessageButton.getCompoundDrawables();
-        DrawUtils.setColor(drawables[0], color2);
-        mMessageButton.setTextColor(color2);
+        ColorAdjuster.adjustButtons(itemView.getContext(), colorProfile,
+                mCallButtonContainer, mCallButton, mMessageButtonContainer, mMessageButton);
 
         // set background color
         int bgColor = ColorCalc.getColor(itemView.getContext(), ColorProfileKey.POP_UP_COLOR,
