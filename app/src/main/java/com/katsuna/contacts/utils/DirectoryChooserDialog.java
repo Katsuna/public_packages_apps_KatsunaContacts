@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,15 +23,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.katsuna.commons.entities.OpticalParams;
+import com.katsuna.commons.entities.SizeProfileKey;
+import com.katsuna.commons.utils.ColorAdjuster;
+import com.katsuna.commons.utils.KatsunaAlertBuilder;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
 
 /**
  * http://www.codeproject.com/Articles/547636/Android-Ready-to-use-simple-directory-chooser-dial
  */
-public class DirectoryChooserDialog {
+public class DirectoryChooserDialog extends DirectoryDialogBase {
     private boolean m_isNewFolderEnabled = true;
     private String m_sdcardDirectory = "";
-    private final Context m_context;
+
     private TextView m_titleView;
 
     private String m_dir = "";
@@ -49,7 +53,7 @@ public class DirectoryChooserDialog {
     }
 
     public DirectoryChooserDialog(Context context, ChosenDirectoryListener chosenDirectoryListener) {
-        m_context = context;
+        super(context);
         m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
         m_chosenDirectoryListener = chosenDirectoryListener;
 
@@ -58,6 +62,8 @@ public class DirectoryChooserDialog {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        init();
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -109,18 +115,28 @@ public class DirectoryChooserDialog {
         AlertDialog.Builder dialogBuilder =
                 createDirectoryChooserDialog(dir, m_subdirs, new DirectoryOnClickListener());
 
-        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Current directory chosen
-                if (m_chosenDirectoryListener != null) {
-                    // Call registered listener supplied with the chosen directory
-                    m_chosenDirectoryListener.onChosenDir(m_dir);
-                }
-            }
-        }).setNegativeButton(android.R.string.cancel, null);
+        dialogBuilder.setPositiveButton(android.R.string.cancel, null)
+                .setNegativeButton(android.R.string.ok,  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Current directory chosen
+                        if (m_chosenDirectoryListener != null) {
+                            // Call registered listener supplied with the chosen directory
+                            m_chosenDirectoryListener.onChosenDir(m_dir);
+                        }
+                    }
+                });
 
         final AlertDialog dirsDialog = dialogBuilder.create();
+
+        dirsDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                Button negativeButton = dirsDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button positiveButton = dirsDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                adjustButtons(positiveButton, negativeButton);
+            }
+        });
 
         dirsDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -202,19 +218,31 @@ public class DirectoryChooserDialog {
         m_titleView.setText(title);
 
         Button newDirButton = new Button(m_context);
-        newDirButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT);
+        lp.setMargins(mFullMargin, mFullMargin, mFullMargin, mFullMargin);
+        newDirButton.setAllCaps(false);
+        newDirButton.setLayoutParams(lp);
+
         newDirButton.setText(R.string.new_folder);
         newDirButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText input = new EditText(m_context);
-
                 // Show new folder name input dialog
-                new AlertDialog.Builder(m_context).
-                        setTitle(R.string.new_folder_name).
-                        setView(input).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Editable newDir = input.getText();
+                KatsunaAlertBuilder builder = new KatsunaAlertBuilder(m_context);
+                builder.setTitle(R.string.new_folder_name);
+                builder.setMessage(0);
+                builder.setView(R.layout.common_katsuna_alert_text_input);
+                builder.setUserProfileContainer(mProfileContainer);
+                builder.setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                builder.setTextSelected(new KatsunaAlertBuilder.KatsunaAlertText() {
+                    @Override
+                    public void textSelected(String newDir) {
                         String newDirName = newDir.toString();
                         // Create new directory
                         if (createSubDir(m_dir + "/" + newDirName)) {
@@ -227,15 +255,28 @@ public class DirectoryChooserDialog {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                }).setNegativeButton("Cancel", null).show();
+                });
+
+                android.app.AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
+
+        // adjust profile for new directory button
+        OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.ACTION_BUTTON,
+                mProfileContainer.getOpticalSizeProfile());
+        SizeAdjuster.adjustButton(m_context, newDirButton, opticalParams);
+        SizeAdjuster.adjustText(m_context, newDirButton, opticalParams);
+        ColorAdjuster.adjustSecondaryButton(m_context, mProfileContainer.getColorProfile(),
+                newDirButton);
 
         if (!m_isNewFolderEnabled) {
             newDirButton.setVisibility(View.GONE);
         }
 
         titleLayout.addView(m_titleView);
+        titleLayout.addView(createTitle(R.string.export_contacts));
+        titleLayout.addView(createDescription(R.string.export_contacts_description));
         titleLayout.addView(newDirButton);
 
         dialogBuilder.setCustomTitle(titleLayout);

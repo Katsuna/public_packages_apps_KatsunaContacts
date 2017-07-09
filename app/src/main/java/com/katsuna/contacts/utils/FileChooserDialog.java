@@ -10,8 +10,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.katsuna.commons.entities.UserProfileContainer;
+import com.katsuna.contacts.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +24,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class FileChooserDialog {
+public class FileChooserDialog extends DirectoryDialogBase {
     private String m_sdcardDirectory = "";
-    private final Context m_context;
     private TextView m_titleView;
 
     private String m_dir = "";
@@ -33,7 +36,7 @@ public class FileChooserDialog {
     private AlertDialog mDialog;
 
     public FileChooserDialog(Context context, ChosenFileListener chosenFileListener) {
-        m_context = context;
+        super(context);
         m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
         m_chosenFileListener = chosenFileListener;
 
@@ -42,6 +45,7 @@ public class FileChooserDialog {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        init();
     }
 
     public void choose() {
@@ -80,7 +84,7 @@ public class FileChooserDialog {
             }
         });
 
-        dialogBuilder.setNegativeButton(android.R.string.cancel, null);
+        dialogBuilder.setPositiveButton(android.R.string.cancel, null);
 
         mDialog = dialogBuilder.create();
 
@@ -102,6 +106,15 @@ public class FileChooserDialog {
                 } else {
                     return false;
                 }
+            }
+        });
+
+        mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                Button positiveButton = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                adjustButtonContainer(positiveButton);
+                adjustPositiveButton(positiveButton);
             }
         });
 
@@ -154,6 +167,7 @@ public class FileChooserDialog {
         m_titleView.setText(title);
 
         titleLayout.addView(m_titleView);
+        titleLayout.addView(createTitle(R.string.import_contacts));
 
         dialogBuilder.setCustomTitle(titleLayout);
 

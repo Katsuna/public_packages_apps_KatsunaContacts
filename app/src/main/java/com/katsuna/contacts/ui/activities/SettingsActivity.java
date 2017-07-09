@@ -10,16 +10,27 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.OpticalParams;
+import com.katsuna.commons.entities.SizeProfile;
+import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SettingsKatsunaActivity;
+import com.katsuna.commons.utils.ColorAdjuster;
 import com.katsuna.commons.utils.Constants;
+import com.katsuna.commons.utils.ProfileReader;
 import com.katsuna.commons.utils.SettingsManager;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalc;
+import com.katsuna.commons.utils.ViewUtils;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.utils.DirectoryChooserDialog;
 import com.katsuna.contacts.utils.FileChooserDialog;
@@ -44,6 +55,9 @@ public class SettingsActivity extends SettingsKatsunaActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
+    private Button mDeleteButton;
+    private Button mImportButton;
+    private Button mExportButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,35 +66,46 @@ public class SettingsActivity extends SettingsKatsunaActivity {
         initControls();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyProfiles();
+        loadProfiles();
+        applySizeProfile(mUserProfileContainer.getOpticalSizeProfile());
+        applyColorProfile(mUserProfileContainer.getColorProfile());
+    }
+
     private void initControls() {
         initToolbar();
+        initAppSettings();
+        mScrollViewContainer = (ScrollView) findViewById(R.id.scroll_view_container);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 
-        Button deleteButton = (Button) findViewById(R.id.deleteContacts);
-        assert deleteButton != null;
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        mDeleteButton = (Button) findViewById(R.id.deleteContacts);
+        assert mDeleteButton != null;
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, SelectContactsActivity.class));
             }
         });
 
-        Button importButton = (Button) findViewById(R.id.importContacts);
-        assert importButton != null;
-        importButton.setOnClickListener(new View.OnClickListener() {
+        mImportButton = (Button) findViewById(R.id.importContacts);
+        assert mImportButton != null;
+        mImportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 importContacts();
             }
         });
 
-        Button exportButton = (Button) findViewById(R.id.exportContacts);
-        assert exportButton != null;
-        exportButton.setOnClickListener(new View.OnClickListener() {
+        mExportButton = (Button) findViewById(R.id.exportContacts);
+        assert mExportButton != null;
+        mExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 exportContacts();
@@ -118,10 +143,6 @@ public class SettingsActivity extends SettingsKatsunaActivity {
                 mNameFirstRadioButton.setChecked(true);
                 break;
         }
-
-        initSizeProfiles();
-        initColorProfiles();
-        initRightHand();
     }
 
     private void importContacts() {
@@ -179,6 +200,32 @@ public class SettingsActivity extends SettingsKatsunaActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    protected void applyColorProfile(ColorProfile colorProfile) {
+        ColorProfile profile = colorProfile;
+        if (colorProfile == ColorProfile.AUTO) {
+            profile = ProfileReader.getUserProfileFromKatsunaServices(this).colorProfile;
+        }
+        ColorAdjuster.adjustButtons(this, profile, mDeleteButton, null);
+        ColorAdjuster.adjustButtons(this, profile, mImportButton, null);
+        ColorAdjuster.adjustButtons(this, profile, mExportButton, null);
+    }
+
+    @Override
+    protected void applySizeProfile(SizeProfile profile) {
+        ViewGroup topViewGroup = (ViewGroup) findViewById(android.R.id.content);
+        SizeAdjuster.applySizeProfile(this, topViewGroup, profile);
+
+        applySizeProfileLocal(profile);
+    }
+
+    private void applySizeProfileLocal(SizeProfile sizeProfile) {
+        OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.SUBHEADER,
+                sizeProfile);
+        SizeAdjuster.adjustText(this, mNameFirstRadioButton, opticalParams);
+        SizeAdjuster.adjustText(this, mSurnameFirstRadioButton, opticalParams);
     }
 
     private class ExportContactsAsyncTask extends AsyncTask<String, Void, String> {

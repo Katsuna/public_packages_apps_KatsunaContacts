@@ -116,9 +116,9 @@
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="@dimen/common_app_menu_height"
         android:layout_gravity="start"
-        app:menu="@menu/drawer"
+        app:menu="@menu/common_app_menu"
         app:theme="@style/CommonDrawer" />
 
 </android.support.v4.widget.DrawerLayout>

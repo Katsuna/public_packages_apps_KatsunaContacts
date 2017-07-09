@@ -1,95 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.katsuna.contacts.ui.activities.SettingsActivity"
-    tools:showIn="@layout/activity_settings">
+    android:layout_height="wrap_content"
+    android:paddingTop="?attr/actionBarSize">
 
-    <Button
-        android:id="@+id/deleteContacts"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/delete_contacts"
-        android:textAllCaps="false"
-        android:textSize="18sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/importContacts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/import_contacts"
-        android:textAllCaps="false"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/exportContacts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/export_contacts"
-        android:textAllCaps="false"
-        android:textSize="18sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/common_black12" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/contacts_display"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:id="@+id/display_sort_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/surname_first_button"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/surname_first" />
-
-        <RadioButton
-            android:id="@+id/name_first_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:text="@string/name_first" />
-    </RadioGroup>
+            android:layout_marginTop="16dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/common_black12" />
+            <com.katsuna.commons.controls.KatsunaButton
+                android:id="@+id/deleteContacts"
+                android:layout_width="@dimen/common_settings_button_width"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/delete_contacts"
+                android:textAllCaps="false"
+                app:sizeProfileKey="SUBHEADER" />
 
-    <include layout="@layout/common_size_profile_selector" />
+            <com.katsuna.commons.controls.KatsunaTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/deleteContacts"
+                android:text="@string/delete_contacts"
+                app:sizeProfileKey="SUBHEADER" />
 
-    <include layout="@layout/common_color_profile_selector" />
+        </RelativeLayout>
 
-    <include layout="@layout/common_right_hand" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp">
 
-</LinearLayout>
+            <com.katsuna.commons.controls.KatsunaButton
+                android:id="@+id/importContacts"
+                android:layout_width="@dimen/common_settings_button_width"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/import_contacts"
+                android:textAllCaps="false"
+                app:sizeProfileKey="SUBHEADER" />
+
+            <com.katsuna.commons.controls.KatsunaTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/importContacts"
+                android:text="@string/import_contacts"
+                app:sizeProfileKey="SUBHEADER" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp">
+
+            <com.katsuna.commons.controls.KatsunaButton
+                android:id="@+id/exportContacts"
+                android:layout_width="@dimen/common_settings_button_width"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/export_contacts"
+                android:textAllCaps="false"
+                app:sizeProfileKey="SUBHEADER" />
+
+            <com.katsuna.commons.controls.KatsunaTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/exportContacts"
+                android:text="@string/export_contacts"
+                app:sizeProfileKey="SUBHEADER" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/common_grey300" />
+
+        <com.katsuna.commons.controls.KatsunaTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/contacts_display_format"
+            app:sizeProfileKey="BODY_2" />
+
+        <RadioGroup
+            android:id="@+id/display_sort_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/surname_first_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:button="@null"
+                android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+                android:drawablePadding="10dp"
+                android:text="@string/surname_first"
+                android:textAlignment="textStart" />
+
+            <RadioButton
+                android:id="@+id/name_first_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:button="@null"
+                android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+                android:drawablePadding="10dp"
+                android:text="@string/name_first"
+                android:textAlignment="textStart" />
+        </RadioGroup>
+
+        <include layout="@layout/common_app_settings" />
+
+    </LinearLayout>
+
+</ScrollView>

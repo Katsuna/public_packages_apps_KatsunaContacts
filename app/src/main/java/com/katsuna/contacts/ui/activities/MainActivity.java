@@ -335,8 +335,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
                         markChanged();
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         break;
-                    case R.id.drawer_help:
-                        break;
                     case R.id.drawer_info:
                         break;
                 }

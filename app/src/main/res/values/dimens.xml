@@ -4,4 +4,6 @@
     <dimen name="text_margin_top_bottom">5dp</dimen>
     <dimen name="text_margin_left_right">14dp</dimen>
     <dimen name="letter_divider_margin">72dp</dimen>
+    <dimen name="export_dialog_full_margin">12dp</dimen>
+    <dimen name="export_dialog_half_margin">6dp</dimen>
 </resources>
