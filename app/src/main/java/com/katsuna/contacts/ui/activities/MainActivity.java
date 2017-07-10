@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +18,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
+import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SearchBarActivity;
@@ -111,7 +112,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     private void initControls() {
         initToolbar(R.drawable.common_ic_menu_black_24dp);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mLettersList = (RecyclerView) findViewById(R.id.letters_list);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
@@ -153,24 +154,62 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
         mFabToolbar = findViewById(R.id.fab_toolbar);
         mNextButton = (ImageButton) findViewById(R.id.next_page_button);
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                adjustFabToolbarNavButtonsVisibility();
+        mNextButton.setOnTouchListener(new View.OnTouchListener() {
+            private Handler mHandler;
+
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mHandler != null) return true;
+                        mHandler = new Handler();
+                        mHandler.postDelayed(mAction, 10);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mHandler == null) return true;
+                        mHandler.removeCallbacks(mAction);
+                        mHandler = null;
+                        break;
+                }
+                return false;
             }
+
+            Runnable mAction = new Runnable() {
+                @Override public void run() {
+                    mLettersList.scrollBy(0, 30);
+                    mHandler.postDelayed(this, 10);
+                }
+            };
         });
 
         mPrevButton = (ImageButton) findViewById(R.id.prev_page_button);
-        mPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-                adjustFabToolbarNavButtonsVisibility();
+        mPrevButton.setOnTouchListener(new View.OnTouchListener() {
+            private Handler mHandler;
+
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mHandler != null) return true;
+                        mHandler = new Handler();
+                        mHandler.postDelayed(mAction, 10);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mHandler == null) return true;
+                        mHandler.removeCallbacks(mAction);
+                        mHandler = null;
+                        break;
+                }
+                return false;
             }
+
+            Runnable mAction = new Runnable() {
+                @Override public void run() {
+                    mLettersList.scrollBy(0, -30);
+                    mHandler.postDelayed(this, 10);
+                }
+            };
         });
 
-        mViewPagerContainer = (LinearLayout) findViewById(R.id.viewpager_container);
+        mViewPagerContainer = findViewById(R.id.viewpager_container);
         mButtonsContainer1 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
         mButtonsContainer2 = (LinearLayout) findViewById(R.id.search_buttons_container);
         mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
@@ -278,10 +317,13 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             if (mItemSelected) {
                 deselectItem();
             }
+
+            mFab1.setVisibility(View.INVISIBLE);
         } else {
             FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformFrom(mFabToolbar);
             mAdapter.unfocusFromSearch();
+            mFab1.setVisibility(View.VISIBLE);
         }
         mFabToolbarOn = show;
     }
@@ -294,6 +336,11 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             scrollToPositionWithOffset(position, 0);
             mAdapter.focusFromSearch(position);
         }
+    }
+
+    @Override
+    public UserProfile getUserProfile() {
+        return mUserProfileContainer.getActiveUserProfile();
     }
 
     @Override
