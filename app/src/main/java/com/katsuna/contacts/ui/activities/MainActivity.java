@@ -308,6 +308,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     private void showFabToolbar(boolean show) {
         if (show) {
+            mSearchView.onActionViewCollapsed();
+
             FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformTo(mFabToolbar);
 
