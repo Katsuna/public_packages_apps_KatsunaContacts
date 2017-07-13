@@ -499,10 +499,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     @Override
     public void selectContact(int position) {
+        showFabToolbar(false);
         if (mItemSelected) {
             deselectItem();
-        } else {
-            focusOnContact(position, getCenter());
         }
     }
 
@@ -529,7 +528,6 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_black07));
         if (mFabToolbarOn) {
             showFabToolbar(false);
-            return;
         }
 
         mSelectedPosition = position;
