@@ -63,8 +63,9 @@
   <skip></skip>
   <!-- Button for the "import contacts" action, in app's settings -->
   <string name="import_contacts">Importer des contacts</string>
-  <!-- Button for the "export contacts" action, in app's settings -->
+  <!-- Button for the "export contacts" action, in app's settings. Appears at alert dialog as title.-->
   <string name="export_contacts">Exporter des contacts</string>
+  <string name="export_contacts_description">Export contacts to a system of folder or create a new one</string>
   <!-- Confirmation message after a successful contact import -->
   <string name="import_completed">Importation terminée.</string>
   <!-- Dialog shown when the user starts a contact import -->
@@ -74,11 +75,13 @@
   <!-- Confirmation/Information message shown after a sucessful contact import, notifying the user of the exported file's location -->
   <string name="contacts_export_completed">Contacts exportés enregistrés au fichier : « %1$s ».</string>
   <!-- Text button inside the "import contacts" dialog screen, used to create a new folder in the device's storage -->
-  <string name="new_folder">Nouveau dossier</string>
+  <string name="new_folder">Export to New folder</string>
   <!-- Dialog title of the dialog shown when the user taps the "New folder" button -->
   <string name="new_folder_name">Nouveau nom du dossier</string>
   <!-- Error message shown when the app didn't manage to create the folder necessary for the contact export -->
   <string name="folder_creation_failed">Impossible de créer le dossier « %1$s ».</string>
   <!-- Error message shown when the user tries to import contacts using a bad/corrupt .vcf file -->
   <string name="invalid_vcf">Vcf non valide.</string>
+  <!-- Setting label for contacts display format -->
+  <string name="contacts_display_format">Contacts display format</string>
 </resources>
