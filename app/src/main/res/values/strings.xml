@@ -93,7 +93,8 @@
     <!-- Button for the "export contacts" action, in app's settings. Appears at alert dialog as title.-->
     <string name="export_contacts">Export contacts</string>
 
-    <string name="export_contacts_description">Export contacts to a system of folder or create a new one</string>
+    <!-- folder selection explanation -->
+    <string name="export_contacts_description">Export contacts to an existing folder or create a new one</string>
 
     <!-- Confirmation message after a successful contact import -->
     <string name="import_completed">Import completed.</string>
