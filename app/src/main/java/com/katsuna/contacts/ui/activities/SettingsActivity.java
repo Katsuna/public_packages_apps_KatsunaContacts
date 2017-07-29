@@ -206,7 +206,11 @@ public class SettingsActivity extends SettingsKatsunaActivity {
     protected void applyColorProfile(ColorProfile colorProfile) {
         ColorProfile profile = colorProfile;
         if (colorProfile == ColorProfile.AUTO) {
-            profile = ProfileReader.getUserProfileFromKatsunaServices(this).colorProfile;
+            if (mUserProfileContainer.hasKatsunaServices()) {
+                profile = ProfileReader.getUserProfileFromKatsunaServices(this).colorProfile;
+            } else {
+                profile = ColorProfile.COLOR_IMPAIREMENT;
+            }
         }
         ColorAdjuster.adjustButtons(this, profile, mDeleteButton, null);
         ColorAdjuster.adjustButtons(this, profile, mImportButton, null);
