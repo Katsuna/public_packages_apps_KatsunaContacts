@@ -136,16 +136,16 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
         mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
 
-        mPopupButton1 = (Button) findViewById(R.id.new_contact_button);
-        mPopupButton1.setOnClickListener(new View.OnClickListener() {
+        mPopupButton2 = (Button) findViewById(R.id.new_contact_button);
+        mPopupButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createContact();
             }
         });
 
-        mPopupButton2 = (Button) findViewById(R.id.search_button);
-        mPopupButton2.setOnClickListener(new View.OnClickListener() {
+        mPopupButton1 = (Button) findViewById(R.id.search_button);
+        mPopupButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFabToolbar(true);
@@ -210,8 +210,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
 
         mViewPagerContainer = findViewById(R.id.viewpager_container);
-        mButtonsContainer1 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
-        mButtonsContainer2 = (LinearLayout) findViewById(R.id.search_buttons_container);
+        mButtonsContainer2 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
+        mButtonsContainer1 = (LinearLayout) findViewById(R.id.search_buttons_container);
         mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
     }
 
@@ -403,16 +403,16 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void setupFab() {
-        mFab1 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
-        mFab1.setOnClickListener(new View.OnClickListener() {
+        mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createContact();
             }
         });
 
-        mFab2 = (FloatingActionButton) findViewById(R.id.search_fab);
-        mFab2.setOnClickListener(new View.OnClickListener() {
+        mFab1 = (FloatingActionButton) findViewById(R.id.search_fab);
+        mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFabToolbar(true);
