@@ -1,8 +1,10 @@
 package com.katsuna.contacts.ui.activities;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.katsuna.commons.ui.KatsunaActivity;
 import com.katsuna.contacts.R;
@@ -24,6 +27,9 @@ import java.util.Locale;
 
 public abstract class PhotoActivity extends KatsunaActivity {
 
+    private static final String TAG = "PhotoActivity";
+    private static final String AOSP_CAMERA_PACKAGE = "com.android.camera2";
+    private static final String AOSP_CAMERA_ACTIVITY = "com.android.camera.CaptureActivity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_FILE = 2;
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 3;
@@ -63,8 +69,15 @@ public abstract class PhotoActivity extends KatsunaActivity {
         }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // use explicitly aosp app if possible
+        if (aospCameraIsInstalledAndEnabled()) {
+            takePictureIntent.setComponent(new ComponentName(AOSP_CAMERA_PACKAGE,
+                    AOSP_CAMERA_ACTIVITY));
+        }
+        ComponentName name = takePictureIntent.resolveActivity(getPackageManager());
+
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        if (name != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -72,7 +85,7 @@ public abstract class PhotoActivity extends KatsunaActivity {
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 //TODO handle exceptions
-                Log.e("TAG", ex.toString());
+                Log.e(TAG, ex.toString());
             }
 
             // Continue only if the File was successfully created
@@ -81,7 +94,20 @@ public abstract class PhotoActivity extends KatsunaActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        } else {
+            Toast.makeText(this, R.string.no_camera_app, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean aospCameraIsInstalledAndEnabled() {
+        boolean output = false;
+        try {
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(AOSP_CAMERA_PACKAGE, 0);
+            output = ai.enabled;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, " Exception: " + e);
+        }
+        return output;
     }
 
     private Uri getUriFromFile(File photoFile) {
