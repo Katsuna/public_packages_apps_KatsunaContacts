@@ -66,7 +66,7 @@
   <!-- Button for the "export contacts" action, in app's settings. Appears at alert dialog as title.-->
   <string name="export_contacts">Exporter des contacts</string>
   <!-- folder selection explanation -->
-  <string name="export_contacts_description">Export contacts to an existing folder or create a new one</string>
+  <string name="export_contacts_description">Exporter contacts vers un dossier existant ou créer un nouveau dossier</string>
   <!-- Confirmation message after a successful contact import -->
   <string name="import_completed">Importation terminée.</string>
   <!-- Dialog shown when the user starts a contact import -->
@@ -76,7 +76,7 @@
   <!-- Confirmation/Information message shown after a sucessful contact import, notifying the user of the exported file's location -->
   <string name="contacts_export_completed">Contacts exportés enregistrés au fichier : « %1$s ».</string>
   <!-- Text button inside the "import contacts" dialog screen, used to create a new folder in the device's storage -->
-  <string name="new_folder">Export to New folder</string>
+  <string name="new_folder">Exporter vers le nouveau dossier</string>
   <!-- Dialog title of the dialog shown when the user taps the "New folder" button -->
   <string name="new_folder_name">Nouveau nom du dossier</string>
   <!-- Error message shown when the app didn't manage to create the folder necessary for the contact export -->
@@ -84,5 +84,7 @@
   <!-- Error message shown when the user tries to import contacts using a bad/corrupt .vcf file -->
   <string name="invalid_vcf">Vcf non valide.</string>
   <!-- Setting label for contacts display format -->
-  <string name="contacts_display_format">Contacts display format</string>
+  <string name="contacts_display_format">Format d’affichage des contacts</string>
+  <!-- Warning shown at photo activity when no camera app is installed and enabled -->
+  <string name="no_camera_app">There is no camera application to handle your request.</string>
 </resources>

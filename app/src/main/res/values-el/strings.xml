@@ -66,7 +66,7 @@
   <!-- Button for the "export contacts" action, in app's settings. Appears at alert dialog as title.-->
   <string name="export_contacts">Μεταφορά επαφών</string>
   <!-- folder selection explanation -->
-  <string name="export_contacts_description">Export contacts to an existing folder or create a new one</string>
+  <string name="export_contacts_description">Κάνε εξαγωγή επαφών σε υπάρχοντα φάκελο ή δημιούργησε έναν νέο</string>
   <!-- Confirmation message after a successful contact import -->
   <string name="import_completed">Εισαγωγή ολοκληρώθηκε.</string>
   <!-- Dialog shown when the user starts a contact import -->
@@ -85,4 +85,6 @@
   <string name="invalid_vcf">Μη έγκυρο αρχείο vcf.</string>
   <!-- Setting label for contacts display format -->
   <string name="contacts_display_format">Μορφή εμφάνισης επαφών</string>
+  <!-- Warning shown at photo activity when no camera app is installed and enabled -->
+  <string name="no_camera_app">There is no camera application to handle your request.</string>
 </resources>
