@@ -37,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
@@ -71,6 +72,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     private FrameLayout mPopupFrame;
     private boolean mSearchMode;
     private int mSelectedPosition;
+    private boolean mReadContactsPermissionDontAsk = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,7 +267,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             @Override
             public boolean onClose() {
                 mSearchMode = false;
-                mAdapter.resetFilter();
+                if (mAdapter != null) {
+                    mAdapter.resetFilter();
+                }
                 return false;
             }
         });
@@ -307,6 +311,10 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void showFabToolbar(boolean show) {
+        if (!readContactsPermissionGranted()) {
+            return;
+        }
+
         if (show) {
             mSearchView.onActionViewCollapsed();
 
@@ -381,8 +389,10 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_settings:
-                        markChanged();
-                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        if (readContactsPermissionGranted()) {
+                            markChanged();
+                            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        }
                         break;
                     case R.id.drawer_info:
                         startActivity(new Intent(MainActivity.this, InfoActivity.class));
@@ -421,14 +431,17 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void createContact() {
+        if (!readContactsPermissionGranted()) {
+            return;
+        }
+
         Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
     }
 
     private void loadContacts() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
+        if (!readContactsPermissionGranted()) {
             return;
         }
 
@@ -451,14 +464,34 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         showNoResultsView();
     }
 
+    private boolean readContactsPermissionGranted() {
+        boolean output;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            if (mReadContactsPermissionDontAsk) {
+                Toast.makeText(MainActivity.this, R.string.common_go_to_settings_permissions,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
+            }
+            output = false;
+        } else {
+            output = true;
+        }
+        return output;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_READ_CONTACTS:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    Log.e(TAG, "read contacts permission granted");
-                    loadContacts();
+                    Log.d(TAG, "read contacts permission granted");
+                } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
+                    Log.d(TAG, "read contacts permission never ask again");
+                    // User selected the Never Ask Again Option
+                    mReadContactsPermissionDontAsk = true;
+                } else {
+                    Log.d(TAG, "read contacts permission denied");
                 }
                 break;
             case REQUEST_CODE_ASK_CALL_PERMISSION:
@@ -628,6 +661,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void search(String query) {
+        if (mAdapter == null) {
+            return;
+        }
         if (TextUtils.isEmpty(query)) {
             mAdapter.resetFilter();
         } else {
