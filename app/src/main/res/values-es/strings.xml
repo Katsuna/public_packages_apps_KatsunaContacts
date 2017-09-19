@@ -86,5 +86,5 @@
   <!-- Setting label for contacts display format -->
   <string name="contacts_display_format">Formato de visualización de contactos</string>
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
-  <string name="no_camera_app">There is no camera application to handle your request.</string>
+  <string name="no_camera_app">No hay ninguna aplicación de cámara para gestionar la petición.</string>
 </resources>
