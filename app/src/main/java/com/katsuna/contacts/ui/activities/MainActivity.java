@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
+import com.katsuna.commons.entities.KatsunaConstants;
 import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.providers.ContactProvider;
@@ -635,16 +636,16 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     @Override
-    public void sendSMS(Contact contact) {
+    public void sendSMS(final Contact contact) {
         final List<Phone> phones = new ContactProvider(this).getPhones(contact.getId());
         if (phones.size() == 1) {
-            sendSmsToNumber(phones.get(0).getNumber());
+            sendSmsToNumber(phones.get(0).getNumber(), contact.getDisplayName());
         } else {
             phoneNumbersDialog(phones, new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    sendSmsToNumber(phones.get(i).getNumber());
+                    sendSmsToNumber(phones.get(i).getNumber(), contact.getDisplayName());
                 }
             });
         }
@@ -656,8 +657,10 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         return mUserProfileContainer;
     }
 
-    private void sendSmsToNumber(String number) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null)));
+    private void sendSmsToNumber(String number, String name) {
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null));
+        i.putExtra(KatsunaConstants.EXTRA_DISPLAY_NAME, name);
+        startActivity(i);
     }
 
     private void search(String query) {
