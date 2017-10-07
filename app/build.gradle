@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+// Load keystore
+def keystorePropertiesFile = rootProject.file("../../../vendor/keys/keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -12,10 +17,20 @@ android {
         versionName "1.0"
     }
 
+    signingConfigs {
+        katsunaConfig {
+            storeFile rootProject.file("../../../vendor/keys/katsuna.keystore");
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.katsunaConfig
 
             lintOptions {
                 disable 'MissingTranslation'
