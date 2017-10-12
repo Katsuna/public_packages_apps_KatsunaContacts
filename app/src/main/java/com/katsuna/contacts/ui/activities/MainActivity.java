@@ -57,6 +57,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.katsuna.commons.utils.Constants.KATSUNA_PRIVACY_URL;
+
 public class MainActivity extends SearchBarActivity implements IContactInteractionListener {
 
     private final static String TAG = MainActivity.class.getName();
@@ -397,6 +399,10 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
                         break;
                     case R.id.drawer_info:
                         startActivity(new Intent(MainActivity.this, InfoActivity.class));
+                        break;
+                    case R.id.drawer_privacy:
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KATSUNA_PRIVACY_URL));
+                        startActivity(browserIntent);
                         break;
                 }
 
