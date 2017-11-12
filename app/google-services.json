@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "1092470962663",
+    "firebase_url": "https://katsuna-contacts.firebaseio.com",
+    "project_id": "katsuna-contacts",
+    "storage_bucket": "katsuna-contacts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092470962663:android:a4b0e29da76fd55c",
+        "android_client_info": {
+          "package_name": "com.katsuna.contacts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092470962663-5dl6nngdsbk31bivtq26nh0doht5gkgk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.katsuna.contacts",
+            "certificate_hash": "a4b16c796eb20f609379f32a8ae7a9b74a7f9947"
+          }
+        },
+        {
+          "client_id": "1092470962663-g7tvnoq3rn97ko9laj0o5llna4vp6h97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.katsuna.contacts",
+            "certificate_hash": "81afe97cf097dddcec68accab33c31560506bda4"
+          }
+        },
+        {
+          "client_id": "1092470962663-4oqk1k4hofik9cg4mkf1it2i7g1qg8hl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZekJZK1RL2CM6jucMikQ0CRHAp0mfe3o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092470962663-4oqk1k4hofik9cg4mkf1it2i7g1qg8hl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
