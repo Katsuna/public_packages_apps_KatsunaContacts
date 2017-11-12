@@ -39,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.entities.KatsunaConstants;
@@ -76,12 +77,13 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     private boolean mSearchMode;
     private int mSelectedPosition;
     private boolean mReadContactsPermissionDontAsk = false;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initControls();
         setupDrawerLayout();
         setupFab();
@@ -162,8 +164,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         mNextButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
 
-            @Override public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mHandler != null) return true;
                         mHandler = new Handler();
@@ -179,7 +182,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             }
 
             Runnable mAction = new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     mLettersList.scrollBy(0, 30);
                     mHandler.postDelayed(this, 10);
                 }
@@ -190,8 +194,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         mPrevButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
 
-            @Override public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mHandler != null) return true;
                         mHandler = new Handler();
@@ -207,7 +212,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             }
 
             Runnable mAction = new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     mLettersList.scrollBy(0, -30);
                     mHandler.postDelayed(this, 10);
                 }
@@ -638,6 +644,16 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     private void callNumber(String number) {
         Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         startActivity(i);
     }
 
