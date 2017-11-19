@@ -33,8 +33,8 @@ LOCAL_STATIC_JAVA_AAR_LIBRARIES := roundedimageview
 LOCAL_STATIC_JAVA_AAR_LIBRARIES += fabtransformation
 
 LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
-LOCAL_AAPT_FLAGS := --version-code 3
-LOCAL_AAPT_FLAGS += --version-name "1.1.1"
+LOCAL_AAPT_FLAGS := --version-code 4
+LOCAL_AAPT_FLAGS += --version-name "1.2.0"
 LOCAL_AAPT_FLAGS += --auto-add-overlay
 LOCAL_AAPT_FLAGS += --generate-dependencies
 LOCAL_AAPT_FLAGS += --extra-packages com.katsuna.commons
