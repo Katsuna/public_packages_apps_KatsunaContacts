@@ -5,16 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.katsuna.commons.ui.adapters.ContactsAdapterBase;
-import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.ui.adapters.ContactsGroupAdapterBase;
+import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
-import com.katsuna.contacts.ui.adapters.viewholders.ContactViewHolder;
+import com.katsuna.contacts.ui.adapters.viewholders.ContactsGroupViewHolder;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
 import java.util.List;
 
-public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
+public class ContactsGroupAdapter extends ContactsGroupAdapterBase {
 
     private static final int CONTACT_NOT_SELECTED = 1;
     private static final int CONTACT_SELECTED = 2;
@@ -22,12 +22,12 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
 
     private IContactInteractionListener mListener;
 
-    private ContactsRecyclerViewAdapter(List<ContactListItemModel> models) {
+    private ContactsGroupAdapter(List<ContactsGroup> models) {
         mOriginalContacts = models;
         mFilteredContacts = models;
     }
 
-    public ContactsRecyclerViewAdapter(List<ContactListItemModel> models, IContactInteractionListener listener) {
+    public ContactsGroupAdapter(List<ContactsGroup> models, IContactInteractionListener listener) {
         this(models);
         mListener = listener;
     }
@@ -54,11 +54,11 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
             case CONTACT_NOT_SELECTED:
             case CONTACT_GREYED_OUT:
                 if (isRightHanded) {
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
                 } else {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_lh, parent, false);
                 }
-                viewHolder = new ContactViewHolder(view, mListener);
+                viewHolder = new ContactsGroupViewHolder(view, mListener);
                 break;
             case CONTACT_SELECTED:
                 if (isRightHanded) {
@@ -74,22 +74,21 @@ public class ContactsRecyclerViewAdapter extends ContactsAdapterBase {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final ContactListItemModel model = mFilteredContacts.get(position);
+        final ContactsGroup model = mFilteredContacts.get(position);
 
         boolean focused = position == mSelectedFromSearchPosition;
 
         switch (viewHolder.getItemViewType()) {
             case CONTACT_NOT_SELECTED:
-                ContactViewHolder contactViewHolder = (ContactViewHolder) viewHolder;
-                contactViewHolder.bind(model, position);
-                contactViewHolder.searchFocus(focused);
-                contactViewHolder.showPopupFrame(false);
+                ContactsGroupViewHolder holder = (ContactsGroupViewHolder) viewHolder;
+                holder.bind(model, position);
+                holder.showPopupFrame(false);
+                holder.adjustState(model.premium, false);
                 break;
             case CONTACT_GREYED_OUT:
-                ContactViewHolder greyOutContactViewHolder = (ContactViewHolder) viewHolder;
-                greyOutContactViewHolder.bind(model, position);
-                greyOutContactViewHolder.searchFocus(focused);
-                greyOutContactViewHolder.showPopupFrame(true);
+                ContactsGroupViewHolder greyOutContactsGroupViewHolder = (ContactsGroupViewHolder) viewHolder;
+                greyOutContactsGroupViewHolder.bind(model, position);
+                greyOutContactsGroupViewHolder.showPopupFrame(true);
                 break;
             case CONTACT_SELECTED:
                 ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;

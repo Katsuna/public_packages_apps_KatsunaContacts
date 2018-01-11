@@ -1,83 +1,33 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.katsuna.commons.entities.ColorProfile;
-import com.katsuna.commons.entities.ColorProfileKey;
-import com.katsuna.commons.entities.SizeProfile;
-import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
-import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.domain.Contact;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
-public class ContactViewHolder extends ContactViewHolderBase {
+public class ContactViewHolder extends RecyclerView.ViewHolder {
 
-    private final View mGroupDivider;
+    private final TextView mContactName;
+    private final TextView mContactDesc;
 
-    public ContactViewHolder(View view, IContactInteractionListener listener) {
-        super(view, listener);
-        mGroupDivider = view.findViewById(R.id.group_divider);
+    public ContactViewHolder(View itemView) {
+        super(itemView);
+        mContactName = itemView.findViewById(R.id.contact_name);
+        mContactDesc = itemView.findViewById(R.id.contact_desc);
     }
 
-    public void bind(final ContactListItemModel model, final int position) {
-        super.bind(model, position);
-
-        initialize();
-        switch (model.getSeparator()) {
-            case FIRST_LETTER:
-                // show group divider
-                mGroupDivider.setVisibility(View.VISIBLE);
-                break;
-            case STARRED:
-            case NONE:
-                break;
+    public void bind(Contact contact, int position) {
+        mContactName.setText(contact.getDisplayName());
+        String contactDesc = contact.showDescription();
+        if (TextUtils.isEmpty(contactDesc)) {
+            mContactDesc.setVisibility(View.GONE);
+        } else {
+            mContactDesc.setText(contactDesc);
+            mContactDesc.setVisibility(View.VISIBLE);
         }
-
-        // direct focus on non selected contact if photo or name is clicked
-        View.OnClickListener focusContact = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.focusContact(position);
-            }
-        };
-        mPhoto.setOnClickListener(focusContact);
-        mDisplayName.setOnClickListener(focusContact);
-
-        adjustProfile();
-    }
-
-    private void initialize() {
-        mGroupDivider.setVisibility(View.GONE);
-    }
-
-    protected void adjustProfile() {
-        super.adjustProfile();
-        SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
-
-        if (opticalSizeProfile != null) {
-            int photoSize = itemView.getResources()
-                    .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
-            if (opticalSizeProfile == SizeProfile.ADVANCED) {
-                photoSize = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
-            } else if (opticalSizeProfile == SizeProfile.SIMPLE) {
-                photoSize = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
-            }
-
-            int letterDividerMargin = itemView.getResources()
-                    .getDimensionPixelSize(R.dimen.letter_divider_margin);
-            int halfPhotoSize = photoSize / 2;
-            ViewGroup.MarginLayoutParams lp =
-                    (ViewGroup.MarginLayoutParams) mGroupDivider.getLayoutParams();
-            lp.setMarginStart(letterDividerMargin + halfPhotoSize);
-        }
-
-        ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
-        int dividerColor = ColorCalc.getColor(itemView.getContext(),
-                ColorProfileKey.DIVIDERS_OPACITY, colorProfile);
-        mGroupDivider.setBackgroundColor(dividerColor);
     }
 
 }

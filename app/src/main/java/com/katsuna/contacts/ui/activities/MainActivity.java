@@ -47,11 +47,11 @@ import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.ui.SearchBarActivity;
-import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.adapters.ContactsRecyclerViewAdapter;
+import com.katsuna.contacts.ui.adapters.ContactsGroupAdapter;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 import com.konifar.fab_transformation.FabTransformation;
 import com.squareup.picasso.Picasso;
@@ -66,8 +66,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
-    private List<ContactListItemModel> mModels;
-    private ContactsRecyclerViewAdapter mAdapter;
+    private List<ContactsGroup> mModels;
+    private ContactsGroupAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
@@ -461,8 +461,8 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         //get contacts from device
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
-        mModels = ContactArranger.getContactsProcessed(contactList);
-        mAdapter = new ContactsRecyclerViewAdapter(mModels, this);
+        mModels = ContactArranger.getContactsGroups(contactList);
+        mAdapter = new ContactsGroupAdapter(mModels, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -472,7 +472,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             }
         });
 
-        initializeFabToolbar(mModels);
+        initializeFabToolbarWithContactGroups(mModels);
 
         showNoResultsView();
     }

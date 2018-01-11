@@ -1,24 +1,14 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKey;
-import com.katsuna.commons.entities.OpticalParams;
-import com.katsuna.commons.entities.SizeProfile;
-import com.katsuna.commons.entities.SizeProfileKey;
-import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
+import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.commons.utils.ColorAdjuster;
 import com.katsuna.commons.utils.ColorCalc;
-import com.katsuna.commons.utils.DrawUtils;
-import com.katsuna.commons.utils.Shape;
-import com.katsuna.commons.utils.SizeAdjuster;
-import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
 
@@ -38,9 +28,10 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
         mMessageButtonContainer = itemView.findViewById(R.id.message_button_container);
     }
 
-    public void bind(final ContactListItemModel model, int position) {
+    public void bind(final ContactsGroup model, int position) {
         super.bind(model, position);
 
+/*
         final Contact contact = model.getContact();
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +65,14 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
                 mListener.sendSMS(contact);
             }
         });
+*/
 
         adjustProfile();
     }
 
     protected void adjustProfile() {
         super.adjustProfile();
+/*
         SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
 
         if (opticalSizeProfile != null) {
@@ -120,6 +113,7 @@ public class ContactSelectedViewHolder extends ContactViewHolderBase {
         }
 
         adjustColorProfile();
+*/
     }
 
     private void adjustColorProfile() {

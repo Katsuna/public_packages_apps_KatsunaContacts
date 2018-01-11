@@ -17,6 +17,7 @@
             android:id="@+id/contacts_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
             android:clipToPadding="false"
             android:paddingBottom="200dp"
             app:layoutManager="LinearLayoutManager"
@@ -47,39 +48,10 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/new_contact_buttons_container"
+                    android:id="@+id/search_buttons_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="?attr/actionBarSize">
-
-                    <Button
-                        android:id="@+id/new_contact_button"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/add_contact"
-                        android:textAllCaps="false"
-                        android:textColor="@color/common_grey50"
-                        android:textSize="18sp"
-                        android:visibility="gone" />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/new_contact_fab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/common_fab_vertical_margin"
-                        android:layout_marginEnd="@dimen/common_fab_margin"
-                        android:layout_marginStart="@dimen/common_fab_margin"
-                        android:layout_marginTop="@dimen/common_fab_vertical_margin"
-                        android:src="@drawable/ic_add_grey50_36dp"
-                        app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/search_buttons_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
                     <Button
                         android:id="@+id/search_button"
@@ -101,6 +73,35 @@
                         android:layout_marginStart="@dimen/common_fab_margin"
                         android:layout_marginTop="@dimen/common_fab_vertical_margin"
                         android:src="@drawable/common_ic_search_black87_24dp"
+                        app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/new_contact_buttons_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/new_contact_button"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/add_contact"
+                        android:textAllCaps="false"
+                        android:textColor="@color/common_grey50"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/new_contact_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/common_fab_vertical_margin"
+                        android:layout_marginEnd="@dimen/common_fab_margin"
+                        android:layout_marginStart="@dimen/common_fab_margin"
+                        android:layout_marginTop="@dimen/common_fab_vertical_margin"
+                        android:src="@drawable/ic_add_grey50_36dp"
                         app:layout_behavior="com.katsuna.contacts.ui.behaviors.ScrollingFABBehavior" />
 
                 </LinearLayout>

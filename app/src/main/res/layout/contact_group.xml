@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contact_basic_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contacts_group_container_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:gravity="center"
+        app:cardBackgroundColor="@color/priority_one"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <RelativeLayout
+            android:id="@+id/contacts_group_container_card_inner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@color/common_grey50">
+
+            <LinearLayout
+                android:id="@+id/star_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/star_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_star"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/star_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="start|center"
+                    android:minHeight="28sp"
+                    android:text="@string/common_favorites"
+                    android:textColor="@color/priority_two"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/start_letter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/priority_two"
+                    android:textSize="36sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contacts_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/star_container"
+                android:paddingBottom="8dp"
+                app:layoutManager="LinearLayoutManager" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/popup_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/common_black54"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp" />
+
+</FrameLayout>
