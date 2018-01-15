@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -50,9 +49,11 @@ import com.katsuna.commons.ui.SearchBarActivity;
 import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ContactArranger;
+import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.ContactsGroupAdapter;
-import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.katsuna.contacts.ui.listeners.IContactListener;
+import com.katsuna.contacts.ui.listeners.IContactsGroupListener;
 import com.konifar.fab_transformation.FabTransformation;
 import com.squareup.picasso.Picasso;
 
@@ -60,7 +61,8 @@ import java.util.List;
 
 import static com.katsuna.commons.utils.Constants.KATSUNA_PRIVACY_URL;
 
-public class MainActivity extends SearchBarActivity implements IContactInteractionListener {
+public class MainActivity extends SearchBarActivity implements IContactsGroupListener,
+        IContactListener {
 
     private final static String TAG = MainActivity.class.getName();
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
@@ -105,7 +107,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
         // keep contact selected after an outgoing call
         if (mItemSelected) {
-            focusContact(mSelectedPosition);
+            selectContactsGroup(mSelectedPosition);
         } else {
             deselectItem();
         }
@@ -119,21 +121,21 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
 
     private void initControls() {
         initToolbar(R.drawable.common_ic_menu_black_24dp);
-        mLettersList = (RecyclerView) findViewById(R.id.letters_list);
+        mLettersList = findViewById(R.id.letters_list);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.contacts_list);
+        mRecyclerView = findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         mLastTouchTimestamp = System.currentTimeMillis();
         initPopupActionHandler();
 
         initDeselectionActionHandler();
 
-        mNoResultsView = (TextView) findViewById(R.id.no_results);
+        mNoResultsView = findViewById(R.id.no_results);
 
-        mPopupFrame = (FrameLayout) findViewById(R.id.popup_frame);
+        mPopupFrame = findViewById(R.id.popup_frame);
         mPopupFrame.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -141,9 +143,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
                 return true;
             }
         });
-        mFabContainer = (LinearLayout) findViewById(R.id.fab_container);
+        mFabContainer = findViewById(R.id.fab_container);
 
-        mPopupButton2 = (Button) findViewById(R.id.new_contact_button);
+        mPopupButton2 = findViewById(R.id.new_contact_button);
         mPopupButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +153,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             }
         });
 
-        mPopupButton1 = (Button) findViewById(R.id.search_button);
+        mPopupButton1 = findViewById(R.id.search_button);
         mPopupButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +162,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
 
         mFabToolbar = findViewById(R.id.fab_toolbar);
-        mNextButton = (ImageButton) findViewById(R.id.next_page_button);
+        mNextButton = findViewById(R.id.next_page_button);
         mNextButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
 
@@ -190,7 +192,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             };
         });
 
-        mPrevButton = (ImageButton) findViewById(R.id.prev_page_button);
+        mPrevButton = findViewById(R.id.prev_page_button);
         mPrevButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
 
@@ -221,9 +223,9 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         });
 
         mViewPagerContainer = findViewById(R.id.viewpager_container);
-        mButtonsContainer2 = (LinearLayout) findViewById(R.id.new_contact_buttons_container);
-        mButtonsContainer1 = (LinearLayout) findViewById(R.id.search_buttons_container);
-        mFabToolbarContainer = (FrameLayout) findViewById(R.id.fab_toolbar_container);
+        mButtonsContainer2 = findViewById(R.id.new_contact_buttons_container);
+        mButtonsContainer1 = findViewById(R.id.search_buttons_container);
+        mFabToolbarContainer = findViewById(R.id.fab_toolbar_container);
     }
 
     @Override
@@ -341,7 +343,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         } else {
             FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformFrom(mFabToolbar);
-            mAdapter.unfocusFromSearch();
+            mAdapter.deselectContactsGroup();
             mFab1.setVisibility(View.VISIBLE);
         }
         mFabToolbarOn = show;
@@ -353,7 +355,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             deselectItem();
             int position = mAdapter.getPositionByStartingLetter(letter);
             scrollToPositionWithOffset(position, 0);
-            mAdapter.focusFromSearch(position);
+            mAdapter.selectContactsGroup(position);
         }
     }
 
@@ -388,7 +390,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void setupDrawerLayout() {
-        NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView view = findViewById(R.id.navigation_view);
         assert view != null;
         view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -426,7 +428,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private void setupFab() {
-        mFab2 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab2 = findViewById(R.id.new_contact_fab);
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -434,7 +436,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
             }
         });
 
-        mFab1 = (FloatingActionButton) findViewById(R.id.search_fab);
+        mFab1 = findViewById(R.id.search_fab);
         mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -462,7 +464,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
         mModels = ContactArranger.getContactsGroups(contactList);
-        mAdapter = new ContactsGroupAdapter(mModels, this);
+        mAdapter = new ContactsGroupAdapter(mModels, this, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -544,19 +546,24 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     @Override
-    public void selectContact(int position) {
+    public void selectContact(int contactGroupPosition, String letter, long contactId) {
         showFabToolbar(false);
-        if (mItemSelected) {
+        tintFabs(true);
+        adjustFabPosition(false);
+        mItemSelected = true;
+        refreshLastSelectionTimestamp();
+/*        if (mItemSelected) {
             deselectItem();
-        }
+        }*/
+
+        mAdapter.selectContactInGroup(contactGroupPosition, letter, contactId);
     }
 
     @Override
     protected void deselectItem() {
-        drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_grey50));
         mItemSelected = false;
         if (mAdapter != null) {
-            mAdapter.deselectContact();
+            mAdapter.deselectContactsGroup();
         }
         tintFabs(false);
         adjustFabPosition(true);
@@ -566,19 +573,18 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     @Override
-    public void focusContact(int position) {
+    public void selectContactsGroup(int position) {
         focusOnContact(position, getCenter());
     }
 
     private void focusOnContact(int position, int offset) {
-        drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.common_black07));
         if (mFabToolbarOn) {
             showFabToolbar(false);
         }
 
         mSelectedPosition = position;
 
-        mAdapter.selectContactAtPosition(position);
+        mAdapter.selectContactsGroup(position);
         scrollToPositionWithOffset(position, offset);
 
         tintFabs(true);
@@ -588,7 +594,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
     }
 
     private int getCenter() {
-        return (mRecyclerView.getHeight() / 2) - 170;
+        return (mRecyclerView.getHeight() / 2) - 270;
     }
 
     private void scrollToPositionWithOffset(int position, int offset) {
@@ -601,6 +607,28 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         Intent i = new Intent(this, EditContactActivity.class);
         i.putExtra("contactId", contactId);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
+    }
+
+    @Override
+    public void deleteContact(final Contact contact) {
+        KatsunaAlertBuilder builder = new KatsunaAlertBuilder(this);
+        builder.setTitle(R.string.common_delete_contact);
+        String message = getString(R.string.common_delete_contact_approval,
+                contact.getDisplayName());
+        builder.setMessage(message);
+        builder.setView(R.layout.common_katsuna_alert);
+        builder.setUserProfileContainer(mUserProfileContainer);
+        builder.setOkListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContactProvider provider = new ContactProvider(MainActivity.this);
+                provider.deleteContact(contact);
+                loadContacts();
+                Toast.makeText(MainActivity.this, R.string.contacts_deleted, Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -692,7 +720,7 @@ public class MainActivity extends SearchBarActivity implements IContactInteracti
         if (TextUtils.isEmpty(query)) {
             mAdapter.resetFilter();
         } else {
-            mAdapter.getFilter().filter(query);
+            //mAdapter.getFilter().filter(query);
         }
     }
 

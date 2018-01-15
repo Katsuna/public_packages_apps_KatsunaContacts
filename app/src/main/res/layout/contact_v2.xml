@@ -8,7 +8,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/star_container"
         android:background="@color/common_black12" />
 
     <TextView
@@ -33,5 +32,149 @@
         android:minHeight="28dp"
         android:textSize="16sp" />
 
+    <LinearLayout
+        android:id="@+id/action_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_black12" />
+
+        <LinearLayout
+            android:id="@+id/more_actions_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/edit_contact_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start|center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/edit_contact_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/common_edit_contact"
+                    android:src="@drawable/common_ic_edit_black54_28dp" />
+
+                <TextView
+                    android:id="@+id/edit_contact_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/common_edit_contact"
+                    android:textColor="@color/common_black54"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_black12" />
+
+            <LinearLayout
+                android:id="@+id/delete_contact_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start|center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/delete_contact_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/common_delete_contact"
+                    android:src="@drawable/common_ic_delete_black54_28dp" />
+
+                <TextView
+                    android:id="@+id/delete_contact_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/common_delete_contact"
+                    android:textColor="@color/common_black54"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_black12" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/button_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:paddingEnd="14dp"
+                android:paddingStart="14dp"
+                android:text="@string/common_call"
+                android:textColor="@color/common_white" />
+
+            <Button
+                android:id="@+id/button_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/button_call"
+                android:background="@color/common_white"
+                android:paddingEnd="14dp"
+                android:paddingStart="14dp"
+                android:text="@string/common_message"
+                android:textColor="@color/buttons_color" />
+
+            <TextView
+                android:id="@+id/txt_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_toStartOf="@id/button_message"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="start|center"
+                android:singleLine="true"
+                android:text="@string/common_more"
+                android:textAllCaps="true"
+                android:textColor="@color/more_color"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

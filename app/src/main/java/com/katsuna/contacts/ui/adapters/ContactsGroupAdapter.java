@@ -5,95 +5,129 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.katsuna.commons.ui.adapters.ContactsGroupAdapterBase;
 import com.katsuna.commons.ui.adapters.models.ContactsGroup;
+import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.adapters.viewholders.ContactSelectedViewHolder;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactsGroupViewHolder;
-import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.katsuna.contacts.ui.listeners.IContactListener;
+import com.katsuna.contacts.ui.listeners.IContactsGroupListener;
 
 import java.util.List;
 
-public class ContactsGroupAdapter extends ContactsGroupAdapterBase {
+public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int CONTACT_NOT_SELECTED = 1;
-    private static final int CONTACT_SELECTED = 2;
-    private static final int CONTACT_GREYED_OUT = 3;
+    private static final int NO_CONTACT_POSITION = -1;
 
-    private IContactInteractionListener mListener;
+    private List<ContactsGroup> mOriginalContacts;
+    private List<ContactsGroup> mFilteredContacts;
+    private int mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
+
+    private IContactsGroupListener mContactsGroupListener;
+    private IContactListener mContactListener;
 
     private ContactsGroupAdapter(List<ContactsGroup> models) {
         mOriginalContacts = models;
         mFilteredContacts = models;
     }
 
-    public ContactsGroupAdapter(List<ContactsGroup> models, IContactInteractionListener listener) {
+    public ContactsGroupAdapter(List<ContactsGroup> models,
+                                IContactsGroupListener contactsGroupListener,
+                                IContactListener contactListener) {
         this(models);
-        mListener = listener;
+        mContactsGroupListener = contactsGroupListener;
+        mContactListener = contactListener;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        int viewType = CONTACT_NOT_SELECTED;
-        if (position == mSelectedContactPosition) {
-            viewType = CONTACT_SELECTED;
-        } else if (mSelectedContactPosition != NO_CONTACT_POSITION) {
-            viewType = CONTACT_GREYED_OUT;
-        }
-        return viewType;
+    public int getItemCount() {
+        return mFilteredContacts.size();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder = null;
-
-        boolean isRightHanded = mListener.getUserProfileContainer().isRightHanded();
+        boolean isRightHanded = mContactsGroupListener.getUserProfileContainer().isRightHanded();
         View view;
 
-        switch (viewType) {
-            case CONTACT_NOT_SELECTED:
-            case CONTACT_GREYED_OUT:
-                if (isRightHanded) {
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
-                } else {
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_lh, parent, false);
-                }
-                viewHolder = new ContactsGroupViewHolder(view, mListener);
-                break;
-            case CONTACT_SELECTED:
-                if (isRightHanded) {
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected, parent, false);
-                } else {
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_selected_lh, parent, false);
-                }
-                viewHolder = new ContactSelectedViewHolder(view, mListener);
-                break;
+        if (isRightHanded) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
+        } else {
+            // TODO implement left handed layout
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
         }
-        return viewHolder;
+
+        return new ContactsGroupViewHolder(view, mContactsGroupListener, mContactListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final ContactsGroup model = mFilteredContacts.get(position);
 
-        boolean focused = position == mSelectedFromSearchPosition;
+        boolean focused = mSelectedContactsGroupPosition == position;
+        boolean unfocused = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
 
-        switch (viewHolder.getItemViewType()) {
-            case CONTACT_NOT_SELECTED:
-                ContactsGroupViewHolder holder = (ContactsGroupViewHolder) viewHolder;
-                holder.bind(model, position);
-                holder.showPopupFrame(false);
-                holder.adjustState(model.premium, false);
-                break;
-            case CONTACT_GREYED_OUT:
-                ContactsGroupViewHolder greyOutContactsGroupViewHolder = (ContactsGroupViewHolder) viewHolder;
-                greyOutContactsGroupViewHolder.bind(model, position);
-                greyOutContactsGroupViewHolder.showPopupFrame(true);
-                break;
-            case CONTACT_SELECTED:
-                ContactSelectedViewHolder contactSelectedViewHolder = (ContactSelectedViewHolder) viewHolder;
-                contactSelectedViewHolder.bind(model, position);
-                break;
-        }
+        ContactsGroupState state = new ContactsGroupState(model.premium, focused, unfocused,
+                position);
+        state.setStartLetter(mSelectedGroupLetter);
+        state.setContactId(mSelectedContactId);
+
+        ContactsGroupViewHolder holder = (ContactsGroupViewHolder) viewHolder;
+        holder.bind(model, position, state);
     }
+
+    // TODO add interface
+    public int getPositionByStartingLetter(String letter) {
+        int position = NO_CONTACT_POSITION;
+        for (int i = 0; i < mFilteredContacts.size(); i++) {
+            //don't focus on premium contacts
+            ContactsGroup model = mFilteredContacts.get(i);
+            if (model.premium) {
+                continue;
+            }
+
+            if (mFilteredContacts.get(i).firstLetter.equals(letter)) {
+                position = i;
+                break;
+            }
+        }
+        return position;
+    }
+
+    public void resetFilter() {
+        mFilteredContacts = mOriginalContacts;
+        notifyDataSetChanged();
+    }
+
+    public void selectContactsGroup(int position) {
+        mSelectedContactsGroupPosition = position;
+        mSelectedContactId = 0;
+        notifyDataSetChanged();
+    }
+
+    public void deselectContactsGroup() {
+        mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
+        mSelectedContactId = 0;
+        notifyDataSetChanged();
+    }
+
+    private String mSelectedGroupLetter;
+    private long mSelectedContactId;
+
+    public void selectContactInGroup(int contactGroupPosition, String letter, long contactId) {
+        mSelectedGroupLetter = letter;
+        mSelectedContactId = contactId;
+        mSelectedContactsGroupPosition = contactGroupPosition;
+        notifyDataSetChanged();
+    }
+
+    public int getPositionByContactId(long contactId) {
+        int position = NO_CONTACT_POSITION;
+/*        for (int i = 0; i < mFilteredContacts.size(); i++) {
+            if (mFilteredContacts.get(i).getContact().getId() == contactId) {
+                position = i;
+                break;
+            }
+        }*/
+        return position;
+    }
+
 }

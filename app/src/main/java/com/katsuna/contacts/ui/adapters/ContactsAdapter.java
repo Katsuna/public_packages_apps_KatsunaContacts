@@ -6,30 +6,37 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.viewholders.ContactViewHolder;
+import com.katsuna.contacts.ui.listeners.IContactListener;
 
 import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Contact> mContacts;
+    private final List<Contact> mContacts;
+    private final IContactListener mContactListener;
+    private final ContactsGroupState mContactsGroupState;
 
-    public ContactsAdapter(List<Contact> models) {
+    public ContactsAdapter(List<Contact> models, IContactListener contactListener,
+                           ContactsGroupState contactsGroupState) {
         mContacts = models;
+        mContactListener = contactListener;
+        mContactsGroupState = contactsGroupState;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_v2, parent, false);
-        return new ContactViewHolder(view);
+        return new ContactViewHolder(view, mContactListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Contact contact = mContacts.get(position);
         ContactViewHolder contactViewHolder = (ContactViewHolder) holder;
-        contactViewHolder.bind(contact, position);
+        contactViewHolder.bind(contact, position, mContactsGroupState);
     }
 
     @Override
