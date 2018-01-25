@@ -91,6 +91,9 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         } else if (state.isFocused()) {
             cardColor = R.color.priority_three;
             cardColorAlpha = R.color.priority_three_tone_one;
+        } else if (state.isHighlighted()) {
+            cardColor = R.color.priority_two;
+            cardColorAlpha = R.color.priority_one_tone_one;
         } else {
             cardColor = R.color.priority_one;
             cardColorAlpha = R.color.priority_one_tone_one;
@@ -101,12 +104,10 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         }
 
         // set colors
-        if (cardColor != 0) {
-            mContactsGroupContainerCard.setCardBackgroundColor(ColorStateList.valueOf(
-                    ContextCompat.getColor(itemView.getContext(), cardColor)));
-            mContactsGroupContainerCardInner.setBackgroundColor(
-                    ContextCompat.getColor(itemView.getContext(), cardColorAlpha));
-        }
+        mContactsGroupContainerCard.setCardBackgroundColor(ColorStateList.valueOf(
+                ContextCompat.getColor(itemView.getContext(), cardColor)));
+        mContactsGroupContainerCardInner.setBackgroundColor(
+                ContextCompat.getColor(itemView.getContext(), cardColorAlpha));
     }
 
     public void showPopupFrame(boolean enabled) {

@@ -20,10 +20,12 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private List<ContactsGroup> mOriginalContacts;
     private List<ContactsGroup> mFilteredContacts;
+    private int mPreviousSelectedContactsGroupPosition = NO_CONTACT_POSITION;
     private int mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
 
     private IContactsGroupListener mContactsGroupListener;
     private IContactListener mContactListener;
+    private int mHighlightedContactsGroupPosition;
 
     private ContactsGroupAdapter(List<ContactsGroup> models) {
         mOriginalContacts = models;
@@ -64,9 +66,10 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         boolean focused = mSelectedContactsGroupPosition == position;
         boolean unfocused = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
+        boolean highlighted = mHighlightedContactsGroupPosition == position;
 
         ContactsGroupState state = new ContactsGroupState(model.premium, focused, unfocused,
-                position);
+                highlighted, position);
         state.setStartLetter(mSelectedGroupLetter);
         state.setContactId(mSelectedContactId);
 
@@ -97,10 +100,48 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
+    private int mPreviousHighlightedContactsGroupPosition;
+
+    public void highlightContactsGroup(int position) {
+        // while we have a selected contact group no highlighting is made
+        if (mSelectedContactsGroupPosition != NO_CONTACT_POSITION) {
+            if (mPreviousHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
+                notifyItemChanged(mPreviousHighlightedContactsGroupPosition);
+            }
+            mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
+            mPreviousHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
+            return;
+        }
+
+        // refresh only if we have a change
+        if (mHighlightedContactsGroupPosition != position) {
+            mPreviousHighlightedContactsGroupPosition = mHighlightedContactsGroupPosition;
+            notifyItemChanged(mPreviousHighlightedContactsGroupPosition);
+            mHighlightedContactsGroupPosition = position;
+            notifyItemChanged(position);
+        }
+    }
+
     public void selectContactsGroup(int position) {
-        mSelectedContactsGroupPosition = position;
-        mSelectedContactId = 0;
-        notifyDataSetChanged();
+        if (mSelectedContactsGroupPosition != position) {
+            mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
+            mSelectedContactsGroupPosition = position;
+
+            // if we have a contact selected we must invalidate everything
+            if (mSelectedContactId > 0) {
+                mSelectedContactId = 0;
+                notifyDataSetChanged();
+            } else {
+                notifyItemChanged(mPreviousSelectedContactsGroupPosition);
+                notifyItemChanged(mSelectedContactsGroupPosition);
+            }
+
+            // unhighlight existing contact group if any
+            if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
+                notifyItemChanged(mHighlightedContactsGroupPosition);
+                mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
+            }
+        }
     }
 
     public void deselectContactsGroup() {

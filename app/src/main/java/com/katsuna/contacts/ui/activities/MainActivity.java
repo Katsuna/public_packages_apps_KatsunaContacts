@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -125,6 +126,36 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
         mRecyclerView = findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
+
+        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                // findPosition to highlight
+
+                LinearLayoutManager lm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
+                int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = lm.findLastVisibleItemPosition();
+
+                if (firstVisibleItemPosition < lastVisibleItemPosition) {
+                    View firstVisibleView = lm.findViewByPosition(firstVisibleItemPosition);
+                    Rect outR = new Rect();
+                    firstVisibleView.getHitRect(outR);
+
+                    int positionToHighlight;
+                    if (outR.bottom - 300 < 0) {
+                        positionToHighlight = firstVisibleItemPosition + 1;
+                        Log.e(TAG, " firstView rect=" + outR + " positionToHighlight:" + positionToHighlight);
+
+                        // order highlight
+                        if (mAdapter != null) {
+                            mAdapter.highlightContactsGroup(positionToHighlight);
+                        }
+                    }
+                }
+
+                //Log.e(TAG, " p1: " + firstVisibleItemPosition + " p2: " + lastVisibleItemPosition );
+            }
+        });
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -538,7 +569,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
                 int position = mAdapter.getPositionByContactId(contactId);
                 if (position != -1) {
-                    focusOnContact(position, getCenter());
+                    focusOnContact(position, 0);
                 }
                 reloadData = false;
             }
@@ -574,7 +605,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
     @Override
     public void selectContactsGroup(int position) {
-        focusOnContact(position, getCenter());
+        focusOnContact(position, 0);
     }
 
     private void focusOnContact(int position, int offset) {
