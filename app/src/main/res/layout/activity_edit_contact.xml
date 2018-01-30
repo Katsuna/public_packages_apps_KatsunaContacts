@@ -4,10 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/common_toolbar" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/common_activity_margin">
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -15,122 +18,229 @@
             android:orientation="vertical"
             android:paddingTop="60dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/photo"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:background="@drawable/circle_blue"
-                android:contentDescription="@string/contact_photo"
-                app:riv_mutate_background="true"
-                app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
-
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_activity_margin">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/name"
-                    style="@style/editContactField"
-                    android:hint="@string/name"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/photo"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/circle_blue"
+                    android:contentDescription="@string/contact_photo"
+                    app:riv_mutate_background="true"
+                    app:riv_oval="true"
+                    app:riv_tile_mode="repeat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/tap_to_add_photo"
+                    android:textColor="@color/common_black87"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/contacts_group_container_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:clipToPadding="false"
+                android:gravity="center"
+                app:cardBackgroundColor="@color/priority_two"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
 
-                <EditText
-                    android:id="@+id/surname"
-                    style="@style/editContactField"
-                    android:hint="@string/surname"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:id="@+id/contacts_group_container_card_inner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:background="@color/priority_two_tone_one"
+                    android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/name_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/description"
-                    style="@style/editContactField"
-                    android:hint="@string/description"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:scaleType="fitStart"
+                            android:src="@drawable/ic_nice_guy_black54_24dp" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/name"
+                            style="@style/editContactField"
+                            android:layout_margin="0dp"
+                            android:hint="@string/name"
+                            android:inputType="text"
+                            android:maxLines="1" />
 
-                <EditText
-                    android:id="@+id/telephone1"
-                    style="@style/editContactField"
-                    android:hint="@string/telephone1"
-                    android:inputType="phone" />
+                    </LinearLayout>
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/surname"
+                        style="@style/editContactField"
+                        android:hint="@string/surname"
+                        android:inputType="text"
+                        android:maxLines="1" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/description"
+                        style="@style/editContactField"
+                        android:hint="@string/description"
+                        android:inputType="text"
+                        android:maxLines="1" />
 
-                <EditText
-                    android:id="@+id/telephone2"
-                    style="@style/editContactField"
-                    android:hint="@string/telephone2"
-                    android:inputType="phone" />
-            </android.support.design.widget.TextInputLayout>
+                    <LinearLayout
+                        android:id="@+id/telephone1_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:scaleType="fitStart"
+                            android:src="@drawable/ic_call_black54_24dp" />
 
-                <EditText
-                    android:id="@+id/telephone3"
-                    style="@style/editContactField"
-                    android:hint="@string/telephone3"
-                    android:inputType="phone" />
-            </android.support.design.widget.TextInputLayout>
+                        <EditText
+                            android:id="@+id/telephone1"
+                            style="@style/editContactField"
+                            android:layout_margin="0dp"
+                            android:hint="@string/telephone1"
+                            android:inputType="phone" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    </LinearLayout>
 
-                <EditText
-                    android:id="@+id/email"
-                    style="@style/editContactField"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/telephone2"
+                        style="@style/editContactField"
+                        android:hint="@string/telephone2"
+                        android:inputType="phone" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/telephone3"
+                        style="@style/editContactField"
+                        android:hint="@string/telephone3"
+                        android:inputType="phone"
+                        android:visibility="gone" />
 
-                <EditText
-                    android:id="@+id/address"
-                    style="@style/editContactField"
-                    android:hint="@string/address"
-                    android:inputType="textMultiLine" />
-            </android.support.design.widget.TextInputLayout>
+                    <LinearLayout
+                        android:id="@+id/email_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:scaleType="fitStart"
+                            android:src="@drawable/ic_email_black54_24dp" />
+
+                        <EditText
+                            android:id="@+id/email"
+                            style="@style/editContactField"
+                            android:layout_margin="0dp"
+                            android:hint="@string/email"
+                            android:inputType="textEmailAddress" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/address"
+                        style="@style/editContactField"
+                        android:layout_marginBottom="8dp"
+                        android:hint="@string/address"
+                        android:inputType="textMultiLine"
+                        android:visibility="gone" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/common_black34" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="16dp">
+
+                        <Button
+                            android:id="@+id/button_save"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="8dp"
+                            android:minWidth="@dimen/common_button_min_width"
+                            android:paddingEnd="14dp"
+                            android:paddingStart="14dp"
+                            android:text="@string/common_save"
+                            android:textColor="@color/common_white" />
+
+                        <Button
+                            android:id="@+id/button_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_toStartOf="@id/button_save"
+                            android:background="@color/common_white"
+                            android:minWidth="@dimen/common_button_min_width"
+                            android:paddingEnd="14dp"
+                            android:paddingStart="14dp"
+                            android:text="@string/common_cancel"
+                            android:textColor="@color/buttons_color" />
+
+                        <TextView
+                            android:id="@+id/txt_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_toStartOf="@id/button_cancel"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start|center"
+                            android:singleLine="true"
+                            android:text="@string/common_more"
+                            android:textAllCaps="true"
+                            android:textColor="@color/more_color"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/edit_contact_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="@dimen/common_fab_margin"
-        android:src="@drawable/common_ic_done_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 

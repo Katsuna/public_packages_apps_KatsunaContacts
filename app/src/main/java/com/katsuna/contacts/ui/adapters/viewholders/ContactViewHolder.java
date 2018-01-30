@@ -34,8 +34,8 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mActionButtonsContainer = itemView.findViewById(R.id.action_buttons_container);
         mListener = contactListener;
 
-        mCallButton = itemView.findViewById(R.id.button_call);
-        mMessageButton = itemView.findViewById(R.id.button_message);
+        mCallButton = itemView.findViewById(R.id.button_save);
+        mMessageButton = itemView.findViewById(R.id.button_cancel);
         mMoreText = itemView.findViewById(R.id.txt_more);
         mMoreActionsContainer = itemView.findViewById(R.id.more_actions_container);
         mEditContactContainer = itemView.findViewById(R.id.edit_contact_container);

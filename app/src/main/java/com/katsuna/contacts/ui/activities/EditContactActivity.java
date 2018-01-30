@@ -1,13 +1,16 @@
 package com.katsuna.contacts.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.katsuna.commons.domain.Address;
 import com.katsuna.commons.domain.Contact;
@@ -17,6 +20,7 @@ import com.katsuna.commons.domain.Name;
 import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.utils.DataAction;
+import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -36,6 +40,9 @@ public class EditContactActivity extends PhotoActivity {
     private EditText mAddress;
     private RoundedImageView mPhoto;
     private Contact mContact;
+    private Button mSaveButton;
+    private Button mCancelButton;
+    private TextView mMoreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +51,12 @@ public class EditContactActivity extends PhotoActivity {
 
         initControls();
         loadContact();
-        setupFab();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adjustColorProfile();
     }
 
     @Override
@@ -53,21 +65,54 @@ public class EditContactActivity extends PhotoActivity {
     }
 
     private void initControls() {
-        mName = (EditText) findViewById(R.id.name);
-        mSurname = (EditText) findViewById(R.id.surname);
-        mDescription = (EditText) findViewById(R.id.description);
-        mTelephone1 = (EditText) findViewById(R.id.telephone1);
-        EditText mTelephone2 = (EditText) findViewById(R.id.telephone2);
-        EditText mTelephone3 = (EditText) findViewById(R.id.telephone3);
-        mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
-        mEmail = (EditText) findViewById(R.id.email);
-        mAddress = (EditText) findViewById(R.id.address);
+        initToolbar();
 
-        mPhoto = (RoundedImageView) findViewById(R.id.photo);
+        mName = findViewById(R.id.name);
+        mSurname = findViewById(R.id.surname);
+        mDescription = findViewById(R.id.description);
+        mTelephone1 = findViewById(R.id.telephone1);
+        EditText mTelephone2 = findViewById(R.id.telephone2);
+        final EditText mTelephone3 = findViewById(R.id.telephone3);
+        mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
+        mEmail = findViewById(R.id.email);
+        mAddress = findViewById(R.id.address);
+
+        mPhoto = findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
+            }
+        });
+        mSaveButton = findViewById(R.id.button_save);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateContact();
+            }
+        });
+
+        mCancelButton = findViewById(R.id.button_cancel);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mMoreButton = findViewById(R.id.txt_more);
+        mMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTelephone3.getVisibility() == View.VISIBLE) {
+                    mTelephone3.setVisibility(View.GONE);
+                    mAddress.setVisibility(View.GONE);
+                    mMoreButton.setText(R.string.common_more);
+                } else {
+                    mTelephone3.setVisibility(View.VISIBLE);
+                    mAddress.setVisibility(View.VISIBLE);
+                    mMoreButton.setText(R.string.common_less);
+                }
             }
         });
     }
@@ -111,16 +156,6 @@ public class EditContactActivity extends PhotoActivity {
         if (mContact.getAddress() != null) {
             mAddress.setText(mContact.getAddress().getFormattedAddress());
         }
-    }
-
-    private void setupFab() {
-        mFab1 = (FloatingActionButton) findViewById(R.id.edit_contact_fab);
-        mFab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateContact();
-            }
-        });
     }
 
     private void updateContact() {
@@ -273,4 +308,21 @@ public class EditContactActivity extends PhotoActivity {
         mPhoto.setImageDrawable(null);
         mContact.setPhoto(null);
     }
+
+    private void adjustColorProfile() {
+        adjustPrimaryButton(this, mSaveButton);
+        adjustSecondaryButton(this, mCancelButton);
+    }
+
+    private void adjustPrimaryButton(Context context, Button button) {
+        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
+        Shape.setRoundedBackground(button, color1);
+    }
+
+    private void adjustSecondaryButton(Context context, Button button) {
+        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
+        int white = ContextCompat.getColor(context, R.color.common_white);
+        Shape.setRoundedBorder(button, color1, white);
+    }
+
 }
