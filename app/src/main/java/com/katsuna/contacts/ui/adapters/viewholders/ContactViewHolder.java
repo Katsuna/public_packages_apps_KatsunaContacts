@@ -9,8 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.entities.OpticalParams;
+import com.katsuna.commons.entities.SizeProfile;
+import com.katsuna.commons.entities.SizeProfileKeyV2;
 import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
 import com.katsuna.commons.utils.Shape;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalcV2;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.listeners.IContactListener;
 
@@ -26,6 +31,8 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final View mMoreActionsContainer;
     private final View mEditContactContainer;
     private final View mDeleteContactContainer;
+    private final TextView mEditContactText;
+    private final TextView mDeleteContactText;
 
     public ContactViewHolder(View itemView, IContactListener contactListener) {
         super(itemView);
@@ -34,12 +41,14 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mActionButtonsContainer = itemView.findViewById(R.id.action_buttons_container);
         mListener = contactListener;
 
-        mCallButton = itemView.findViewById(R.id.button_save);
-        mMessageButton = itemView.findViewById(R.id.button_cancel);
+        mCallButton = itemView.findViewById(R.id.button_call);
+        mMessageButton = itemView.findViewById(R.id.button_message);
         mMoreText = itemView.findViewById(R.id.txt_more);
         mMoreActionsContainer = itemView.findViewById(R.id.more_actions_container);
         mEditContactContainer = itemView.findViewById(R.id.edit_contact_container);
         mDeleteContactContainer = itemView.findViewById(R.id.delete_contact_container);
+        mEditContactText = itemView.findViewById(R.id.edit_contact_text);
+        mDeleteContactText = itemView.findViewById(R.id.delete_contact_text);
     }
 
     public void bind(final Contact contact, final int position,
@@ -107,8 +116,6 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        adjustColorProfile();
-
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +153,35 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 mListener.deleteContact(contact);
             }
         });
+
+        adjustSizeProfile();
+        adjustColorProfile();
+    }
+
+    private void adjustSizeProfile() {
+        SizeProfile sizeProfile = mListener.getUserProfileContainer().getOpticalSizeProfile();
+
+        // display name
+        OpticalParams opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.TITLE, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mContactName, opticalParams);
+
+        // contact description
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.SUBHEADING_1, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mContactDesc, opticalParams);
+
+        // adjust buttons
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.BUTTON, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mCallButton, opticalParams);
+        SizeAdjuster.adjustText(itemView.getContext(), mMessageButton, opticalParams);
+
+        // more text
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.BUTTON, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mMoreText, opticalParams);
+
+        // contact description
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.SUBHEADING_2, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mEditContactText, opticalParams);
+        SizeAdjuster.adjustText(itemView.getContext(), mDeleteContactText, opticalParams);
     }
 
     private void adjustColorProfile() {
