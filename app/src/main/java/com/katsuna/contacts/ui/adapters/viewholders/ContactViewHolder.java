@@ -112,7 +112,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 mListener.selectContact(contactsGroupState.getContactGroupPosition(),
-                        contact.getFirstLetterNormalized(), contact.getId());
+                        contact.getFirstLetterNormalized(), contact.getId(), position);
             }
         });
 

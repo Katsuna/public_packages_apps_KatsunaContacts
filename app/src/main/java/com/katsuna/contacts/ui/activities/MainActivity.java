@@ -2,7 +2,6 @@ package com.katsuna.contacts.ui.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -27,15 +25,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,10 +67,8 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private RecyclerView mRecyclerView;
     private DrawerLayout drawerLayout;
     private TextView mNoResultsView;
-    private SearchView mSearchView;
     private Contact mSelectedContact;
     private FrameLayout mPopupFrame;
-    private boolean mSearchMode;
     private int mSelectedPosition;
     private boolean mReadContactsPermissionDontAsk = false;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -265,7 +256,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             //don't show popup if menu drawer is open or toolbar search is enabled
             // or contact is selected or search with letters is shown.
             if (!drawerLayout.isDrawerOpen(GravityCompat.START)
-                    && !mSearchMode
                     && !mItemSelected
                     && !mFabToolbarOn) {
                 mPopupFrame.setVisibility(View.VISIBLE);
@@ -282,62 +272,8 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        // Assumes current activity is the searchable activity
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                showPopup(false);
-                showFabToolbar(false);
-                search(newText);
-                return false;
-            }
-        });
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                mSearchMode = false;
-                if (mAdapter != null) {
-                    mAdapter.resetFilter();
-                }
-                return false;
-            }
-        });
-        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSearchMode = true;
-                showPopup(false);
-                showFabToolbar(false);
-            }
-        });
-
-        return true;
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            mSearchView.setQuery(query, false);
-        }
     }
 
     @Override
@@ -358,8 +294,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         }
 
         if (show) {
-            mSearchView.onActionViewCollapsed();
-
             FabTransformation.with(mFab2).duration(Constants.FAB_TRANSFORMATION_DURATION)
                     .transformTo(mFabToolbar);
 
@@ -569,7 +503,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
                 int position = mAdapter.getPositionByContactId(contactId);
                 if (position != -1) {
-                    focusOnContact(position, 0);
+                    focusOnContactGroup(position, 0);
                 }
                 reloadData = false;
             }
@@ -577,17 +511,19 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     }
 
     @Override
-    public void selectContact(int contactGroupPosition, String letter, long contactId) {
+    public void selectContact(int contactGroupPosition, String letter, long contactId, int pos) {
         showFabToolbar(false);
         tintFabs(true);
         adjustFabPosition(false);
         mItemSelected = true;
         refreshLastSelectionTimestamp();
-/*        if (mItemSelected) {
-            deselectItem();
-        }*/
-
         mAdapter.selectContactInGroup(contactGroupPosition, letter, contactId);
+        // scroll to contact by using its position inside inner list
+        // only for not starred contacts
+        if (contactGroupPosition > 0) {
+            int contactHeight = getResources().getDimensionPixelSize(R.dimen.contact_item_height);
+            scrollToPositionWithOffset(contactGroupPosition, - pos * contactHeight);
+        }
     }
 
     @Override
@@ -605,10 +541,10 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
     @Override
     public void selectContactsGroup(int position) {
-        focusOnContact(position, 0);
+        focusOnContactGroup(position, 0);
     }
 
-    private void focusOnContact(int position, int offset) {
+    private void focusOnContactGroup(int position, int offset) {
         if (mFabToolbarOn) {
             showFabToolbar(false);
         }

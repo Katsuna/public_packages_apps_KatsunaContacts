@@ -4,7 +4,7 @@ import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.UserProfileContainer;
 
 public interface IContactListener {
-    void selectContact(int contactGroupPosition, String letter, long contactId);
+    void selectContact(int contactGroupPosition, String letter, long contactId, int position);
 
     void editContact(long contactId);
 

@@ -26,6 +26,9 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     private IContactsGroupListener mContactsGroupListener;
     private IContactListener mContactListener;
     private int mHighlightedContactsGroupPosition;
+    private int mPreviousHighlightedContactsGroupPosition;
+    private String mSelectedGroupLetter;
+    private long mSelectedContactId;
 
     private ContactsGroupAdapter(List<ContactsGroup> models) {
         mOriginalContacts = models;
@@ -47,16 +50,8 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        boolean isRightHanded = mContactsGroupListener.getUserProfileContainer().isRightHanded();
-        View view;
-
-        if (isRightHanded) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
-        } else {
-            // TODO implement left handed layout
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent, false);
-        }
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent,
+                false);
         return new ContactsGroupViewHolder(view, mContactsGroupListener, mContactListener);
     }
 
@@ -77,7 +72,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.bind(model, position, state);
     }
 
-    // TODO add interface
     public int getPositionByStartingLetter(String letter) {
         int position = NO_CONTACT_POSITION;
         for (int i = 0; i < mFilteredContacts.size(); i++) {
@@ -100,8 +94,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
-    private int mPreviousHighlightedContactsGroupPosition;
-
     public void highlightContactsGroup(int position) {
         // while we have a selected contact group no highlighting is made
         if (mSelectedContactsGroupPosition != NO_CONTACT_POSITION) {
@@ -123,24 +115,22 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void selectContactsGroup(int position) {
-        if (mSelectedContactsGroupPosition != position) {
-            mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
-            mSelectedContactsGroupPosition = position;
+        mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
+        mSelectedContactsGroupPosition = position;
 
-            // if we have a contact selected we must invalidate everything
-            if (mSelectedContactId > 0) {
-                mSelectedContactId = 0;
-                notifyDataSetChanged();
-            } else {
-                notifyItemChanged(mPreviousSelectedContactsGroupPosition);
-                notifyItemChanged(mSelectedContactsGroupPosition);
-            }
+        // if we have a contact selected we must invalidate everything
+        if (mSelectedContactId > 0) {
+            mSelectedContactId = 0;
+            notifyDataSetChanged();
+        } else {
+            notifyItemChanged(mPreviousSelectedContactsGroupPosition);
+            notifyItemChanged(mSelectedContactsGroupPosition);
+        }
 
-            // unhighlight existing contact group if any
-            if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
-                notifyItemChanged(mHighlightedContactsGroupPosition);
-                mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
-            }
+        // unhighlight existing contact group if any
+        if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
+            notifyItemChanged(mHighlightedContactsGroupPosition);
+            mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
         }
     }
 
@@ -149,9 +139,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         mSelectedContactId = 0;
         notifyDataSetChanged();
     }
-
-    private String mSelectedGroupLetter;
-    private long mSelectedContactId;
 
     public void selectContactInGroup(int contactGroupPosition, String letter, long contactId) {
         mSelectedGroupLetter = letter;
