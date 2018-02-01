@@ -43,6 +43,7 @@ public class EditContactActivity extends PhotoActivity {
     private Button mSaveButton;
     private Button mCancelButton;
     private TextView mMoreButton;
+    private TextView mAddPhotoText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class EditContactActivity extends PhotoActivity {
     }
 
     private void initControls() {
-        initToolbar();
+        initToolbar(R.drawable.common_ic_close_black54_24dp);
 
         mName = findViewById(R.id.name);
         mSurname = findViewById(R.id.surname);
@@ -79,6 +80,13 @@ public class EditContactActivity extends PhotoActivity {
 
         mPhoto = findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+        mAddPhotoText = findViewById(R.id.add_photo_text);
+        mAddPhotoText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
