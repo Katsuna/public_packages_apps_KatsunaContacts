@@ -126,4 +126,7 @@
     <!-- Warning shown at photo activity when no camera app is installed and enabled -->
     <string name="no_camera_app">There is no camera application to handle your request.</string>
 
+    <!-- No free telephone fields while adding number to existing contact -->
+    <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
+
 </resources>

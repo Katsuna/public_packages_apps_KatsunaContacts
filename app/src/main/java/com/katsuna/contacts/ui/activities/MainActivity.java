@@ -20,7 +20,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -62,6 +61,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
+    private static final int REQUEST_CODE_ADD_NUMBER_TO_CONTACT = 4;
     private List<ContactsGroup> mModels;
     private ContactsGroupAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -72,6 +72,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private int mSelectedPosition;
     private boolean mReadContactsPermissionDontAsk = false;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private boolean reloadData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,8 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         } else {
             deselectItem();
         }
+
+        handleIntent();
     }
 
     @Override
@@ -135,7 +138,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                     int positionToHighlight;
                     if (outR.bottom - 300 < 0) {
                         positionToHighlight = firstVisibleItemPosition + 1;
-                        Log.e(TAG, " firstView rect=" + outR + " positionToHighlight:" + positionToHighlight);
 
                         // order highlight
                         if (mAdapter != null) {
@@ -187,24 +189,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         mNextButton = findViewById(R.id.next_page_button);
         mNextButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (mHandler != null) return true;
-                        mHandler = new Handler();
-                        mHandler.postDelayed(mAction, 10);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (mHandler == null) return true;
-                        mHandler.removeCallbacks(mAction);
-                        mHandler = null;
-                        break;
-                }
-                return false;
-            }
-
             Runnable mAction = new Runnable() {
                 @Override
                 public void run() {
@@ -212,11 +196,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                     mHandler.postDelayed(this, 10);
                 }
             };
-        });
-
-        mPrevButton = findViewById(R.id.prev_page_button);
-        mPrevButton.setOnTouchListener(new View.OnTouchListener() {
-            private Handler mHandler;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -234,7 +213,11 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                 }
                 return false;
             }
+        });
 
+        mPrevButton = findViewById(R.id.prev_page_button);
+        mPrevButton.setOnTouchListener(new View.OnTouchListener() {
+            private Handler mHandler;
             Runnable mAction = new Runnable() {
                 @Override
                 public void run() {
@@ -242,6 +225,23 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                     mHandler.postDelayed(this, 10);
                 }
             };
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mHandler != null) return true;
+                        mHandler = new Handler();
+                        mHandler.postDelayed(mAction, 10);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (mHandler == null) return true;
+                        mHandler.removeCallbacks(mAction);
+                        mHandler = null;
+                        break;
+                }
+                return false;
+            }
         });
 
         mViewPagerContainer = findViewById(R.id.viewpager_container);
@@ -271,9 +271,23 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
+    private String numberToAddToExistingContact;
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            if (Constants.ADD_TO_CONTACT_ACTION.equals(action)) {
+                numberToAddToExistingContact =
+                        intent.getStringExtra(Constants.ADD_TO_CONTACT_ACTION_NUMBER);
+                mFab2.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showFabToolbar(true);
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -486,8 +500,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         }
     }
 
-    private boolean reloadData = true;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -507,6 +519,10 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                 }
                 reloadData = false;
             }
+        } else if (requestCode == REQUEST_CODE_ADD_NUMBER_TO_CONTACT) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
         }
     }
 
@@ -517,6 +533,16 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         adjustFabPosition(false);
         mItemSelected = true;
         refreshLastSelectionTimestamp();
+
+        if (!TextUtils.isEmpty(numberToAddToExistingContact)) {
+            Intent i = new Intent(this, EditContactActivity.class);
+            i.setAction(Constants.ADD_TO_CONTACT_ACTION);
+            i.putExtra("contactId", contactId);
+            i.putExtra(Constants.ADD_TO_CONTACT_ACTION_NUMBER, numberToAddToExistingContact);
+            startActivityForResult(i, REQUEST_CODE_ADD_NUMBER_TO_CONTACT);
+            return;
+        }
+
         mAdapter.selectContactInGroup(contactGroupPosition, letter, contactId);
         // scroll to contact by using its position inside inner list
         // only for not starred contacts

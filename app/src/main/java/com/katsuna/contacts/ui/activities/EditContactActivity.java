@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.katsuna.commons.domain.Address;
 import com.katsuna.commons.domain.Contact;
@@ -19,6 +20,7 @@ import com.katsuna.commons.domain.Email;
 import com.katsuna.commons.domain.Name;
 import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.providers.ContactProvider;
+import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
 import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
@@ -36,6 +38,8 @@ public class EditContactActivity extends PhotoActivity {
     private EditText mSurname;
     private EditText mDescription;
     private EditText mTelephone1;
+    private EditText mTelephone2;
+    private EditText mTelephone3;
     private EditText mEmail;
     private EditText mAddress;
     private RoundedImageView mPhoto;
@@ -58,6 +62,33 @@ public class EditContactActivity extends PhotoActivity {
     protected void onResume() {
         super.onResume();
         adjustColorProfile();
+        readIncomingNumberToAdd();
+    }
+
+    private void readIncomingNumberToAdd() {
+        Intent i = getIntent();
+        String action = i.getAction();
+        if (Constants.ADD_TO_CONTACT_ACTION.equals(action)) {
+            String number = i.getStringExtra(Constants.ADD_TO_CONTACT_ACTION_NUMBER);
+            if (!TextUtils.isEmpty(number)) {
+                String output = "";
+                if (TextUtils.isEmpty(mTelephone1.getText())) {
+                    mTelephone1.setText(number);
+                    mTelephone1.requestFocus();
+                } else if (TextUtils.isEmpty(mTelephone2.getText())) {
+                    mTelephone2.setText(number);
+                    mTelephone2.requestFocus();
+                } else if (TextUtils.isEmpty(mTelephone3.getText())) {
+                    mTelephone3.setText(number);
+                    showMoreFields(true);
+                    mTelephone3.requestFocus();
+                } else {
+                    output = getResources().getString(R.string.no_free_telephone_fields);
+                    showMoreFields(true);
+                }
+                Toast.makeText(this, output, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
@@ -72,8 +103,8 @@ public class EditContactActivity extends PhotoActivity {
         mSurname = findViewById(R.id.surname);
         mDescription = findViewById(R.id.description);
         mTelephone1 = findViewById(R.id.telephone1);
-        EditText mTelephone2 = findViewById(R.id.telephone2);
-        final EditText mTelephone3 = findViewById(R.id.telephone3);
+        mTelephone2 = findViewById(R.id.telephone2);
+        mTelephone3 = findViewById(R.id.telephone3);
         mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
         mEmail = findViewById(R.id.email);
         mAddress = findViewById(R.id.address);
@@ -113,16 +144,24 @@ public class EditContactActivity extends PhotoActivity {
             @Override
             public void onClick(View v) {
                 if (mTelephone3.getVisibility() == View.VISIBLE) {
-                    mTelephone3.setVisibility(View.GONE);
-                    mAddress.setVisibility(View.GONE);
-                    mMoreButton.setText(R.string.common_more);
+                    showMoreFields(false);
                 } else {
-                    mTelephone3.setVisibility(View.VISIBLE);
-                    mAddress.setVisibility(View.VISIBLE);
-                    mMoreButton.setText(R.string.common_less);
+                    showMoreFields(true);
                 }
             }
         });
+    }
+
+    private void showMoreFields(boolean flag) {
+        if (flag) {
+            mTelephone3.setVisibility(View.VISIBLE);
+            mAddress.setVisibility(View.VISIBLE);
+            mMoreButton.setText(R.string.common_less);
+        } else {
+            mTelephone3.setVisibility(View.GONE);
+            mAddress.setVisibility(View.GONE);
+            mMoreButton.setText(R.string.common_more);
+        }
     }
 
     private void loadContact() {
