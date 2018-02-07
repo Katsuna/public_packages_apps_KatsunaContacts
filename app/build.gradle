@@ -75,6 +75,6 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:$firebaseVersion"
     testImplementation 'junit:junit:4.12'
 
-    //apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.gms.google-services'
 
 }
