@@ -18,6 +18,7 @@ android {
         versionCode 4
         versionName "1.2.0"
         project.ext.set("archivesBaseName", "Contacts-" + defaultConfig.versionName)
+        manifestPlaceholders = [providers_auth:"com.katsuna"]
     }
 
     signingConfigs {
@@ -30,6 +31,14 @@ android {
     }
 
     buildTypes {
+
+        staging {
+            initWith debug
+            applicationIdSuffix '.staging'
+            manifestPlaceholders = [providers_auth:"com.katsuna.staging"]
+            matchingFallbacks = ['debug','release']
+        }
+
         release {
             minifyEnabled true
             proguardFiles 'proguard-rules.pro'
@@ -66,6 +75,6 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:$firebaseVersion"
     testImplementation 'junit:junit:4.12'
 
-    apply plugin: 'com.google.gms.google-services'
+    //apply plugin: 'com.google.gms.google-services'
 
 }
