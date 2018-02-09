@@ -26,7 +26,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     private IContactsGroupListener mContactsGroupListener;
     private IContactListener mContactListener;
     private int mHighlightedContactsGroupPosition;
-    private int mPreviousHighlightedContactsGroupPosition;
     private String mSelectedGroupLetter;
     private long mSelectedContactId;
 
@@ -97,18 +96,18 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void highlightContactsGroup(int position) {
         // while we have a selected contact group no highlighting is made
         if (mSelectedContactsGroupPosition != NO_CONTACT_POSITION) {
-            if (mPreviousHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
-                notifyItemChanged(mPreviousHighlightedContactsGroupPosition);
+            if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
+                notifyItemChanged(mHighlightedContactsGroupPosition);
             }
             mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
-            mPreviousHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
             return;
         }
 
         // refresh only if we have a change
         if (mHighlightedContactsGroupPosition != position) {
-            mPreviousHighlightedContactsGroupPosition = mHighlightedContactsGroupPosition;
-            notifyItemChanged(mPreviousHighlightedContactsGroupPosition);
+            if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
+                notifyItemChanged(mHighlightedContactsGroupPosition);
+            }
             mHighlightedContactsGroupPosition = position;
             notifyItemChanged(position);
         }

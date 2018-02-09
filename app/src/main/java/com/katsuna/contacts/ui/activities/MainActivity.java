@@ -120,35 +120,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
         mRecyclerView = findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
-
-        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                // findPosition to highlight
-
-                LinearLayoutManager lm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
-                int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
-                int lastVisibleItemPosition = lm.findLastVisibleItemPosition();
-
-                if (firstVisibleItemPosition < lastVisibleItemPosition) {
-                    View firstVisibleView = lm.findViewByPosition(firstVisibleItemPosition);
-                    Rect outR = new Rect();
-                    firstVisibleView.getHitRect(outR);
-
-                    int positionToHighlight;
-                    if (outR.bottom - 300 < 0) {
-                        positionToHighlight = firstVisibleItemPosition + 1;
-
-                        // order highlight
-                        if (mAdapter != null) {
-                            mAdapter.highlightContactsGroup(positionToHighlight);
-                        }
-                    }
-                }
-
-                //Log.e(TAG, " p1: " + firstVisibleItemPosition + " p2: " + lastVisibleItemPosition );
-            }
-        });
+        mRecyclerView.setItemViewCacheSize(100);
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
