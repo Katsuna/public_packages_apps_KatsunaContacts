@@ -1,6 +1,5 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -9,11 +8,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.katsuna.commons.domain.Contact;
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKeyV2;
 import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfile;
 import com.katsuna.commons.entities.SizeProfileKeyV2;
 import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
-import com.katsuna.commons.utils.Shape;
+import com.katsuna.commons.utils.ColorAdjusterV2;
+import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.SizeAdjuster;
 import com.katsuna.commons.utils.SizeCalcV2;
 import com.katsuna.contacts.R;
@@ -69,6 +71,14 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             mActionButtonsContainer.setVisibility(View.GONE);
         }
 
+        ColorProfile colorProfile = mListener.getUserProfileContainer().getActiveUserProfile().colorProfile;
+        int secondaryColor1 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_1, colorProfile);
+        int secondaryColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_2, colorProfile);
+        int greyColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_GREY_2, colorProfile);
+
         int colorForTextFields;
         int colorForBackground;
         if (contactsGroupState.isFocused()) {
@@ -77,36 +87,35 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 // we have a contact selected in this contacts group and this is our contact
                 colorForTextFields = R.color.common_black87;
                 if (contactsGroupState.isPremium()) {
-                    colorForBackground = R.color.priority_two_tone_one;
+                    colorForBackground = secondaryColor2;
                 } else {
-                    colorForBackground = R.color.priority_three_tone_one;
+                    colorForBackground = secondaryColor1;
                 }
             } else {
                 // we have a contact selected in this contacts group but not this contact
                 colorForTextFields = R.color.common_black34;
-                colorForBackground = R.color.common_transparent;
+                colorForBackground = ContextCompat.getColor(itemView.getContext(),
+                        R.color.common_transparent);
             }
         } else {
             if (contactsGroupState.getContactId() > 0) {
                 // we have a contact selected but not in this contacts group
                 colorForTextFields = R.color.common_black34;
-                colorForBackground = R.color.common_transparent;
+                colorForBackground = ContextCompat.getColor(itemView.getContext(),
+                        R.color.common_transparent);
             } else {
                 // we have no contact selected
                 colorForTextFields = R.color.common_black87;
                 if (contactsGroupState.isPremium()) {
-                    colorForBackground = R.color.priority_two_tone_one;
-                } else if (contactsGroupState.isFocused()) {
-                    colorForBackground = R.color.priority_three_tone_one;
+                    colorForBackground = secondaryColor2;
                 } else {
-                    colorForBackground = R.color.priority_one_tone_one;
+                    colorForBackground = greyColor2;
                 }
             }
         }
         mContactName.setTextColor(ContextCompat.getColor(itemView.getContext(),colorForTextFields));
         mContactDesc.setTextColor(ContextCompat.getColor(itemView.getContext(),colorForTextFields));
-        itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(),
-                colorForBackground));
+        itemView.setBackgroundColor(colorForBackground);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,19 +194,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void adjustColorProfile() {
-        adjustPrimaryButton(itemView.getContext(), mCallButton);
-        adjustSecondaryButton(itemView.getContext(), mMessageButton);
-    }
-
-    private void adjustPrimaryButton(Context context, Button button) {
-        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
-        Shape.setRoundedBackground(button, color1);
-    }
-
-    private void adjustSecondaryButton(Context context, Button button) {
-        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
-        int white = ContextCompat.getColor(context, R.color.common_white);
-        Shape.setRoundedBorder(button, color1, white);
+        ColorAdjusterV2.adjustButtons(itemView.getContext(),
+                mListener.getUserProfileContainer().getActiveUserProfile(),
+                mCallButton, mMessageButton, mMoreText);
     }
 
     private void expandMoreActions(boolean flag) {

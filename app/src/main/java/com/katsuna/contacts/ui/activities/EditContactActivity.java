@@ -1,11 +1,14 @@
 package com.katsuna.contacts.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -19,10 +22,14 @@ import com.katsuna.commons.domain.Description;
 import com.katsuna.commons.domain.Email;
 import com.katsuna.commons.domain.Name;
 import com.katsuna.commons.domain.Phone;
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKeyV2;
+import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.providers.ContactProvider;
+import com.katsuna.commons.utils.ColorAdjusterV2;
+import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
-import com.katsuna.commons.utils.Shape;
 import com.katsuna.contacts.R;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -48,6 +55,8 @@ public class EditContactActivity extends PhotoActivity {
     private Button mCancelButton;
     private TextView mMoreButton;
     private TextView mAddPhotoText;
+    private CardView mContactContainerCard;
+    private View mContactContainerCardInner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,7 @@ public class EditContactActivity extends PhotoActivity {
 
         initControls();
         loadContact();
+        setupFab();
     }
 
     @Override
@@ -99,6 +109,9 @@ public class EditContactActivity extends PhotoActivity {
     private void initControls() {
         initToolbar(R.drawable.common_ic_close_black54_24dp);
 
+        mContactContainerCard = findViewById(R.id.contact_container_card);
+        mContactContainerCardInner = findViewById(R.id.contact_container_card_inner);
+        mName = findViewById(R.id.name);
         mName = findViewById(R.id.name);
         mSurname = findViewById(R.id.surname);
         mDescription = findViewById(R.id.description);
@@ -121,33 +134,6 @@ public class EditContactActivity extends PhotoActivity {
             @Override
             public void onClick(View v) {
                 selectImage();
-            }
-        });
-        mSaveButton = findViewById(R.id.button_save);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateContact();
-            }
-        });
-
-        mCancelButton = findViewById(R.id.button_cancel);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        mMoreButton = findViewById(R.id.txt_more);
-        mMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTelephone3.getVisibility() == View.VISIBLE) {
-                    showMoreFields(false);
-                } else {
-                    showMoreFields(true);
-                }
             }
         });
     }
@@ -348,28 +334,72 @@ public class EditContactActivity extends PhotoActivity {
     @Override
     void loadPhoto(Uri uri) {
         Picasso.with(this).load(uri).fit().centerCrop().into(mPhoto);
+        showAddPhotoInstructions(false);
     }
 
     @Override
     void removePhoto() {
         mPhoto.setImageDrawable(null);
         mContact.setPhoto(null);
+        showAddPhotoInstructions(true);
+    }
+
+    private void showAddPhotoInstructions(boolean flag) {
+        mAddPhotoText.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void adjustColorProfile() {
-        adjustPrimaryButton(this, mSaveButton);
-        adjustSecondaryButton(this, mCancelButton);
+        UserProfile userProfile = mUserProfileContainer.getActiveUserProfile();
+        ColorAdjusterV2.adjustButtons(this, userProfile, mSaveButton, mCancelButton, mMoreButton);
+
+        int primaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2,
+                userProfile.colorProfile);
+
+        int secondaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_COLOR_2,
+                userProfile.colorProfile);
+
+        mContactContainerCard.setCardBackgroundColor(ColorStateList.valueOf(primaryColor2));
+        mContactContainerCardInner.setBackgroundColor(secondaryColor2);
+
+
+        if (mPhoto.getDrawable() == null) {
+            mPhoto.setBackground(getAddPhotoDrawable());
+        }
     }
 
-    private void adjustPrimaryButton(Context context, Button button) {
-        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
-        Shape.setRoundedBackground(button, color1);
+    private Drawable getAddPhotoDrawable() {
+        // calc color and icon
+        ColorProfile colorProfile = mUserProfileContainer.getActiveUserProfile().colorProfile;
+        int secondaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_COLOR_2,
+                colorProfile);
+
+        // adjust circle
+        GradientDrawable circleDrawable =
+                (GradientDrawable) getDrawable(R.drawable.common_circle_black);
+        if (circleDrawable != null) {
+            circleDrawable.setColor(secondaryColor2);
+        }
+
+        // adjust icon
+        Drawable icon = getDrawable(R.drawable.ic_add_a_photo_black54_24dp);
+
+        // compose layers
+        Drawable[] layers = {circleDrawable, icon };
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+
+        int diff = getResources().getDimensionPixelSize(R.dimen.add_a_photo_inset);
+        layerDrawable.setLayerInset(1, diff, diff, diff, diff);
+        return layerDrawable;
     }
 
-    private void adjustSecondaryButton(Context context, Button button) {
-        int color1 = ContextCompat.getColor(context, R.color.buttons_color);
-        int white = ContextCompat.getColor(context, R.color.common_white);
-        Shape.setRoundedBorder(button, color1, white);
+    private void setupFab() {
+        mFab1 = findViewById(R.id.edit_contact_fab);
+        mFab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateContact();
+            }
+        });
     }
 
 }

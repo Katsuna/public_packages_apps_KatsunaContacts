@@ -9,4 +9,5 @@
     <dimen name="contact_field_margin_top">10dp</dimen>
     <dimen name="contact_field_margin_start">40dp</dimen>
     <dimen name="contact_item_height">50dp</dimen>
+    <dimen name="add_a_photo_inset">28dp</dimen>
 </resources>

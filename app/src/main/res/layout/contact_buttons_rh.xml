@@ -23,8 +23,7 @@
         android:background="@color/common_white"
         android:paddingEnd="14dp"
         android:paddingStart="14dp"
-        android:text="@string/common_message"
-        android:textColor="@color/buttons_color" />
+        android:text="@string/common_message" />
 
     <TextView
         android:id="@+id/txt_more"
@@ -34,14 +33,13 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_toStartOf="@id/button_cancel"
+        android:layout_toStartOf="@id/button_message"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="start|center"
         android:singleLine="true"
         android:text="@string/common_more"
         android:textAllCaps="true"
-        android:textColor="@color/more_color"
         android:textSize="14sp" />
 
 </RelativeLayout>

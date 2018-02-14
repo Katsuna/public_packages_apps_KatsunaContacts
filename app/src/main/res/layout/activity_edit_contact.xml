@@ -20,7 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="start|center"
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -31,9 +31,8 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/circle_blue"
                     android:contentDescription="@string/contact_photo"
-                    app:riv_mutate_background="true"
+                    app:riv_mutate_background="false"
                     app:riv_oval="true"
                     app:riv_tile_mode="repeat" />
 
@@ -41,7 +40,9 @@
                     android:id="@+id/add_photo_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="58dp"
+                    android:layout_marginStart="8dp"
                     android:fontFamily="sans-serif-medium"
                     android:minWidth="28dp"
                     android:text="@string/tap_to_add_photo"
@@ -51,7 +52,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/contacts_group_container_card"
+                android:id="@+id/contact_container_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
@@ -59,16 +60,14 @@
                 android:layout_marginStart="8dp"
                 android:clipToPadding="false"
                 android:gravity="center"
-                app:cardBackgroundColor="@color/priority_two"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
-                    android:id="@+id/contacts_group_container_card_inner"
+                    android:id="@+id/contact_container_card_inner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:background="@color/priority_two_tone_one"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -146,8 +145,7 @@
                         android:id="@+id/telephone3"
                         style="@style/editContactField"
                         android:hint="@string/telephone3"
-                        android:inputType="phone"
-                        android:visibility="gone" />
+                        android:inputType="phone" />
 
                     <LinearLayout
                         android:id="@+id/email_container"
@@ -179,67 +177,7 @@
                         style="@style/editContactField"
                         android:layout_marginBottom="8dp"
                         android:hint="@string/address"
-                        android:inputType="textMultiLine"
-                        android:visibility="gone" />
-
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@color/common_black34" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="16dp">
-
-                        <Button
-                            android:id="@+id/button_save"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="8dp"
-                            android:minWidth="@dimen/common_button_min_width"
-                            android:paddingEnd="14dp"
-                            android:paddingStart="14dp"
-                            android:text="@string/common_save"
-                            android:textColor="@color/common_white" />
-
-                        <Button
-                            android:id="@+id/button_cancel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_toStartOf="@id/button_save"
-                            android:background="@color/common_white"
-                            android:minWidth="@dimen/common_button_min_width"
-                            android:paddingEnd="14dp"
-                            android:paddingStart="14dp"
-                            android:text="@string/common_cancel"
-                            android:textColor="@color/buttons_color" />
-
-                        <TextView
-                            android:id="@+id/txt_more"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_toStartOf="@id/button_cancel"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:gravity="start|center"
-                            android:singleLine="true"
-                            android:text="@string/common_more"
-                            android:textAllCaps="true"
-                            android:textColor="@color/more_color"
-                            android:textSize="14sp" />
-
-                    </RelativeLayout>
-
+                        android:inputType="textMultiLine" />
 
                 </LinearLayout>
 
@@ -248,6 +186,16 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/edit_contact_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="@dimen/common_fab_margin"
+        android:layout_marginStart="@dimen/common_fab_margin"
+        android:layout_marginTop="76dp"
+        android:src="@drawable/common_ic_done_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 

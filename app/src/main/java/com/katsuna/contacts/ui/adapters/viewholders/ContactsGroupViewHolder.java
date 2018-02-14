@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.katsuna.commons.entities.ColorProfile;
+import com.katsuna.commons.entities.ColorProfileKeyV2;
 import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
+import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.ui.adapters.ContactsAdapter;
 import com.katsuna.contacts.ui.listeners.IContactListener;
@@ -85,29 +88,45 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         int cardColor;
         int cardColorAlpha;
 
+        ColorProfile colorProfile = mUserProfileContainer.getActiveUserProfile().colorProfile;
+        int primaryColor1 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.PRIMARY_COLOR_1, colorProfile);
+        int primaryColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.PRIMARY_COLOR_2, colorProfile);
+        int secondaryColor1 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_1, colorProfile);
+        int secondaryColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_2, colorProfile);
+        int greyColor1 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.PRIMARY_GREY_1, colorProfile);
+        int greyColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_GREY_2, colorProfile);
+
         if (state.isPremium()) {
-            cardColor = R.color.priority_two;
-            cardColorAlpha = R.color.priority_two_tone_one;
+            cardColor = primaryColor2;
+            cardColorAlpha = secondaryColor2;
         } else if (state.isFocused()) {
-            cardColor = R.color.priority_three;
-            cardColorAlpha = R.color.priority_three_tone_one;
+            cardColor = primaryColor1;
+            cardColorAlpha = secondaryColor1;
         } else if (state.isHighlighted()) {
-            cardColor = R.color.priority_two;
-            cardColorAlpha = R.color.priority_one_tone_one;
+            cardColor = primaryColor2;
+            cardColorAlpha = secondaryColor2;
         } else {
-            cardColor = R.color.priority_one;
-            cardColorAlpha = R.color.priority_one_tone_one;
+            cardColor = greyColor1;
+            cardColorAlpha = greyColor2;
         }
 
         if (state.getContactId() > 0) {
-            cardColorAlpha = R.color.common_unfocused;
+            cardColorAlpha = ContextCompat.getColor(itemView.getContext(), R.color.common_unfocused);
         }
 
         // set colors
-        mContactsGroupContainerCard.setCardBackgroundColor(ColorStateList.valueOf(
-                ContextCompat.getColor(itemView.getContext(), cardColor)));
-        mContactsGroupContainerCardInner.setBackgroundColor(
-                ContextCompat.getColor(itemView.getContext(), cardColorAlpha));
+        mContactsGroupContainerCard.setCardBackgroundColor(ColorStateList.valueOf(cardColor));
+        mContactsGroupContainerCardInner.setBackgroundColor(cardColorAlpha);
+
+        mStarDesc.setTextColor(primaryColor2);
+        mStartLetter.setTextColor(primaryColor2);
+        mStarIcon.setColorFilter(primaryColor2);
     }
 
     public void showPopupFrame(boolean enabled) {
