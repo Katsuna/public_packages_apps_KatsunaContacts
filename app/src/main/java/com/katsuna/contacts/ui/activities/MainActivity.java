@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.katsuna.commons.controls.KatsunaNavigationView;
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.domain.Phone;
 import com.katsuna.commons.entities.KatsunaConstants;
@@ -73,6 +73,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private boolean mReadContactsPermissionDontAsk = false;
     private FirebaseAnalytics mFirebaseAnalytics;
     private boolean reloadData = true;
+    private KatsunaNavigationView mKatsunaNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,9 +342,8 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     }
 
     private void setupDrawerLayout() {
-        NavigationView view = findViewById(R.id.navigation_view);
-        assert view != null;
-        view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mKatsunaNavigationView = findViewById(R.id.katsuna_navigation_view);
+        mKatsunaNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
