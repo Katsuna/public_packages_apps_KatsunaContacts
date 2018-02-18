@@ -8,153 +8,153 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/contacts_io_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:visibility="gone">
-
-            <com.katsuna.commons.controls.KatsunaButton
-                android:id="@+id/deleteContacts"
-                android:layout_width="@dimen/common_settings_button_width"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:text="@string/delete_contacts"
-                android:textAllCaps="false"
-                app:sizeProfileKey="SUBHEADER" />
-
-            <com.katsuna.commons.controls.KatsunaTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/deleteContacts"
-                android:text="@string/delete_contacts"
-                app:sizeProfileKey="SUBHEADER" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp">
-
-            <com.katsuna.commons.controls.KatsunaButton
-                android:id="@+id/importContacts"
-                android:layout_width="@dimen/common_settings_button_width"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:text="@string/import_contacts"
-                android:textAllCaps="false"
-                app:sizeProfileKey="SUBHEADER" />
-
-            <com.katsuna.commons.controls.KatsunaTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/importContacts"
-                android:text="@string/import_contacts"
-                app:sizeProfileKey="SUBHEADER" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp">
-
-            <com.katsuna.commons.controls.KatsunaButton
-                android:id="@+id/exportContacts"
-                android:layout_width="@dimen/common_settings_button_width"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:text="@string/export_contacts"
-                android:textAllCaps="false"
-                app:sizeProfileKey="SUBHEADER" />
-
-            <com.katsuna.commons.controls.KatsunaTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/exportContacts"
-                android:text="@string/export_contacts"
-                app:sizeProfileKey="SUBHEADER" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
             android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:background="@color/common_grey300" />
+            android:clipToPadding="false"
+            android:gravity="center"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
 
-        <com.katsuna.commons.controls.KatsunaTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="@string/contacts_display_format"
-            app:sizeProfileKey="BODY_2" />
+            <LinearLayout
+                android:id="@+id/contacts_io_card_inner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/display_sort_group"
+                <TextView
+                    android:id="@+id/import_contacts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@drawable/ic_import"
+                    android:gravity="center"
+                    android:minHeight="48dp"
+                    android:text="@string/import_contacts"
+                    android:textColor="@color/common_black54"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/common_black12" />
+
+                <TextView
+                    android:id="@+id/export_contacts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@drawable/ic_export"
+                    android:gravity="center"
+                    android:minHeight="48dp"
+                    android:text="@string/export_contacts"
+                    android:textColor="@color/common_black54"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/contacts_display_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:clipToPadding="false"
+            android:gravity="center"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
 
-            <RadioButton
-                android:id="@+id/surname_first_button"
+            <LinearLayout
+                android:id="@+id/contacts_display_card_inner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
-                android:drawablePadding="10dp"
-                android:text="@string/surname_first"
-                android:textAlignment="textStart" />
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/name_first_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
-                android:drawablePadding="10dp"
-                android:text="@string/name_first"
-                android:textAlignment="textStart" />
-        </RadioGroup>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:minHeight="19dp"
+                    android:text="@string/contacts_display_format"
+                    android:textColor="@color/common_black54"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/common_black12" />
+
+                <RadioGroup
+                    android:id="@+id/display_sort_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/surname_first_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="12dp"
+                        android:button="@null"
+                        android:drawablePadding="10dp"
+                        android:drawableStart="?android:attr/listChoiceIndicatorSingle"
+                        android:minHeight="48dp"
+                        android:text="@string/surname_first"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/common_black54"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/common_black12" />
+
+                    <RadioButton
+                        android:id="@+id/name_first_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="12dp"
+                        android:button="@null"
+                        android:drawablePadding="10dp"
+                        android:drawableStart="?android:attr/listChoiceIndicatorSingle"
+                        android:minHeight="48dp"
+                        android:text="@string/name_first"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/common_black54"
+                        android:textSize="16sp" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
         <include layout="@layout/common_app_settings" />
 

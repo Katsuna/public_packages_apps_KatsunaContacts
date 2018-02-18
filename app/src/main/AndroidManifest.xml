@@ -29,6 +29,7 @@
         android:required="true" />
 
     <application
+        android:name=".ContactsApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
         android:icon="@mipmap/ic_launcher"
@@ -89,20 +90,6 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.SelectContactsActivity"
-            android:label="@string/title_activity_select_contacts"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
 
         <activity
             android:name=".ui.activities.InfoActivity"
