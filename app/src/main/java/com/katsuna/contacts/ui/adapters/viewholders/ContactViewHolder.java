@@ -19,6 +19,7 @@ import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.SizeAdjuster;
 import com.katsuna.commons.utils.SizeCalcV2;
 import com.katsuna.contacts.R;
+import com.katsuna.contacts.data.ContactDescriptionResolver;
 import com.katsuna.contacts.ui.listeners.IContactListener;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -56,7 +57,8 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Contact contact, final int position,
                      final ContactsGroupState contactsGroupState) {
         mContactName.setText(contact.getDisplayName());
-        String contactDesc = contact.showDescription();
+
+        String contactDesc = ContactDescriptionResolver.getDescription(itemView.getContext(), contact);
         if (TextUtils.isEmpty(contactDesc)) {
             mContactDesc.setVisibility(View.GONE);
         } else {

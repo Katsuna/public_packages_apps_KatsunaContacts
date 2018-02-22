@@ -44,12 +44,14 @@ import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ContactArranger;
 import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.contacts.R;
+import com.katsuna.contacts.data.FetchContactsInfoAsyncTask;
 import com.katsuna.contacts.ui.adapters.ContactsGroupAdapter;
 import com.katsuna.contacts.ui.listeners.IContactListener;
 import com.katsuna.contacts.ui.listeners.IContactsGroupListener;
 import com.konifar.fab_transformation.FabTransformation;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static com.katsuna.commons.utils.Constants.KATSUNA_PRIVACY_URL;
@@ -71,15 +73,13 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private FrameLayout mPopupFrame;
     private int mSelectedPosition;
     private boolean mReadContactsPermissionDontAsk = false;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private boolean reloadData = true;
-    private KatsunaNavigationView mKatsunaNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initControls();
         setupDrawerLayout();
         setupFab();
@@ -121,7 +121,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
         mRecyclerView = findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
-        mRecyclerView.setItemViewCacheSize(100);
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -133,11 +132,10 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         mNoResultsView = findViewById(R.id.no_results);
 
         mPopupFrame = findViewById(R.id.popup_frame);
-        mPopupFrame.setOnTouchListener(new View.OnTouchListener() {
+        mPopupFrame.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 showPopup(false);
-                return true;
             }
         });
         mFabContainer = findViewById(R.id.fab_container);
@@ -162,7 +160,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         mNextButton = findViewById(R.id.next_page_button);
         mNextButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
-            Runnable mAction = new Runnable() {
+            final Runnable mAction = new Runnable() {
                 @Override
                 public void run() {
                     mLettersList.scrollBy(0, 30);
@@ -191,7 +189,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         mPrevButton = findViewById(R.id.prev_page_button);
         mPrevButton.setOnTouchListener(new View.OnTouchListener() {
             private Handler mHandler;
-            Runnable mAction = new Runnable() {
+            final Runnable mAction = new Runnable() {
                 @Override
                 public void run() {
                     mLettersList.scrollBy(0, -30);
@@ -342,7 +340,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     }
 
     private void setupDrawerLayout() {
-        mKatsunaNavigationView = findViewById(R.id.katsuna_navigation_view);
+        KatsunaNavigationView mKatsunaNavigationView = findViewById(R.id.katsuna_navigation_view);
         mKatsunaNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -414,6 +412,12 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         //get contacts from device
         ContactProvider contactProvider = new ContactProvider(this);
         List<Contact> contactList = contactProvider.getContacts();
+
+        // load contants info cache
+        Contact[] contactsArray = new Contact[contactList.size()];
+        new FetchContactsInfoAsyncTask(new WeakReference<Context>(this))
+                .execute(contactList.toArray(contactsArray));
+
         mModels = ContactArranger.getContactsGroups(contactList);
         mAdapter = new ContactsGroupAdapter(mModels, this, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -627,12 +631,14 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             phonesArray[i++] = phone.getNumber();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.alert_title, null);
-        builder.setCustomTitle(view);
-        builder.setItems(phonesArray, listener);
-        builder.show();
+        if (inflater != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.alert_title, null);
+            builder.setCustomTitle(view);
+            builder.setItems(phonesArray, listener);
+            builder.show();
+        }
     }
 
     private void callNumber(String number) {

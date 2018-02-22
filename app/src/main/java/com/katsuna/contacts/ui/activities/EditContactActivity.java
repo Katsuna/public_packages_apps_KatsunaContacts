@@ -31,6 +31,7 @@ import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
 import com.katsuna.contacts.R;
+import com.katsuna.contacts.data.ContactsInfoCache;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -202,6 +203,9 @@ public class EditContactActivity extends PhotoActivity {
                 Bitmap bitmap = ((RoundedDrawable) mPhoto.getDrawable()).getSourceBitmap();
                 mContact.setPhoto(bitmap);
             }
+
+            // invalidate cache to reflect new changes
+            ContactsInfoCache.invalidateContact(mContact.getId());
 
             ContactProvider contactProvider = new ContactProvider(EditContactActivity.this);
             contactProvider.updateContact(mContact);

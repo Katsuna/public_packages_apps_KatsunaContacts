@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.ui.adapters.models.ContactsGroup;
 import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
 import com.katsuna.contacts.R;
@@ -18,9 +19,8 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int NO_CONTACT_POSITION = -1;
 
-    private List<ContactsGroup> mOriginalContacts;
+    private final List<ContactsGroup> mOriginalContacts;
     private List<ContactsGroup> mFilteredContacts;
-    private int mPreviousSelectedContactsGroupPosition = NO_CONTACT_POSITION;
     private int mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
 
     private IContactsGroupListener mContactsGroupListener;
@@ -114,7 +114,7 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void selectContactsGroup(int position) {
-        mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
+        int mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
         mSelectedContactsGroupPosition = position;
 
         // if we have a contact selected we must invalidate everything
@@ -148,12 +148,14 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public int getPositionByContactId(long contactId) {
         int position = NO_CONTACT_POSITION;
-/*        for (int i = 0; i < mFilteredContacts.size(); i++) {
-            if (mFilteredContacts.get(i).getContact().getId() == contactId) {
-                position = i;
-                break;
+        for (int i = 0; i < mFilteredContacts.size(); i++) {
+            for (Contact contact : mFilteredContacts.get(i).contactList) {
+                if (contact.getId() == contactId) {
+                    position = i;
+                    break;
+                }
             }
-        }*/
+        }
         return position;
     }
 
