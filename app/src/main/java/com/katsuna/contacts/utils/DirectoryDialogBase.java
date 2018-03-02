@@ -16,32 +16,31 @@ import com.katsuna.commons.utils.SizeAdjuster;
 import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
 
-public class DirectoryDialogBase {
+class DirectoryDialogBase {
 
-    protected final Context m_context;
+    final Context m_context;
 
-    protected UserProfileContainer mProfileContainer;
-    protected LinearLayout.LayoutParams mLayoutParamsMini;
-    protected int mFullMargin;
-    protected int mHalfMargin;
+    UserProfileContainer mProfileContainer;
+    private LinearLayout.LayoutParams mLayoutParamsMini;
+    int mFullMargin;
 
-    public DirectoryDialogBase(Context context) {
+    DirectoryDialogBase(Context context) {
         m_context = context;
     }
 
-    protected void init() {
+    void init() {
         // profile and common dimens init
         mProfileContainer = ProfileReader.getKatsunaUserProfile(m_context);
         mLayoutParamsMini = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mFullMargin = m_context.getResources()
                 .getDimensionPixelSize(R.dimen.export_dialog_full_margin);
-        mHalfMargin = m_context.getResources()
+        int mHalfMargin = m_context.getResources()
                 .getDimensionPixelSize(R.dimen.export_dialog_half_margin);
         mLayoutParamsMini.setMargins(mFullMargin, mHalfMargin, mFullMargin, mHalfMargin);
     }
 
-    protected TextView createTitle(int titleId) {
+    TextView createTitle(int titleId) {
         TextView title = new TextView(m_context);
         title.setAllCaps(false);
         title.setLayoutParams(mLayoutParamsMini);
@@ -54,7 +53,7 @@ public class DirectoryDialogBase {
         return title;
     }
 
-    protected TextView createDescription(int descriptionId) {
+    TextView createDescription(int descriptionId) {
         TextView description = new TextView(m_context);
         description.setAllCaps(false);
         description.setLayoutParams(mLayoutParamsMini);
@@ -67,7 +66,7 @@ public class DirectoryDialogBase {
         return description;
     }
 
-    protected void adjustButtons(Button positiveButton, Button negativeButton) {
+    void adjustButtons(Button positiveButton, Button negativeButton) {
         // adjust button container
         adjustButtonContainer(negativeButton);
 
@@ -83,7 +82,7 @@ public class DirectoryDialogBase {
         lp.setMargins(mFullMargin, 0, mFullMargin, 0);
     }
 
-    protected void adjustButtonContainer(Button button) {
+    void adjustButtonContainer(Button button) {
         int bgColor = ContextCompat.getColor(m_context, R.color.common_grey300);
 
         LinearLayout buttonsContainer = ((LinearLayout) button.getParent());
@@ -92,7 +91,7 @@ public class DirectoryDialogBase {
 
     }
 
-    protected void adjustPositiveButton(Button button) {
+    void adjustPositiveButton(Button button) {
         button.setAllCaps(false);
 
         OpticalParams opticalParams =
@@ -106,7 +105,7 @@ public class DirectoryDialogBase {
                 button);
     }
 
-    protected void adjustNegativeButton(Button button) {
+    private void adjustNegativeButton(Button button) {
         button.setAllCaps(false);
         OpticalParams opticalParams =
                 SizeCalc.getOpticalParams(SizeProfileKey.ACTION_BUTTON,

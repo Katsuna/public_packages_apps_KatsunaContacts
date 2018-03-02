@@ -83,6 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="12dp"
+                            android:contentDescription="@string/name"
                             android:scaleType="fitStart"
                             android:src="@drawable/ic_nice_guy_black54_24dp" />
 
@@ -123,6 +124,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:contentDescription="@string/telephone1"
                             android:scaleType="fitStart"
                             android:src="@drawable/ic_call_black54_24dp" />
 
@@ -160,6 +162,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
+                            android:contentDescription="@string/email"
                             android:scaleType="fitStart"
                             android:src="@drawable/ic_email_black54_24dp" />
 

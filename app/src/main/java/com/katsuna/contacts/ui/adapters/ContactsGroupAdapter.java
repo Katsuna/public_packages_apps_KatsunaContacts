@@ -1,5 +1,6 @@
 package com.katsuna.contacts.ui.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int NO_CONTACT_POSITION = -1;
 
     private final List<ContactsGroup> mOriginalContacts;
-    private List<ContactsGroup> mFilteredContacts;
     private int mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
 
     private IContactsGroupListener mContactsGroupListener;
@@ -31,7 +31,6 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private ContactsGroupAdapter(List<ContactsGroup> models) {
         mOriginalContacts = models;
-        mFilteredContacts = models;
     }
 
     public ContactsGroupAdapter(List<ContactsGroup> models,
@@ -44,19 +43,20 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mFilteredContacts.size();
+        return mOriginalContacts.size();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group, parent,
                 false);
         return new ContactsGroupViewHolder(view, mContactsGroupListener, mContactListener);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final ContactsGroup model = mFilteredContacts.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        final ContactsGroup model = mOriginalContacts.get(position);
 
         boolean focused = mSelectedContactsGroupPosition == position;
         boolean unfocused = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
@@ -73,24 +73,19 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public int getPositionByStartingLetter(String letter) {
         int position = NO_CONTACT_POSITION;
-        for (int i = 0; i < mFilteredContacts.size(); i++) {
+        for (int i = 0; i < mOriginalContacts.size(); i++) {
             //don't focus on premium contacts
-            ContactsGroup model = mFilteredContacts.get(i);
+            ContactsGroup model = mOriginalContacts.get(i);
             if (model.premium) {
                 continue;
             }
 
-            if (mFilteredContacts.get(i).firstLetter.equals(letter)) {
+            if (mOriginalContacts.get(i).firstLetter.equals(letter)) {
                 position = i;
                 break;
             }
         }
         return position;
-    }
-
-    public void resetFilter() {
-        mFilteredContacts = mOriginalContacts;
-        notifyDataSetChanged();
     }
 
     public void highlightContactsGroup(int position) {
@@ -148,8 +143,8 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public int getPositionByContactId(long contactId) {
         int position = NO_CONTACT_POSITION;
-        for (int i = 0; i < mFilteredContacts.size(); i++) {
-            for (Contact contact : mFilteredContacts.get(i).contactList) {
+        for (int i = 0; i < mOriginalContacts.size(); i++) {
+            for (Contact contact : mOriginalContacts.get(i).contactList) {
                 if (contact.getId() == contactId) {
                     position = i;
                     break;

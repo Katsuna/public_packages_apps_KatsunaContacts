@@ -26,7 +26,6 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
     private final UserProfileContainer mUserProfileContainer;
     private final CardView mContactsGroupContainerCard;
     private final View mContactsGroupContainerCardInner;
-    private final View mPopupFrame;
 
     private final TextView mStartLetter;
     private final ImageView mStarIcon;
@@ -37,7 +36,6 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
                                    IContactsGroupListener contactsGroupListener,
                                    IContactListener contactListener) {
         super(view);
-        mPopupFrame = view.findViewById(R.id.popup_frame);
         mContactsGroupListener = contactsGroupListener;
         mContactListener = contactListener;
         mUserProfileContainer = contactsGroupListener.getUserProfileContainer();
@@ -127,14 +125,5 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         mStarDesc.setTextColor(primaryColor2);
         mStartLetter.setTextColor(primaryColor2);
         mStarIcon.setColorFilter(primaryColor2);
-    }
-
-    public void showPopupFrame(boolean enabled) {
-        if (enabled) {
-            mPopupFrame.setVisibility(View.VISIBLE);
-        } else {
-            mPopupFrame.setVisibility(View.GONE);
-        }
-
     }
 }

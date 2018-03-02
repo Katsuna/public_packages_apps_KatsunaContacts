@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +25,6 @@ import com.katsuna.commons.entities.ColorProfile;
 import com.katsuna.commons.entities.ColorProfileKeyV2;
 import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.providers.ContactProvider;
-import com.katsuna.commons.utils.ColorAdjusterV2;
 import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
@@ -52,9 +50,6 @@ public class EditContactActivity extends PhotoActivity {
     private EditText mAddress;
     private RoundedImageView mPhoto;
     private Contact mContact;
-    private Button mSaveButton;
-    private Button mCancelButton;
-    private TextView mMoreButton;
     private TextView mAddPhotoText;
     private CardView mContactContainerCard;
     private View mContactContainerCardInner;
@@ -143,11 +138,9 @@ public class EditContactActivity extends PhotoActivity {
         if (flag) {
             mTelephone3.setVisibility(View.VISIBLE);
             mAddress.setVisibility(View.VISIBLE);
-            mMoreButton.setText(R.string.common_less);
         } else {
             mTelephone3.setVisibility(View.GONE);
             mAddress.setVisibility(View.GONE);
-            mMoreButton.setText(R.string.common_more);
         }
     }
 
@@ -354,8 +347,6 @@ public class EditContactActivity extends PhotoActivity {
 
     private void adjustColorProfile() {
         UserProfile userProfile = mUserProfileContainer.getActiveUserProfile();
-        ColorAdjusterV2.adjustButtons(this, userProfile, mSaveButton, mCancelButton, mMoreButton);
-
         int primaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2,
                 userProfile.colorProfile);
 

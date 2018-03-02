@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -79,7 +80,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        FirebaseAnalytics.getInstance(this);
         initControls();
         setupDrawerLayout();
         setupFab();
@@ -121,6 +122,33 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
         mRecyclerView = findViewById(R.id.contacts_list);
         mRecyclerView.setItemAnimator(null);
+        mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                // findPosition to highlight
+
+                LinearLayoutManager lm = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
+                int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = lm.findLastVisibleItemPosition();
+
+                if (firstVisibleItemPosition < lastVisibleItemPosition) {
+                    View firstVisibleView = lm.findViewByPosition(firstVisibleItemPosition);
+                    Rect outR = new Rect();
+                    firstVisibleView.getHitRect(outR);
+
+                    int positionToHighlight;
+                    if (outR.bottom - 300 < 0) {
+                        positionToHighlight = firstVisibleItemPosition + 1;
+
+                        // order highlight
+                        if (mAdapter != null) {
+                            mAdapter.highlightContactsGroup(positionToHighlight);
+                        }
+                    }
+                }
+            }
+        });
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -172,6 +200,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        v.performClick();
                         if (mHandler != null) return true;
                         mHandler = new Handler();
                         mHandler.postDelayed(mAction, 10);
@@ -201,6 +230,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        v.performClick();
                         if (mHandler != null) return true;
                         mHandler = new Handler();
                         mHandler.postDelayed(mAction, 10);
@@ -366,10 +396,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
                 return true;
             }
         });
-    }
-
-    private boolean isChanged() {
-        return mModels == null;
     }
 
     private void markChanged() {
@@ -562,10 +588,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         refreshLastSelectionTimestamp();
     }
 
-    private int getCenter() {
-        return (mRecyclerView.getHeight() / 2) - 270;
-    }
-
     private void scrollToPositionWithOffset(int position, int offset) {
         ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                 .scrollToPositionWithOffset(position, offset);
@@ -682,17 +704,6 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", number, null));
         i.putExtra(KatsunaConstants.EXTRA_DISPLAY_NAME, name);
         startActivity(i);
-    }
-
-    private void search(String query) {
-        if (mAdapter == null) {
-            return;
-        }
-        if (TextUtils.isEmpty(query)) {
-            mAdapter.resetFilter();
-        } else {
-            //mAdapter.getFilter().filter(query);
-        }
     }
 
     private void showNoResultsView() {

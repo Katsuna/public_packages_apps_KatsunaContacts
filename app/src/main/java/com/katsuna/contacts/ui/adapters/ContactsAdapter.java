@@ -1,5 +1,6 @@
 package com.katsuna.contacts.ui.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mContactsGroupState = contactsGroupState;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         boolean isRightHanded = mContactListener.getUserProfileContainer().isRightHanded();
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.contact_v2, parent, false);
@@ -42,7 +44,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Contact contact = mContacts.get(position);
         ContactViewHolder contactViewHolder = (ContactViewHolder) holder;
         contactViewHolder.bind(contact, position, mContactsGroupState);

@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -57,7 +56,7 @@ public class CreateContactActivity extends PhotoActivity {
     }
 
     private void initControls() {
-        mPhoto = (RoundedImageView) findViewById(R.id.photo);
+        mPhoto = findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,12 +64,12 @@ public class CreateContactActivity extends PhotoActivity {
             }
         });
 
-        mName = (EditText) findViewById(R.id.name);
-        mSurname = (EditText) findViewById(R.id.surname);
-        mTelephone = (EditText) findViewById(R.id.telephone);
-        mDescription = (EditText) findViewById(R.id.description);
+        mName = findViewById(R.id.name);
+        mSurname = findViewById(R.id.surname);
+        mTelephone = findViewById(R.id.telephone);
+        mDescription = findViewById(R.id.description);
 
-        mFab1 = (FloatingActionButton) findViewById(R.id.new_contact_fab);
+        mFab1 = findViewById(R.id.new_contact_fab);
         mFab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +102,7 @@ public class CreateContactActivity extends PhotoActivity {
             }
         });
 
-        mNoPhotoContainer = (LinearLayout) findViewById(R.id.noPhotoContainer);
+        mNoPhotoContainer = findViewById(R.id.noPhotoContainer);
         mNoPhotoContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -243,15 +243,14 @@ public class DirectoryChooserDialog extends DirectoryDialogBase {
                 builder.setTextSelected(new KatsunaAlertBuilder.KatsunaAlertText() {
                     @Override
                     public void textSelected(String newDir) {
-                        String newDirName = newDir.toString();
                         // Create new directory
-                        if (createSubDir(m_dir + "/" + newDirName)) {
+                        if (createSubDir(m_dir + "/" + newDir)) {
                             // Navigate into the new directory
-                            m_dir += "/" + newDirName;
+                            m_dir += "/" + newDir;
                             updateDirectory();
                         } else {
                             Toast.makeText(m_context,
-                                    String.format(m_context.getString(R.string.folder_creation_failed), newDirName),
+                                    String.format(m_context.getString(R.string.folder_creation_failed), newDir),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

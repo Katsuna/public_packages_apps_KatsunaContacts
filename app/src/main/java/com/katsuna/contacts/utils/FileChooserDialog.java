@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.katsuna.commons.entities.UserProfileContainer;
 import com.katsuna.contacts.R;
 
 import java.io.File;
