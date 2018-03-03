@@ -22,7 +22,7 @@
             android:paddingBottom="200dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/contact" />
+            tools:listitem="@layout/contact_v2" />
 
         <TextView
             android:id="@+id/no_results"

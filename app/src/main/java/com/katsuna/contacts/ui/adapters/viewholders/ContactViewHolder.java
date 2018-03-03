@@ -32,8 +32,6 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
     private final Button mMessageButton;
     private final TextView mMoreText;
     private final View mMoreActionsContainer;
-    private final View mEditContactContainer;
-    private final View mDeleteContactContainer;
     private final TextView mEditContactText;
     private final TextView mDeleteContactText;
 
@@ -48,8 +46,6 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
         mMessageButton = itemView.findViewById(R.id.button_message);
         mMoreText = itemView.findViewById(R.id.txt_more);
         mMoreActionsContainer = itemView.findViewById(R.id.more_actions_container);
-        mEditContactContainer = itemView.findViewById(R.id.edit_contact_container);
-        mDeleteContactContainer = itemView.findViewById(R.id.delete_contact_container);
         mEditContactText = itemView.findViewById(R.id.edit_contact_text);
         mDeleteContactText = itemView.findViewById(R.id.delete_contact_text);
     }
@@ -151,14 +147,14 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        mEditContactContainer.setOnClickListener(new View.OnClickListener() {
+        mEditContactText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.editContact(contact.getId());
             }
         });
 
-        mDeleteContactContainer.setOnClickListener(new View.OnClickListener() {
+        mDeleteContactText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.deleteContact(contact);

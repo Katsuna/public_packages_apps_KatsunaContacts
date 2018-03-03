@@ -52,70 +52,39 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/edit_contact_container"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/edit_contact_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:gravity="start|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/edit_contact_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:contentDescription="@string/common_edit_contact"
-                    android:src="@drawable/common_ic_edit_black54_28dp" />
-
-                <TextView
-                    android:id="@+id/edit_contact_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:text="@string/common_edit_contact"
-                    android:textColor="@color/common_black54"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/common_ic_edit_black54_28dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="@string/common_edit_contact"
+                android:textColor="@color/common_black54"
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/common_black12" />
 
-            <LinearLayout
-                android:id="@+id/delete_contact_container"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/delete_contact_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:gravity="start|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/delete_contact_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:contentDescription="@string/common_delete_contact"
-                    android:src="@drawable/common_ic_delete_black54_28dp" />
-
-                <TextView
-                    android:id="@+id/delete_contact_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:text="@string/common_delete_contact"
-                    android:textColor="@color/common_black54"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/common_ic_delete_black54_28dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="@string/common_delete_contact"
+                android:textColor="@color/common_black54"
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
