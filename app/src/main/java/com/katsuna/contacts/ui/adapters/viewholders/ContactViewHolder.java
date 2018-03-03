@@ -112,7 +112,6 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
             }
         }
         mContactName.setTextColor(ContextCompat.getColor(itemView.getContext(),colorForTextFields));
-        mContactDesc.setTextColor(ContextCompat.getColor(itemView.getContext(),colorForTextFields));
         itemView.setBackgroundColor(colorForBackground);
 
         itemView.setOnClickListener(new View.OnClickListener() {

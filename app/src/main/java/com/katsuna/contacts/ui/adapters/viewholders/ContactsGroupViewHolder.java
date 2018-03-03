@@ -26,6 +26,7 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
     private final UserProfileContainer mUserProfileContainer;
     private final CardView mContactsGroupContainerCard;
     private final View mContactsGroupContainerCardInner;
+    private final View mCardHandle;
 
     private final TextView mStartLetter;
     private final ImageView mStarIcon;
@@ -47,6 +48,7 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
 
         mContactsGroupContainerCard = view.findViewById(R.id.contacts_group_container_card);
         mContactsGroupContainerCardInner = view.findViewById(R.id.contacts_group_container_card_inner);
+        mCardHandle = view.findViewById(R.id.card_handle);
     }
 
     public void bind(final ContactsGroup model, final int position,
@@ -77,8 +79,6 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         };
         mContactsGroupContainerCard.setOnClickListener(focusContact);
 
-        // adjustProfile();
-        //showPopupFrame(true);
     }
 
     private void adjustState(ContactsGroupState state) {
@@ -95,10 +95,10 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
                 ColorProfileKeyV2.SECONDARY_COLOR_1, colorProfile);
         int secondaryColor2 = ColorCalcV2.getColor(itemView.getContext(),
                 ColorProfileKeyV2.SECONDARY_COLOR_2, colorProfile);
-        int greyColor1 = ColorCalcV2.getColor(itemView.getContext(),
-                ColorProfileKeyV2.PRIMARY_GREY_1, colorProfile);
         int greyColor2 = ColorCalcV2.getColor(itemView.getContext(),
                 ColorProfileKeyV2.SECONDARY_GREY_2, colorProfile);
+
+        int transparent = ContextCompat.getColor(itemView.getContext(), R.color.common_transparent);
 
         if (state.isPremium()) {
             cardColor = primaryColor2;
@@ -108,9 +108,9 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
             cardColorAlpha = secondaryColor1;
         } else if (state.isHighlighted()) {
             cardColor = primaryColor2;
-            cardColorAlpha = secondaryColor2;
+            cardColorAlpha = greyColor2;
         } else {
-            cardColor = greyColor1;
+            cardColor = transparent;
             cardColorAlpha = greyColor2;
         }
 
@@ -121,6 +121,7 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         // set colors
         mContactsGroupContainerCard.setCardBackgroundColor(ColorStateList.valueOf(cardColor));
         mContactsGroupContainerCardInner.setBackgroundColor(cardColorAlpha);
+        mCardHandle.setBackgroundColor(cardColor);
 
         mStarDesc.setTextColor(primaryColor2);
         mStartLetter.setTextColor(primaryColor2);
