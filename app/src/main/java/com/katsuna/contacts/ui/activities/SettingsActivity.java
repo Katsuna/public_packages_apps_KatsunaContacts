@@ -245,6 +245,9 @@ public class SettingsActivity extends SettingsActivityBase {
         mContactsDisplayCardInner.setBackgroundColor(secondaryGrey2);
         ColorAdjusterV2.setTextViewDrawableColor(mImportContacts, primary2);
         ColorAdjusterV2.setTextViewDrawableColor(mExportContacts, primary2);
+        ColorAdjusterV2.adjustRadioButton(this, profile, mNameFirstRadioButton, 0, false);
+        ColorAdjusterV2.adjustRadioButton(this, profile, mSurnameFirstRadioButton, 0, false);
+        formatDisplayNameSortingColor();
     }
 
     @Override
