@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
@@ -53,6 +54,7 @@ public class EditContactActivity extends PhotoActivity {
     private TextView mAddPhotoText;
     private CardView mContactContainerCard;
     private View mContactContainerCardInner;
+    private boolean mCreateMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +148,28 @@ public class EditContactActivity extends PhotoActivity {
 
     private void loadContact() {
         long contactId = getIntent().getLongExtra("contactId", 0);
+
+        if (contactId == 0) {
+            mCreateMode = true;
+            mContact = new Contact();
+            mContact.initialize();
+
+            // handle incoming creation intents
+            Intent incomingIntent = getIntent();
+            if (incomingIntent.getAction() != null &&
+                    incomingIntent.getAction().equals(Constants.CREATE_CONTACT_ACTION)) {
+                mTelephone1.setText(incomingIntent.getStringExtra("number"));
+            }
+            if (incomingIntent.getAction() != null &&
+                    incomingIntent.getAction().equals(Intent.ACTION_INSERT)) {
+                mTelephone1.setText(incomingIntent.getStringExtra(ContactsContract.Intents.Insert.PHONE));
+                mName.setText(incomingIntent.getStringExtra(ContactsContract.Intents.Insert.NAME));
+            }
+
+            setTitle(R.string.common_create_contact);
+
+            return;
+        }
         ContactProvider contactProvider = new ContactProvider(this);
 
         mContact = contactProvider.getContact(contactId);
@@ -197,11 +221,14 @@ public class EditContactActivity extends PhotoActivity {
                 mContact.setPhoto(bitmap);
             }
 
-            // invalidate cache to reflect new changes
-            ContactsInfoCache.invalidateContact(mContact.getId());
-
             ContactProvider contactProvider = new ContactProvider(EditContactActivity.this);
-            contactProvider.updateContact(mContact);
+            if (mCreateMode) {
+                contactProvider.addContact(mContact);
+            } else {
+                // invalidate cache to reflect new changes
+                ContactsInfoCache.invalidateContact(mContact.getId());
+                contactProvider.updateContact(mContact);
+            }
 
             Intent intent = new Intent();
             intent.putExtra("contactId", mContact.getId());

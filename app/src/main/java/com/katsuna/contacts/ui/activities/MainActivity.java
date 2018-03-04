@@ -425,7 +425,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             return;
         }
 
-        Intent i = new Intent(MainActivity.this, CreateContactActivity.class);
+        Intent i = new Intent(MainActivity.this, EditContactActivity.class);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
     }
 
