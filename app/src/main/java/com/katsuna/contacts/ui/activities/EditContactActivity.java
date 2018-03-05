@@ -383,6 +383,15 @@ public class EditContactActivity extends PhotoActivity {
         mContactContainerCard.setCardBackgroundColor(ColorStateList.valueOf(primaryColor2));
         mContactContainerCardInner.setBackgroundColor(secondaryColor2);
 
+        mName.setTextColor(primaryColor2);
+        mSurname.setTextColor(primaryColor2);
+        mDescription.setTextColor(primaryColor2);
+        mTelephone1.setTextColor(primaryColor2);
+        mTelephone2.setTextColor(primaryColor2);
+        mTelephone3.setTextColor(primaryColor2);
+        mEmail.setTextColor(primaryColor2);
+        mAddress.setTextColor(primaryColor2);
+
 
         if (mPhoto.getDrawable() == null) {
             mPhoto.setBackground(getAddPhotoDrawable());

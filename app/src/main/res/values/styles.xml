@@ -7,7 +7,6 @@
         <item name="android:layout_marginStart">@dimen/contact_field_margin_start</item>
         <item name="android:layout_marginTop">@dimen/contact_field_margin_top</item>
         <item name="android:gravity">left</item>
-        <item name="android:textColor">@color/blue_one</item>
         <item name="android:textColorHint">@color/common_black34</item>
         <item name="android:backgroundTint">@drawable/edit_text_bg</item>
         <item name="android:paddingBottom">16dp</item>
