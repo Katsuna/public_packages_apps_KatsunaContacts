@@ -14,13 +14,15 @@ import com.katsuna.contacts.ui.adapters.viewholders.ContactsGroupViewHolder;
 import com.katsuna.contacts.ui.listeners.IContactListener;
 import com.katsuna.contacts.ui.listeners.IContactsGroupListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int NO_CONTACT_POSITION = -1;
 
-    private final List<ContactsGroup> mOriginalContacts;
+    private final List<ContactsGroup> mOriginalContactsGroups;
+    private List<ContactsGroup> mFilteredContactsGroups;
     private int mSelectedContactsGroupPosition = NO_CONTACT_POSITION;
 
     private IContactsGroupListener mContactsGroupListener;
@@ -30,7 +32,8 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     private long mSelectedContactId;
 
     private ContactsGroupAdapter(List<ContactsGroup> models) {
-        mOriginalContacts = models;
+        mOriginalContactsGroups = models;
+        mFilteredContactsGroups = models;
     }
 
     public ContactsGroupAdapter(List<ContactsGroup> models,
@@ -43,7 +46,7 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mOriginalContacts.size();
+        return mFilteredContactsGroups.size();
     }
 
     @NonNull
@@ -56,7 +59,7 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        final ContactsGroup model = mOriginalContacts.get(position);
+        final ContactsGroup model = mFilteredContactsGroups.get(position);
 
         boolean focused = mSelectedContactsGroupPosition == position;
         boolean unfocused = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
@@ -73,14 +76,14 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public int getPositionByStartingLetter(String letter) {
         int position = NO_CONTACT_POSITION;
-        for (int i = 0; i < mOriginalContacts.size(); i++) {
+        for (int i = 0; i < mFilteredContactsGroups.size(); i++) {
             //don't focus on premium contacts
-            ContactsGroup model = mOriginalContacts.get(i);
+            ContactsGroup model = mFilteredContactsGroups.get(i);
             if (model.premium) {
                 continue;
             }
 
-            if (mOriginalContacts.get(i).firstLetter.equals(letter)) {
+            if (mFilteredContactsGroups.get(i).firstLetter.equals(letter)) {
                 position = i;
                 break;
             }
@@ -143,8 +146,8 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public int getPositionByContactId(long contactId) {
         int position = NO_CONTACT_POSITION;
-        for (int i = 0; i < mOriginalContacts.size(); i++) {
-            for (Contact contact : mOriginalContacts.get(i).contactList) {
+        for (int i = 0; i < mFilteredContactsGroups.size(); i++) {
+            for (Contact contact : mFilteredContactsGroups.get(i).contactList) {
                 if (contact.getId() == contactId) {
                     position = i;
                     break;
@@ -154,4 +157,37 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position;
     }
 
+    public void resetFilter() {
+        mFilteredContactsGroups = mOriginalContactsGroups;
+        notifyDataSetChanged();
+    }
+
+    public void filter(String query) {
+        query = query.toLowerCase();
+
+        List<ContactsGroup> filteredGroups = new ArrayList<>();
+        for (ContactsGroup cg : mOriginalContactsGroups) {
+            //exclude premium contacts
+            if (cg.premium) continue;
+
+            List<Contact> contactsFound = new ArrayList<>();
+            for(Contact contact: cg.contactList) {
+                final String name = contact.getDisplayName().toLowerCase();
+
+                if (name.contains(query)) {
+                    contactsFound.add(new Contact(contact));
+                }
+            }
+
+            if (contactsFound.size() > 0) {
+                ContactsGroup contactsGroupFound = new ContactsGroup();
+                contactsGroupFound.contactList = contactsFound;
+                contactsGroupFound.firstLetter = cg.firstLetter;
+                filteredGroups.add(contactsGroupFound);
+            }
+        }
+
+        mFilteredContactsGroups = filteredGroups;
+        notifyDataSetChanged();
+    }
 }
