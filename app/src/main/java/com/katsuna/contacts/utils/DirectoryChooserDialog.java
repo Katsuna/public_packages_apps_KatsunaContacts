@@ -16,13 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfileKey;
 import com.katsuna.commons.utils.ColorAdjuster;
@@ -30,6 +23,13 @@ import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.commons.utils.SizeAdjuster;
 import com.katsuna.commons.utils.SizeCalc;
 import com.katsuna.contacts.R;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * http://www.codeproject.com/Articles/547636/Android-Ready-to-use-simple-directory-chooser-dial
@@ -230,10 +230,11 @@ public class DirectoryChooserDialog extends DirectoryDialogBase {
             public void onClick(View v) {
                 // Show new folder name input dialog
                 KatsunaAlertBuilder builder = new KatsunaAlertBuilder(m_context);
-                builder.setTitle(R.string.new_folder_name);
-                builder.setMessage(0);
-                builder.setView(R.layout.common_katsuna_alert_text_input);
-                builder.setUserProfileContainer(mProfileContainer);
+                String title = m_context.getResources().getString(R.string.new_folder_name);
+                builder.setTitle(title);
+                builder.setView(R.layout.common_katsuna_alert);
+                builder.setTextVisibility(View.VISIBLE);
+                builder.setUserProfile(mProfileContainer.getActiveUserProfile());
                 builder.setOkListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

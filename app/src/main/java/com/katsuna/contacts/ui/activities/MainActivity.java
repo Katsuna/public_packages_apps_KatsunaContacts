@@ -685,12 +685,12 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     @Override
     public void deleteContact(final Contact contact) {
         KatsunaAlertBuilder builder = new KatsunaAlertBuilder(this);
-        builder.setTitle(R.string.common_delete_contact);
+        builder.setTitle(getString(R.string.common_delete_contact));
         String message = getString(R.string.common_delete_contact_approval,
                 contact.getDisplayName());
         builder.setMessage(message);
         builder.setView(R.layout.common_katsuna_alert);
-        builder.setUserProfileContainer(mUserProfileContainer);
+        builder.setUserProfile(mUserProfileContainer.getActiveUserProfile());
         builder.setOkListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
