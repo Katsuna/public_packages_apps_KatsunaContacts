@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/card_holder"
+        android:layout_width="8dp"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/edit_text_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
+            android:visibility="invisible"
+            tools:ignore="ContentDescription" />
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/icon"
+            android:textColorHint="@color/common_black34"
+            tools:ignore="LabelFor,TextFields" />
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignBottom="@+id/edit_text"
+            android:layout_alignEnd="@+id/edit_text"
+            android:layout_alignTop="@+id/edit_text"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            android:contentDescription="@string/next_field" />
+
+        <ImageView
+            android:id="@+id/warning_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignBottom="@+id/edit_text"
+            android:layout_alignEnd="@+id/edit_text"
+            android:layout_alignTop="@+id/edit_text"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            android:contentDescription="@string/missing_field" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

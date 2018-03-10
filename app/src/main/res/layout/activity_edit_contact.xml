@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_grey_two">
+    android:background="@color/common_grey_two"
+    android:focusableInTouchMode="true">
 
     <include layout="@layout/common_toolbar" />
 
@@ -51,7 +52,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            <android.support.v7.widget.CardView
                 android:id="@+id/contact_container_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -64,123 +65,75 @@
                 app:cardElevation="2dp">
 
                 <LinearLayout
-                    android:id="@+id/contact_container_card_inner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/name_container"
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
+                        android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="@dimen/contact_field_margin_top"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:hint="@string/name"
+                        android:inputType="text"
+                        app:field_icon="@drawable/ic_nice_guy_black54_24dp"
+                        app:field_margin_top="10dp"
+                        app:field_required="true"
+                        app:field_required_missing="@string/missing_name" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="12dp"
-                            android:contentDescription="@string/name"
-                            android:scaleType="fitStart"
-                            android:src="@drawable/ic_nice_guy_black54_24dp" />
-
-                        <EditText
-                            android:id="@+id/name"
-                            style="@style/editContactField"
-                            android:layout_margin="0dp"
-                            android:hint="@string/name"
-                            android:inputType="text"
-                            android:maxLines="1" />
-
-                    </LinearLayout>
-
-                    <EditText
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
                         android:id="@+id/surname"
-                        style="@style/editContactField"
-                        android:hint="@string/surname"
-                        android:inputType="text"
-                        android:maxLines="1" />
-
-                    <EditText
-                        android:id="@+id/description"
-                        style="@style/editContactField"
-                        android:hint="@string/description"
-                        android:inputType="text"
-                        android:maxLines="1" />
-
-                    <LinearLayout
-                        android:id="@+id/telephone1_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="@dimen/contact_field_margin_top"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:hint="@string/surname"
+                        android:inputType="text" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:contentDescription="@string/telephone1"
-                            android:scaleType="fitStart"
-                            android:src="@drawable/ic_call_black54_24dp" />
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/description"
+                        android:inputType="text" />
 
-                        <EditText
-                            android:id="@+id/telephone1"
-                            style="@style/editContactField"
-                            android:layout_margin="0dp"
-                            android:hint="@string/telephone1"
-                            android:inputType="phone" />
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
+                        android:id="@+id/telephone1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/telephone1"
+                        android:inputType="phone"
+                        app:field_icon="@drawable/ic_call_black54_24dp"
+                        app:field_required="true"
+                        app:field_required_missing="@string/missing_telephone" />
 
-                    </LinearLayout>
-
-                    <EditText
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
                         android:id="@+id/telephone2"
-                        style="@style/editContactField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:hint="@string/telephone2"
                         android:inputType="phone" />
 
-                    <EditText
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
                         android:id="@+id/telephone3"
-                        style="@style/editContactField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:hint="@string/telephone3"
                         android:inputType="phone" />
 
-                    <LinearLayout
-                        android:id="@+id/email_container"
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
+                        android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="@dimen/contact_field_margin_top"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:hint="@string/email"
+                        android:inputType="textEmailAddress"
+                        app:field_icon="@drawable/ic_email_black54_24dp" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:contentDescription="@string/email"
-                            android:scaleType="fitStart"
-                            android:src="@drawable/ic_email_black54_24dp" />
-
-                        <EditText
-                            android:id="@+id/email"
-                            style="@style/editContactField"
-                            android:layout_margin="0dp"
-                            android:hint="@string/email"
-                            android:inputType="textEmailAddress" />
-
-                    </LinearLayout>
-
-                    <EditText
+                    <com.katsuna.contacts.ui.controls.KatsunaWizardText
                         android:id="@+id/address"
-                        style="@style/editContactField"
-                        android:layout_marginBottom="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:hint="@string/address"
-                        android:inputType="textMultiLine" />
+                        android:inputType="textMultiLine"
+                        app:field_margin_bottom="10dp" />
 
                 </LinearLayout>
 

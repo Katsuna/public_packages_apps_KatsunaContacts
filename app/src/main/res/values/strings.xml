@@ -129,4 +129,10 @@
     <!-- No free telephone fields while adding number to existing contact -->
     <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
 
+    <string name="missing_name">Please enter Name</string>
+
+    <string name="missing_telephone">Please enter Telephone</string>
+    <string name="next_field">Next field</string>
+    <string name="missing_field">Missing field</string>
+
 </resources>

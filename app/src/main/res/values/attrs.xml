@@ -1,0 +1,11 @@
+<resources>
+    <declare-styleable name="KatsunaWizardText">
+        <attr name="field_icon" format="integer" />
+        <attr name="field_required" format="boolean" />
+        <attr name="field_required_missing" format="string" />
+        <attr name="field_margin_top" format="dimension" />
+        <attr name="field_margin_bottom" format="dimension" />
+        <attr name="android:hint" format="string" />
+        <attr name="android:inputType" />
+    </declare-styleable>
+</resources>

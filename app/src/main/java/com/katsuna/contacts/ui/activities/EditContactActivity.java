@@ -9,10 +9,12 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +31,10 @@ import com.katsuna.commons.providers.ContactProvider;
 import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
+import com.katsuna.commons.utils.DrawUtils;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.data.ContactsInfoCache;
+import com.katsuna.contacts.ui.controls.KatsunaWizardText;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -40,21 +44,28 @@ import java.util.List;
 
 public class EditContactActivity extends PhotoActivity {
 
-    private EditText[] mTelephones;
-    private EditText mName;
-    private EditText mSurname;
-    private EditText mDescription;
-    private EditText mTelephone1;
-    private EditText mTelephone2;
-    private EditText mTelephone3;
-    private EditText mEmail;
-    private EditText mAddress;
+    private KatsunaWizardText[] mTelephones;
+    private KatsunaWizardText[] mAllControls;
+    private KatsunaWizardText mName;
+    private KatsunaWizardText mSurname;
+    private KatsunaWizardText mDescription;
+    private KatsunaWizardText mTelephone1;
+    private KatsunaWizardText mTelephone2;
+    private KatsunaWizardText mTelephone3;
+    private KatsunaWizardText mEmail;
+    private KatsunaWizardText mAddress;
     private RoundedImageView mPhoto;
     private Contact mContact;
     private TextView mAddPhotoText;
     private CardView mContactContainerCard;
-    private View mContactContainerCardInner;
     private boolean mCreateMode;
+    private int mPrimaryColor1;
+    private int mPrimaryColor2;
+    private int mSecondaryColor3;
+    private LayerDrawable mDoneDrawableOk;
+    private Drawable mWarningDrawable;
+    private int mBlack54;
+    private int mBlack34;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +82,14 @@ public class EditContactActivity extends PhotoActivity {
         super.onResume();
         adjustColorProfile();
         readIncomingNumberToAdd();
+        if (mCreateMode) {
+            mName.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mName.requestFocusOnEditText();
+                }
+            }, 100);
+        }
     }
 
     private void readIncomingNumberToAdd() {
@@ -88,11 +107,9 @@ public class EditContactActivity extends PhotoActivity {
                     mTelephone2.requestFocus();
                 } else if (TextUtils.isEmpty(mTelephone3.getText())) {
                     mTelephone3.setText(number);
-                    showMoreFields(true);
                     mTelephone3.requestFocus();
                 } else {
                     output = getResources().getString(R.string.no_free_telephone_fields);
-                    showMoreFields(true);
                 }
                 Toast.makeText(this, output, Toast.LENGTH_LONG).show();
             }
@@ -107,18 +124,30 @@ public class EditContactActivity extends PhotoActivity {
     private void initControls() {
         initToolbar(R.drawable.common_ic_close_black54_24dp);
 
+        mBlack54 = ContextCompat.getColor(EditContactActivity.this, R.color.common_black54);
+        mBlack34 = ContextCompat.getColor(EditContactActivity.this, R.color.common_black34);
+
         mContactContainerCard = findViewById(R.id.contact_container_card);
-        mContactContainerCardInner = findViewById(R.id.contact_container_card_inner);
-        mName = findViewById(R.id.name);
         mName = findViewById(R.id.name);
         mSurname = findViewById(R.id.surname);
         mDescription = findViewById(R.id.description);
         mTelephone1 = findViewById(R.id.telephone1);
         mTelephone2 = findViewById(R.id.telephone2);
         mTelephone3 = findViewById(R.id.telephone3);
-        mTelephones = new EditText[]{mTelephone1, mTelephone2, mTelephone3};
+        mTelephones = new KatsunaWizardText[]{mTelephone1, mTelephone2, mTelephone3};
         mEmail = findViewById(R.id.email);
         mAddress = findViewById(R.id.address);
+        assignBehavior(mName, mSurname);
+        assignBehavior(mSurname, mDescription);
+        assignBehavior(mDescription, mTelephone1);
+        assignBehavior(mTelephone1, mTelephone2);
+        assignBehavior(mTelephone2, mTelephone3);
+        assignBehavior(mTelephone3, mEmail);
+        assignBehavior(mEmail, mAddress);
+        assignBehavior(mAddress, null);
+
+        mAllControls = new KatsunaWizardText[]{mName, mSurname, mDescription, mTelephone1,
+                mTelephone2, mTelephone3, mEmail, mAddress};
 
         mPhoto = findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
@@ -136,14 +165,10 @@ public class EditContactActivity extends PhotoActivity {
         });
     }
 
-    private void showMoreFields(boolean flag) {
-        if (flag) {
-            mTelephone3.setVisibility(View.VISIBLE);
-            mAddress.setVisibility(View.VISIBLE);
-        } else {
-            mTelephone3.setVisibility(View.GONE);
-            mAddress.setVisibility(View.GONE);
-        }
+    private void assignBehavior(KatsunaWizardText wizardText, KatsunaWizardText nextWizardText) {
+        KatsunaWizardBehavior behavior = new KatsunaWizardBehavior(wizardText, nextWizardText);
+        wizardText.setOnFocus(behavior);
+        wizardText.setTextChangedListener(behavior);
     }
 
     private void loadContact() {
@@ -240,20 +265,29 @@ public class EditContactActivity extends PhotoActivity {
     private boolean inputIsValid() {
         boolean output = true;
         if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
-            mName.setError(getResources().getString(R.string.name_validation));
+            mName.setError(mPrimaryColor1);
             output = false;
         }
         if (mTelephone1.getText().length() == 0) {
-            mTelephone1.setError(getResources().getString(R.string.number_validation));
+            mTelephone1.setError(mPrimaryColor1);
             output = false;
         }
+
+        // adjust presentation for not required fields
+        mSurname.setCardHolderColor(mPrimaryColor2);
+        mDescription.setCardHolderColor(mPrimaryColor2);
+        mTelephone2.setCardHolderColor(mPrimaryColor2);
+        mTelephone3.setCardHolderColor(mPrimaryColor2);
+        mEmail.setCardHolderColor(mPrimaryColor2);
+        mAddress.setCardHolderColor(mPrimaryColor2);
+
         return output;
     }
 
     private Name getNameForUpdate() {
         Name name = mContact.getName();
-        name.setName(mName.getText().toString());
-        name.setSurname(mSurname.getText().toString());
+        name.setName(mName.getText());
+        name.setSurname(mSurname.getText());
         return name;
     }
 
@@ -264,7 +298,7 @@ public class EditContactActivity extends PhotoActivity {
             Phone phone = null;
             if (mContact.getPhone(i) == null) {
                 if (!TextUtils.isEmpty(mTelephones[i].getText())) {
-                    phone = new Phone(mTelephones[i].getText().toString());
+                    phone = new Phone(mTelephones[i].getText());
                     phone.setDataAction(DataAction.CREATE);
                 }
             } else {
@@ -272,7 +306,7 @@ public class EditContactActivity extends PhotoActivity {
                 if (TextUtils.isEmpty(mTelephones[i].getText())) {
                     phone.setDataAction(DataAction.DELETE);
                 } else {
-                    phone.setNumber(mTelephones[i].getText().toString());
+                    phone.setNumber(mTelephones[i].getText());
                     phone.setDataAction(DataAction.UPDATE);
                 }
             }
@@ -297,7 +331,7 @@ public class EditContactActivity extends PhotoActivity {
             if (!TextUtils.isEmpty(mEmail.getText())) {
                 email = new Email();
                 email.setDataAction(DataAction.CREATE);
-                email.setAddress(mEmail.getText().toString());
+                email.setAddress(mEmail.getText());
             }
         } else {
             email = mContact.getEmail();
@@ -305,7 +339,7 @@ public class EditContactActivity extends PhotoActivity {
                 email.setDataAction(DataAction.DELETE);
             } else {
                 email.setDataAction(DataAction.UPDATE);
-                email.setAddress(mEmail.getText().toString());
+                email.setAddress(mEmail.getText());
             }
         }
 
@@ -319,7 +353,7 @@ public class EditContactActivity extends PhotoActivity {
             if (!TextUtils.isEmpty(mAddress.getText())) {
                 address = new Address();
                 address.setDataAction(DataAction.CREATE);
-                address.setFormattedAddress(mAddress.getText().toString());
+                address.setFormattedAddress(mAddress.getText());
             }
         } else {
             address = mContact.getAddress();
@@ -327,7 +361,7 @@ public class EditContactActivity extends PhotoActivity {
                 address.setDataAction(DataAction.DELETE);
             } else {
                 address.setDataAction(DataAction.UPDATE);
-                address.setFormattedAddress(mAddress.getText().toString());
+                address.setFormattedAddress(mAddress.getText());
             }
         }
 
@@ -339,7 +373,7 @@ public class EditContactActivity extends PhotoActivity {
 
         if (mContact.getDescription() == null) {
             if (!TextUtils.isEmpty(mDescription.getText())) {
-                description = new Description(mDescription.getText().toString());
+                description = new Description(mDescription.getText());
                 description.setDataAction(DataAction.CREATE);
             }
         } else {
@@ -348,7 +382,7 @@ public class EditContactActivity extends PhotoActivity {
                 description.setDataAction(DataAction.DELETE);
             } else {
                 description.setDataAction(DataAction.UPDATE);
-                description.setDescription(mDescription.getText().toString());
+                description.setDescription(mDescription.getText());
             }
         }
 
@@ -374,27 +408,42 @@ public class EditContactActivity extends PhotoActivity {
 
     private void adjustColorProfile() {
         UserProfile userProfile = mUserProfileContainer.getActiveUserProfile();
-        int primaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2,
+        mPrimaryColor1 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_1,
+                userProfile.colorProfile);
+        mPrimaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2,
+                userProfile.colorProfile);
+        int mSecondaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_COLOR_2,
+                userProfile.colorProfile);
+        mSecondaryColor3 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_COLOR_3,
                 userProfile.colorProfile);
 
-        int secondaryColor2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_COLOR_2,
-                userProfile.colorProfile);
+        mContactContainerCard.setCardBackgroundColor(ColorStateList.valueOf(mSecondaryColor2));
 
-        mContactContainerCard.setCardBackgroundColor(ColorStateList.valueOf(primaryColor2));
-        mContactContainerCardInner.setBackgroundColor(secondaryColor2);
-
-        mName.setTextColor(primaryColor2);
-        mSurname.setTextColor(primaryColor2);
-        mDescription.setTextColor(primaryColor2);
-        mTelephone1.setTextColor(primaryColor2);
-        mTelephone2.setTextColor(primaryColor2);
-        mTelephone3.setTextColor(primaryColor2);
-        mEmail.setTextColor(primaryColor2);
-        mAddress.setTextColor(primaryColor2);
-
+        for (KatsunaWizardText wizardText : mAllControls) {
+            wizardText.setTextColor(mPrimaryColor2);
+        }
 
         if (mPhoto.getDrawable() == null) {
             mPhoto.setBackground(getAddPhotoDrawable());
+        }
+        adjustWizardTextFieldsStep1();
+    }
+
+    /*
+    Step 1 is when the activity is resumed. No edit is started yet.
+     */
+    private void adjustWizardTextFieldsStep1() {
+        createNextItemDrawables();
+        createWarningDrawable();
+
+        for (KatsunaWizardText wizardText : mAllControls) {
+            if (TextUtils.isEmpty(wizardText.getText())) {
+                wizardText.setCardHolderColor(mSecondaryColor3);
+            } else {
+                wizardText.setCardHolderColor(mPrimaryColor2);
+            }
+            wizardText.setImageDrawable(mDoneDrawableOk);
+            wizardText.setWarningDrawable(mWarningDrawable);
         }
     }
 
@@ -415,7 +464,7 @@ public class EditContactActivity extends PhotoActivity {
         Drawable icon = getDrawable(R.drawable.ic_add_a_photo_black54_24dp);
 
         // compose layers
-        Drawable[] layers = {circleDrawable, icon };
+        Drawable[] layers = {circleDrawable, icon};
         LayerDrawable layerDrawable = new LayerDrawable(layers);
 
         int diff = getResources().getDimensionPixelSize(R.dimen.add_a_photo_inset);
@@ -423,9 +472,36 @@ public class EditContactActivity extends PhotoActivity {
         return layerDrawable;
     }
 
+    private void createNextItemDrawables() {
+        GradientDrawable circleDrawable =
+                (GradientDrawable) getDrawable(R.drawable.common_circle_black);
+        if (circleDrawable != null) {
+            circleDrawable.setColor(mPrimaryColor2);
+        }
+
+        // adjust icon
+        Drawable icon = getDrawable(R.drawable.ic_done_white_24dp);
+
+        // compose layers
+        Drawable[] layers = {circleDrawable, icon};
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+
+        int diff = getResources().getDimensionPixelSize(R.dimen.done_icon_inset);
+        layerDrawable.setLayerInset(1, diff, diff, diff, diff);
+        mDoneDrawableOk = layerDrawable;
+    }
+
+    private void createWarningDrawable() {
+        // adjust icon
+        Drawable icon = getDrawable(R.drawable.ic_info_white_24dp);
+        DrawUtils.setColor(icon, mPrimaryColor1);
+
+        mWarningDrawable = icon;
+    }
+
     private void setupFab() {
-        mFab1 = findViewById(R.id.edit_contact_fab);
-        mFab1.setOnClickListener(new View.OnClickListener() {
+        mFab2 = findViewById(R.id.edit_contact_fab);
+        mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateContact();
@@ -433,4 +509,79 @@ public class EditContactActivity extends PhotoActivity {
         });
     }
 
+    private class KatsunaWizardBehavior implements View.OnFocusChangeListener, TextWatcher {
+
+        private final KatsunaWizardText mKatsunaWizardText;
+        private final KatsunaWizardText mNextKatsunaWizardText;
+
+        KatsunaWizardBehavior(KatsunaWizardText wizardText, KatsunaWizardText nextWizardText) {
+            mKatsunaWizardText = wizardText;
+            mNextKatsunaWizardText = nextWizardText;
+
+            wizardText.setImageOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mNextKatsunaWizardText != null) {
+                        mNextKatsunaWizardText.requestFocus();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                mKatsunaWizardText.setCardHolderColor(mPrimaryColor2);
+                mKatsunaWizardText.setUnderlineColor(mPrimaryColor2);
+                if (!TextUtils.isEmpty(mKatsunaWizardText.getText())) {
+                    showNextImageControl(true);
+                }
+            } else {
+                mKatsunaWizardText.setImageVisibility(View.GONE);
+                if (TextUtils.isEmpty(mKatsunaWizardText.getText())) {
+                    if (mKatsunaWizardText.isRequired()) {
+                        mKatsunaWizardText.setCardHolderColor(mPrimaryColor1);
+                        mKatsunaWizardText.setUnderlineColor(mPrimaryColor1);
+                        mKatsunaWizardText.showMissingHint(true);
+                    } else {
+                        mKatsunaWizardText.setCardHolderColor(mSecondaryColor3);
+                        mKatsunaWizardText.setUnderlineColor(mBlack34);
+                        mKatsunaWizardText.showMissingHint(false);
+                    }
+                } else {
+                    mKatsunaWizardText.setCardHolderColor(mPrimaryColor2);
+                    mKatsunaWizardText.setUnderlineColor(mBlack34);
+                }
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (TextUtils.isEmpty(mKatsunaWizardText.getText())) {
+                showNextImageControl(false);
+            } else {
+                showNextImageControl(true);
+                if (mKatsunaWizardText.isRequired()) {
+                    mKatsunaWizardText.clearError(mPrimaryColor2, mBlack54);
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+
+        private void showNextImageControl(boolean flag) {
+            if (mNextKatsunaWizardText == null) return;
+            if (mKatsunaWizardText.isFocused()) {
+                mKatsunaWizardText.setImageVisibility(flag ? View.VISIBLE : View.GONE);
+            }
+        }
+    }
 }
