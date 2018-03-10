@@ -69,6 +69,7 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private static final int REQUEST_CODE_ASK_CALL_PERMISSION = 2;
     private static final int REQUEST_CODE_EDIT_CONTACT = 3;
     private static final int REQUEST_CODE_ADD_NUMBER_TO_CONTACT = 4;
+    private static final int REQUEST_CODE_WRITE_CONTACTS_PERMISSION = 5;
     private List<ContactsGroup> mModels;
     private ContactsGroupAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -82,6 +83,8 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     private String numberToAddToExistingContact;
     private boolean mSearchMode;
     private SearchView mSearchView;
+    private boolean createContactRequestPending = false;
+    private long mContactIdForEdit = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -503,8 +506,11 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
     }
 
     private void createContact() {
-        if (!readContactsPermissionGranted()) {
+        if (writeContactsPermissionMissing()) {
+            createContactRequestPending = true;
             return;
+        } else {
+            createContactRequestPending = false;
         }
 
         Intent i = new Intent(MainActivity.this, EditContactActivity.class);
@@ -558,6 +564,18 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
         return output;
     }
 
+    private boolean writeContactsPermissionMissing() {
+        boolean output;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CONTACTS},
+                    REQUEST_CODE_WRITE_CONTACTS_PERMISSION);
+            output = true;
+        } else {
+            output = false;
+        }
+        return output;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -575,8 +593,19 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
             case REQUEST_CODE_ASK_CALL_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    Log.e(TAG, "call contact permission granted");
+                    Log.d(TAG, "call contact permission granted");
                     callContact(mSelectedContact);
+                }
+                break;
+            case REQUEST_CODE_WRITE_CONTACTS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Log.d(TAG, "write contact permission granted");
+                    if (createContactRequestPending) {
+                        createContact();
+                    } else if (mContactIdForEdit != 0) {
+                        editContact(mContactIdForEdit);
+                    }
                 }
                 break;
             default:
@@ -677,6 +706,13 @@ public class MainActivity extends SearchBarActivity implements IContactsGroupLis
 
     @Override
     public void editContact(long contactId) {
+        if (writeContactsPermissionMissing()) {
+            mContactIdForEdit = contactId;
+            return;
+        } else {
+            mContactIdForEdit = 0;
+        }
+
         Intent i = new Intent(this, EditContactActivity.class);
         i.putExtra("contactId", contactId);
         startActivityForResult(i, REQUEST_CODE_EDIT_CONTACT);
