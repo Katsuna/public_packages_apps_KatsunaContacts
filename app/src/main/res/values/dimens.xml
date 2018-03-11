@@ -6,4 +6,9 @@
     <dimen name="letter_divider_margin">72dp</dimen>
     <dimen name="export_dialog_full_margin">12dp</dimen>
     <dimen name="export_dialog_half_margin">6dp</dimen>
+    <dimen name="contact_field_margin_top">10dp</dimen>
+    <dimen name="contact_field_margin_start">40dp</dimen>
+    <dimen name="contact_item_height">50dp</dimen>
+    <dimen name="add_a_photo_inset">28dp</dimen>
+    <dimen name="done_icon_inset">4dp</dimen>
 </resources>

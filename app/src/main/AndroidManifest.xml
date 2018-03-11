@@ -15,8 +15,6 @@
         <screen android:screenSize="normal" android:screenDensity="xxxhdpi" /> <!-- 640 -->
    </compatible-screens>
 
-    <!-- Keep in sync with build.gradle -->
-    <uses-sdk android:minSdkVersion="22" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -24,13 +22,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-permission android:name="com.katsuna.services.datastore.permission.preferences" />
+    <uses-permission android:name="${providers_auth}.services.datastore.permission.preferences" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
     <application
+        android:name=".ContactsApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
         android:icon="@mipmap/ic_launcher"
@@ -50,17 +49,25 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
+            <intent-filter>
+                <action android:name="com.katsuna.contacts.add" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".ui.activities.CreateContactActivity"
+            android:name=".ui.activities.EditContactActivity"
+            android:label="@string/common_edit_contact"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="com.katsuna.contacts.edit" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.INSERT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -72,30 +79,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.EditContactActivity"
-            android:configChanges="orientation|screenSize"
-            android:parentActivityName=".ui.activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
             android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.SelectContactsActivity"
-            android:label="@string/title_activity_select_contacts"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
 
         <activity
             android:name=".ui.activities.InfoActivity"
@@ -105,7 +92,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.katsuna.contacts.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -21,15 +21,12 @@ public class InfoActivity extends KatsunaInfoActivity {
     private void initControls() {
         initToolbar();
 
-
-        PackageInfo pInfo = null;
+        PackageInfo pInfo;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             mAppIcon.setImageResource(R.mipmap.ic_launcher);
             mAppName.setText(R.string.app_name);
-
-            String version = getString(R.string.common_version);
-            mAppVersion.setText(version + " " + pInfo.versionName);
+            mAppVersion.setText(getString(R.string.common_version_info, pInfo.versionName));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }

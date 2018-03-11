@@ -2,35 +2,34 @@ package com.katsuna.contacts.ui.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
-import com.katsuna.commons.entities.OpticalParams;
+import com.katsuna.commons.entities.ColorProfileKeyV2;
 import com.katsuna.commons.entities.SizeProfile;
-import com.katsuna.commons.entities.SizeProfileKey;
+import com.katsuna.commons.entities.UserProfile;
 import com.katsuna.commons.providers.ContactProvider;
-import com.katsuna.commons.ui.SettingsKatsunaActivity;
-import com.katsuna.commons.utils.ColorAdjuster;
+import com.katsuna.commons.ui.SettingsActivityBase;
+import com.katsuna.commons.utils.ColorAdjusterV2;
+import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.ProfileReader;
 import com.katsuna.commons.utils.SettingsManager;
 import com.katsuna.commons.utils.SizeAdjuster;
-import com.katsuna.commons.utils.SizeCalc;
-import com.katsuna.commons.utils.ViewUtils;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.utils.DirectoryChooserDialog;
 import com.katsuna.contacts.utils.FileChooserDialog;
@@ -45,7 +44,7 @@ import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 
-public class SettingsActivity extends SettingsKatsunaActivity {
+public class SettingsActivity extends SettingsActivityBase {
 
     private static final String TAG = "SettingsActivity";
 
@@ -55,9 +54,13 @@ public class SettingsActivity extends SettingsKatsunaActivity {
     private RadioButton mSurnameFirstRadioButton;
     private RadioButton mNameFirstRadioButton;
     private ProgressDialog mProgressDialog;
-    private Button mDeleteButton;
-    private Button mImportButton;
-    private Button mExportButton;
+    private TextView mImportContacts;
+    private TextView mExportContacts;
+    private CardView mContactsIoCard;
+    private CardView mContactsDisplayCard;
+    private View mContactsIoCardInner;
+    private View mContactsDisplayCardInner;
+    private RadioGroup mRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,69 +73,31 @@ public class SettingsActivity extends SettingsKatsunaActivity {
     protected void onResume() {
         super.onResume();
         applyProfiles();
-        loadProfiles();
-        applySizeProfile(mUserProfileContainer.getOpticalSizeProfile());
-        applyColorProfile(mUserProfileContainer.getColorProfile());
+        formatDisplayNameSortingColor();
+        initControlsListeners();
     }
 
-    private void initControls() {
+    @Override
+    protected void initControls() {
+        super.initControls();
         initToolbar();
-        initAppSettings();
-        mScrollViewContainer = (ScrollView) findViewById(R.id.scroll_view_container);
+        mScrollViewContainer = findViewById(R.id.scroll_view_container);
+
+        mContactsIoCard = findViewById(R.id.contacts_io_card);
+        mContactsIoCardInner = findViewById(R.id.contacts_io_card_inner);
+
+        mContactsDisplayCard = findViewById(R.id.contacts_display_card);
+        mContactsDisplayCardInner = findViewById(R.id.contacts_display_card_inner);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mImportContacts = findViewById(R.id.import_contacts);
+        mExportContacts = findViewById(R.id.export_contacts);
 
-
-        mDeleteButton = (Button) findViewById(R.id.deleteContacts);
-        assert mDeleteButton != null;
-        mDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, SelectContactsActivity.class));
-            }
-        });
-
-        mImportButton = (Button) findViewById(R.id.importContacts);
-        assert mImportButton != null;
-        mImportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                importContacts();
-            }
-        });
-
-        mExportButton = (Button) findViewById(R.id.exportContacts);
-        assert mExportButton != null;
-        mExportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exportContacts();
-            }
-        });
-
-
-        RadioGroup mRadioGroup = (RadioGroup) findViewById(R.id.display_sort_group);
-        mSurnameFirstRadioButton = (RadioButton) findViewById(R.id.surname_first_button);
-        mNameFirstRadioButton = (RadioButton) findViewById(R.id.name_first_button);
-
-        assert mRadioGroup != null;
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
-                // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = (RadioButton) rGroup.findViewById(checkedId);
-
-                if (mSurnameFirstRadioButton == checkedRadioButton) {
-
-                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
-                }
-
-                if (mNameFirstRadioButton == checkedRadioButton) {
-                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_NAME);
-                }
-            }
-        });
+        mRadioGroup = findViewById(R.id.display_sort_group);
+        mSurnameFirstRadioButton = findViewById(R.id.surname_first_button);
+        mNameFirstRadioButton = findViewById(R.id.name_first_button);
 
         String displaySortSetting = SettingsManager.readSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
         switch (displaySortSetting) {
@@ -142,6 +107,60 @@ public class SettingsActivity extends SettingsKatsunaActivity {
             case Constants.DISPLAY_SORT_NAME:
                 mNameFirstRadioButton.setChecked(true);
                 break;
+        }
+    }
+
+    private void initControlsListeners() {
+        assert mImportContacts != null;
+        mImportContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                importContacts();
+            }
+        });
+
+        assert mExportContacts != null;
+        mExportContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportContacts();
+            }
+        });
+
+        assert mRadioGroup != null;
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = rGroup.findViewById(checkedId);
+
+                if (mSurnameFirstRadioButton == checkedRadioButton) {
+
+                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_SURNAME);
+                }
+
+                if (mNameFirstRadioButton == checkedRadioButton) {
+                    SettingsManager.setSetting(SettingsActivity.this, Constants.DISPLAY_SORT_KEY, Constants.DISPLAY_SORT_NAME);
+                }
+                formatDisplayNameSortingColor();
+            }
+        });
+    }
+
+    private void formatDisplayNameSortingColor() {
+        if (mUserProfileContainer == null) return;
+
+        UserProfile profile = mUserProfileContainer.getActiveUserProfile();
+        int colorChecked = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2, profile.colorProfile);
+        int colorBlack54 = ContextCompat.getColor(this, R.color.common_black54);
+        if (mSurnameFirstRadioButton.isChecked()) {
+            mSurnameFirstRadioButton.setTextColor(colorChecked);
+        } else {
+            mSurnameFirstRadioButton.setTextColor(colorBlack54);
+        }
+        if (mNameFirstRadioButton.isChecked()) {
+            mNameFirstRadioButton.setTextColor(colorChecked);
+        } else {
+            mNameFirstRadioButton.setTextColor(colorBlack54);
         }
     }
 
@@ -212,24 +231,29 @@ public class SettingsActivity extends SettingsKatsunaActivity {
                 profile = ColorProfile.COLOR_IMPAIREMENT;
             }
         }
-        ColorAdjuster.adjustButtons(this, profile, mDeleteButton, null);
-        ColorAdjuster.adjustButtons(this, profile, mImportButton, null);
-        ColorAdjuster.adjustButtons(this, profile, mExportButton, null);
+        int primaryGrey1 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_GREY_1,
+                profile);
+
+        int secondaryGrey2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.SECONDARY_GREY_2,
+                profile);
+
+        int primary2 = ColorCalcV2.getColor(this, ColorProfileKeyV2.PRIMARY_COLOR_2, profile);
+
+        mContactsIoCard.setCardBackgroundColor(primaryGrey1);
+        mContactsDisplayCard.setCardBackgroundColor(primaryGrey1);
+        mContactsIoCardInner.setBackgroundColor(secondaryGrey2);
+        mContactsDisplayCardInner.setBackgroundColor(secondaryGrey2);
+        ColorAdjusterV2.setTextViewDrawableColor(mImportContacts, primary2);
+        ColorAdjusterV2.setTextViewDrawableColor(mExportContacts, primary2);
+        ColorAdjusterV2.adjustRadioButton(this, profile, mNameFirstRadioButton, 0, false);
+        ColorAdjusterV2.adjustRadioButton(this, profile, mSurnameFirstRadioButton, 0, false);
+        formatDisplayNameSortingColor();
     }
 
     @Override
     protected void applySizeProfile(SizeProfile profile) {
-        ViewGroup topViewGroup = (ViewGroup) findViewById(android.R.id.content);
+        ViewGroup topViewGroup = findViewById(android.R.id.content);
         SizeAdjuster.applySizeProfile(this, topViewGroup, profile);
-
-        applySizeProfileLocal(profile);
-    }
-
-    private void applySizeProfileLocal(SizeProfile sizeProfile) {
-        OpticalParams opticalParams = SizeCalc.getOpticalParams(SizeProfileKey.SUBHEADER,
-                sizeProfile);
-        SizeAdjuster.adjustText(this, mNameFirstRadioButton, opticalParams);
-        SizeAdjuster.adjustText(this, mSurnameFirstRadioButton, opticalParams);
     }
 
     private class ExportContactsAsyncTask extends AsyncTask<String, Void, String> {

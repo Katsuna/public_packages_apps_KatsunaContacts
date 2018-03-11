@@ -1,83 +1,209 @@
 package com.katsuna.contacts.ui.adapters.viewholders;
 
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.katsuna.commons.domain.Contact;
 import com.katsuna.commons.entities.ColorProfile;
-import com.katsuna.commons.entities.ColorProfileKey;
+import com.katsuna.commons.entities.ColorProfileKeyV2;
+import com.katsuna.commons.entities.OpticalParams;
 import com.katsuna.commons.entities.SizeProfile;
-import com.katsuna.commons.ui.adapters.models.ContactListItemModel;
-import com.katsuna.commons.utils.ColorCalc;
+import com.katsuna.commons.entities.SizeProfileKeyV2;
+import com.katsuna.commons.ui.adapters.models.ContactsGroupState;
+import com.katsuna.commons.utils.ColorAdjusterV2;
+import com.katsuna.commons.utils.ColorCalcV2;
+import com.katsuna.commons.utils.SizeAdjuster;
+import com.katsuna.commons.utils.SizeCalcV2;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.ui.listeners.IContactInteractionListener;
+import com.katsuna.contacts.data.ContactDescriptionResolver;
+import com.katsuna.contacts.ui.listeners.IContactListener;
 
-public class ContactViewHolder extends ContactViewHolderBase {
+public class ContactViewHolder extends RecyclerView.ViewHolder {
 
-    private final View mGroupDivider;
+    private final TextView mContactName;
+    private final TextView mContactDesc;
+    private final View mActionButtonsContainer;
+    private final IContactListener mListener;
+    private final Button mCallButton;
+    private final Button mMessageButton;
+    private final TextView mMoreText;
+    private final View mMoreActionsContainer;
+    private final TextView mEditContactText;
+    private final TextView mDeleteContactText;
 
-    public ContactViewHolder(View view, IContactInteractionListener listener) {
-        super(view, listener);
-        mGroupDivider = view.findViewById(R.id.group_divider);
+    public ContactViewHolder(View itemView, IContactListener contactListener) {
+        super(itemView);
+        mContactName = itemView.findViewById(R.id.contact_name);
+        mContactDesc = itemView.findViewById(R.id.contact_desc);
+        mActionButtonsContainer = itemView.findViewById(R.id.action_buttons_container);
+        mListener = contactListener;
+
+        mCallButton = itemView.findViewById(R.id.button_call);
+        mMessageButton = itemView.findViewById(R.id.button_message);
+        mMoreText = itemView.findViewById(R.id.txt_more);
+        mMoreActionsContainer = itemView.findViewById(R.id.more_actions_container);
+        mEditContactText = itemView.findViewById(R.id.edit_contact_text);
+        mDeleteContactText = itemView.findViewById(R.id.delete_contact_text);
     }
 
-    public void bind(final ContactListItemModel model, final int position) {
-        super.bind(model, position);
+    public void bind(final Contact contact, final int position,
+                     final ContactsGroupState contactsGroupState) {
+        mContactName.setText(contact.getDisplayName());
 
-        initialize();
-        switch (model.getSeparator()) {
-            case FIRST_LETTER:
-                // show group divider
-                mGroupDivider.setVisibility(View.VISIBLE);
-                break;
-            case STARRED:
-            case NONE:
-                break;
+        String contactDesc = ContactDescriptionResolver.getDescription(itemView.getContext(), contact);
+        if (TextUtils.isEmpty(contactDesc)) {
+            mContactDesc.setVisibility(View.GONE);
+        } else {
+            mContactDesc.setText(contactDesc);
+            mContactDesc.setVisibility(View.VISIBLE);
         }
 
-        // direct focus on non selected contact if photo or name is clicked
-        View.OnClickListener focusContact = new View.OnClickListener() {
+        if (contact.getId() == contactsGroupState.getContactId() &&
+                contactsGroupState.isFocused()) {
+            mActionButtonsContainer.setVisibility(View.VISIBLE);
+        } else {
+            mActionButtonsContainer.setVisibility(View.GONE);
+        }
+
+        ColorProfile colorProfile = mListener.getUserProfileContainer().getActiveUserProfile().colorProfile;
+        int secondaryColor1 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_1, colorProfile);
+        int secondaryColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_COLOR_2, colorProfile);
+        int greyColor2 = ColorCalcV2.getColor(itemView.getContext(),
+                ColorProfileKeyV2.SECONDARY_GREY_2, colorProfile);
+
+        int colorForTextFields;
+        int colorForBackground;
+        if (contactsGroupState.isFocused()) {
+            if (contact.getId() == contactsGroupState.getContactId() ||
+                    contactsGroupState.getContactId() == 0) {
+                // we have a contact selected in this contacts group and this is our contact
+                colorForTextFields = R.color.common_black87;
+                if (contactsGroupState.isPremium()) {
+                    colorForBackground = secondaryColor2;
+                } else {
+                    colorForBackground = secondaryColor1;
+                }
+            } else {
+                // we have a contact selected in this contacts group but not this contact
+                colorForTextFields = R.color.common_black34;
+                colorForBackground = ContextCompat.getColor(itemView.getContext(),
+                        R.color.common_transparent);
+            }
+        } else {
+            if (contactsGroupState.getContactId() > 0) {
+                // we have a contact selected but not in this contacts group
+                colorForTextFields = R.color.common_black34;
+                colorForBackground = ContextCompat.getColor(itemView.getContext(),
+                        R.color.common_transparent);
+            } else {
+                // we have no contact selected
+                colorForTextFields = R.color.common_black87;
+                if (contactsGroupState.isPremium()) {
+                    colorForBackground = secondaryColor2;
+                } else {
+                    colorForBackground = greyColor2;
+                }
+            }
+        }
+        mContactName.setTextColor(ContextCompat.getColor(itemView.getContext(),colorForTextFields));
+        itemView.setBackgroundColor(colorForBackground);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.selectContact(contactsGroupState.getContactGroupPosition(),
+                        contact.getFirstLetterNormalized(), contact.getId(), position);
+            }
+        });
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.focusContact(position);
+                mListener.callContact(contact);
             }
-        };
-        mPhoto.setOnClickListener(focusContact);
-        mDisplayName.setOnClickListener(focusContact);
+        });
 
-        adjustProfile();
+        mMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.sendSMS(contact);
+            }
+        });
+        mMoreText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMoreActionsContainer.getVisibility() == View.VISIBLE) {
+                    expandMoreActions(false);
+                } else {
+                    expandMoreActions(true);
+                }
+            }
+        });
+
+        mEditContactText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.editContact(contact.getId());
+            }
+        });
+
+        mDeleteContactText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.deleteContact(contact);
+            }
+        });
+
+        adjustSizeProfile();
+        adjustColorProfile();
     }
 
-    private void initialize() {
-        mGroupDivider.setVisibility(View.GONE);
+    private void adjustSizeProfile() {
+        SizeProfile sizeProfile = mListener.getUserProfileContainer().getOpticalSizeProfile();
+
+        // display name
+        OpticalParams opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.TITLE, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mContactName, opticalParams);
+
+        // contact description
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.SUBHEADING_1, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mContactDesc, opticalParams);
+
+        // adjust buttons
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.BUTTON, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mCallButton, opticalParams);
+        SizeAdjuster.adjustText(itemView.getContext(), mMessageButton, opticalParams);
+
+        // more text
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.BUTTON, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mMoreText, opticalParams);
+
+        // contact description
+        opticalParams = SizeCalcV2.getOpticalParams(SizeProfileKeyV2.SUBHEADING_2, sizeProfile);
+        SizeAdjuster.adjustText(itemView.getContext(), mEditContactText, opticalParams);
+        SizeAdjuster.adjustText(itemView.getContext(), mDeleteContactText, opticalParams);
     }
 
-    protected void adjustProfile() {
-        super.adjustProfile();
-        SizeProfile opticalSizeProfile = mUserProfileContainer.getOpticalSizeProfile();
+    private void adjustColorProfile() {
+        ColorAdjusterV2.adjustButtons(itemView.getContext(),
+                mListener.getUserProfileContainer().getActiveUserProfile(),
+                mCallButton, mMessageButton, mMoreText);
+    }
 
-        if (opticalSizeProfile != null) {
-            int photoSize = itemView.getResources()
-                    .getDimensionPixelSize(R.dimen.common_contact_photo_size_intemediate);
-            if (opticalSizeProfile == SizeProfile.ADVANCED) {
-                photoSize = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_advanced);
-            } else if (opticalSizeProfile == SizeProfile.SIMPLE) {
-                photoSize = itemView.getResources()
-                        .getDimensionPixelSize(R.dimen.common_contact_photo_size_simple);
-            }
-
-            int letterDividerMargin = itemView.getResources()
-                    .getDimensionPixelSize(R.dimen.letter_divider_margin);
-            int halfPhotoSize = photoSize / 2;
-            ViewGroup.MarginLayoutParams lp =
-                    (ViewGroup.MarginLayoutParams) mGroupDivider.getLayoutParams();
-            lp.setMarginStart(letterDividerMargin + halfPhotoSize);
+    private void expandMoreActions(boolean flag) {
+        if (flag) {
+            mMoreActionsContainer.setVisibility(View.VISIBLE);
+            mMoreText.setText(R.string.common_less);
+        } else {
+            mMoreActionsContainer.setVisibility(View.GONE);
+            mMoreText.setText(R.string.common_more);
         }
-
-        ColorProfile colorProfile = mUserProfileContainer.getColorProfile();
-        int dividerColor = ColorCalc.getColor(itemView.getContext(),
-                ColorProfileKey.DIVIDERS_OPACITY, colorProfile);
-        mGroupDivider.setBackgroundColor(dividerColor);
     }
 
 }
