@@ -62,13 +62,14 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
         final ContactsGroup model = mFilteredContactsGroups.get(position);
 
         boolean focused = mSelectedContactsGroupPosition == position;
-        boolean unfocused = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
+        boolean focusModeOn = mSelectedContactsGroupPosition != NO_CONTACT_POSITION;
         boolean highlighted = mHighlightedContactsGroupPosition == position;
 
-        ContactsGroupState state = new ContactsGroupState(model.premium, focused, unfocused,
+        ContactsGroupState state = new ContactsGroupState(model.premium, focused, focusModeOn,
                 highlighted, position);
         state.setStartLetter(mSelectedGroupLetter);
         state.setContactId(mSelectedContactId);
+        state.setSelectedGroupPosition(mSelectedContactsGroupPosition);
 
         ContactsGroupViewHolder holder = (ContactsGroupViewHolder) viewHolder;
         holder.bind(model, position, state);
@@ -112,23 +113,19 @@ public class ContactsGroupAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void selectContactsGroup(int position) {
-        int mPreviousSelectedContactsGroupPosition = mSelectedContactsGroupPosition;
         mSelectedContactsGroupPosition = position;
 
-        // if we have a contact selected we must invalidate everything
         if (mSelectedContactId > 0) {
             mSelectedContactId = 0;
             notifyDataSetChanged();
-        } else {
-            notifyItemChanged(mPreviousSelectedContactsGroupPosition);
-            notifyItemChanged(mSelectedContactsGroupPosition);
         }
 
         // unhighlight existing contact group if any
         if (mHighlightedContactsGroupPosition != NO_CONTACT_POSITION) {
-            notifyItemChanged(mHighlightedContactsGroupPosition);
             mHighlightedContactsGroupPosition = NO_CONTACT_POSITION;
         }
+
+        notifyDataSetChanged();
     }
 
     public void deselectContactsGroup() {

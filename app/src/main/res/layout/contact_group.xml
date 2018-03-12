@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView
         android:id="@+id/contacts_group_container_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,9 +76,21 @@
         <View
             android:id="@+id/card_handle"
             android:layout_width="8dp"
-            android:layout_height="match_parent"
-            android:background="@color/common_amberA400"/>
+            android:layout_height="match_parent" />
 
     </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/opacity_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:visibility="invisible"
+        app:cardBackgroundColor="@color/common_black34"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp" />
 
 </FrameLayout>

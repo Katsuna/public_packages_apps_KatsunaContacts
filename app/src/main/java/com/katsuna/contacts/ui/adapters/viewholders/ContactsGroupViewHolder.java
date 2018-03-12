@@ -32,6 +32,7 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mStarIcon;
     private final TextView mStarDesc;
     private final RecyclerView mContactsList;
+    private final View mOpacityLayer;
 
     public ContactsGroupViewHolder(View view,
                                    IContactsGroupListener contactsGroupListener,
@@ -47,6 +48,7 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
         mContactsList = view.findViewById(R.id.contacts_list);
 
         mContactsGroupContainerCard = view.findViewById(R.id.contacts_group_container_card);
+        mOpacityLayer = view.findViewById(R.id.opacity_layer);
         mContactsGroupContainerCardInner = view.findViewById(R.id.contacts_group_container_card_inner);
         mCardHandle = view.findViewById(R.id.card_handle);
     }
@@ -116,6 +118,16 @@ public class ContactsGroupViewHolder extends RecyclerView.ViewHolder {
 
         if (state.getContactId() > 0) {
             cardColorAlpha = ContextCompat.getColor(itemView.getContext(), R.color.common_unfocused);
+        }
+
+        if (state.isFocusModeOn()) {
+            if (state.isFocused()) {
+                mOpacityLayer.setVisibility(View.INVISIBLE);
+            } else {
+                mOpacityLayer.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mOpacityLayer.setVisibility(View.INVISIBLE);
         }
 
         // set colors
