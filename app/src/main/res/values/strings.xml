@@ -135,4 +135,7 @@
     <string name="next_field">Next field</string>
     <string name="missing_field">Missing field</string>
 
+    <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
+    <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
+
 </resources>

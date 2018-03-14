@@ -32,6 +32,7 @@ import com.katsuna.commons.utils.ColorCalcV2;
 import com.katsuna.commons.utils.Constants;
 import com.katsuna.commons.utils.DataAction;
 import com.katsuna.commons.utils.DrawUtils;
+import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.contacts.R;
 import com.katsuna.contacts.data.ContactsInfoCache;
 import com.katsuna.contacts.ui.controls.KatsunaWizardText;
@@ -264,12 +265,18 @@ public class EditContactActivity extends PhotoActivity {
 
     private boolean inputIsValid() {
         boolean output = true;
+        String popupMessage = "";
         if (mName.getText().length() == 0 && mSurname.getText().length() == 0) {
             mName.setError(mPrimaryColor1);
+            popupMessage = getString(R.string.missing_required_contact_name_fields);
             output = false;
         }
         if (mTelephone1.getText().length() == 0) {
             mTelephone1.setError(mPrimaryColor1);
+            if (popupMessage.length() > 0) {
+                popupMessage += "\n";
+            }
+            popupMessage += getString(R.string.missing_required_contact_telephone_field);
             output = false;
         }
 
@@ -280,6 +287,22 @@ public class EditContactActivity extends PhotoActivity {
         mTelephone3.setCardHolderColor(mPrimaryColor2);
         mEmail.setCardHolderColor(mPrimaryColor2);
         mAddress.setCardHolderColor(mPrimaryColor2);
+
+        if (!output) {
+            KatsunaAlertBuilder builder = new KatsunaAlertBuilder(this);
+            builder.setTitle(getString(R.string.common_missing_fields));
+            builder.setMessage(popupMessage);
+            builder.setView(R.layout.common_katsuna_alert);
+            builder.setUserProfile(mUserProfileContainer.getActiveUserProfile());
+            builder.setCancelHidden(true);
+            builder.setOkListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            builder.create().show();
+        }
 
         return output;
     }
