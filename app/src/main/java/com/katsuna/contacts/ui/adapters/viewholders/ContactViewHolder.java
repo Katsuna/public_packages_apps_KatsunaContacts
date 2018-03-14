@@ -79,6 +79,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
 
         int colorForTextFields;
         int colorForBackground;
+        int elevation = itemView.getContext().getResources()
+                .getDimensionPixelSize(R.dimen.common_selection_elevation);
+        itemView.setElevation(0);
         if (contactsGroupState.isFocused()) {
             if (contact.getId() == contactsGroupState.getContactId() ||
                     contactsGroupState.getContactId() == 0) {
@@ -89,6 +92,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     colorForBackground = secondaryColor1;
                 }
+                itemView.setElevation(elevation);
             } else {
                 // we have a contact selected in this contacts group but not this contact
                 colorForTextFields = R.color.common_black34;
