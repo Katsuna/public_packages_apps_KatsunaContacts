@@ -34,7 +34,7 @@ import com.katsuna.commons.utils.DataAction;
 import com.katsuna.commons.utils.DrawUtils;
 import com.katsuna.commons.utils.KatsunaAlertBuilder;
 import com.katsuna.contacts.R;
-import com.katsuna.contacts.data.ContactsInfoCache;
+import com.katsuna.commons.data.ContactsInfoCache;
 import com.katsuna.contacts.ui.controls.KatsunaWizardText;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
