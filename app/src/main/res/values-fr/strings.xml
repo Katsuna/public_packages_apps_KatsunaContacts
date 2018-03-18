@@ -43,14 +43,10 @@
   <string name="remove_photo">Supprimer</string>
   <!-- Title of the file picker activity, after "select photo" (not shown everytime) -->
   <string name="select_file">Sélectionnez le fichier</string>
-  <!-- Text button besides the FAB shown after a certain period of inactivity in the main screen -->
-  <string name="add_contact">Ajouter un contact</string>
   <!-- Shown when the user hasn't selected any contacts for an action that requires a number of them -->
   <string name="no_contacts_selected">Aucun contact sélectionné.</string>
   <!-- Dialog title for the contacts deletion screen -->
   <string name="delete_contacts">Supprimer des contacts</string>
-  <!-- Confirmation message after a successful contacts deletion -->
-  <string name="contacts_deleted">Suppression réussie.</string>
   <!-- Confirmation message shown in the contacts deletion dialog -->
   <string name="delete_contacts_approval">Êtes-vous sûr de vouloir supprimer les contacts sélectionnés ?</string>
   <!-- Title of the contacts display format setting -->
@@ -87,4 +83,12 @@
   <string name="contacts_display_format">Format d’affichage des contacts</string>
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
   <string name="no_camera_app">Il n\'y a pas d\'application de caméra pour gérer votre demande.</string>
+  <!-- No free telephone fields while adding number to existing contact -->
+  <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
+  <string name="missing_name">Please enter Name</string>
+  <string name="missing_telephone">Please enter Telephone</string>
+  <string name="next_field">Next field</string>
+  <string name="missing_field">Missing field</string>
+  <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
+  <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
 </resources>

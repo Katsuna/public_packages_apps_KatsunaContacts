@@ -43,14 +43,10 @@
   <string name="remove_photo">Αφαίρεση</string>
   <!-- Title of the file picker activity, after "select photo" (not shown everytime) -->
   <string name="select_file">Επιλέξτε αρχείο</string>
-  <!-- Text button besides the FAB shown after a certain period of inactivity in the main screen -->
-  <string name="add_contact">Προσθήκη επαφής</string>
   <!-- Shown when the user hasn't selected any contacts for an action that requires a number of them -->
   <string name="no_contacts_selected">Δεν έχουν επιλεγεί επαφές.</string>
   <!-- Dialog title for the contacts deletion screen -->
   <string name="delete_contacts">Διαγραφή επαφών</string>
-  <!-- Confirmation message after a successful contacts deletion -->
-  <string name="contacts_deleted">Διαγραφή επιτυχής.</string>
   <!-- Confirmation message shown in the contacts deletion dialog -->
   <string name="delete_contacts_approval">Είστε βέβαιοι ότι θέλετε να διαγράψετε τις επιλεγμένες επαφές;</string>
   <!-- Title of the contacts display format setting -->
@@ -87,4 +83,12 @@
   <string name="contacts_display_format">Μορφή εμφάνισης επαφών</string>
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
   <string name="no_camera_app">Δεν υπάρχει εφαρμογή κάμερας για το αιτημά σου</string>
+  <!-- No free telephone fields while adding number to existing contact -->
+  <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
+  <string name="missing_name">Please enter Name</string>
+  <string name="missing_telephone">Please enter Telephone</string>
+  <string name="next_field">Next field</string>
+  <string name="missing_field">Missing field</string>
+  <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
+  <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
 </resources>
