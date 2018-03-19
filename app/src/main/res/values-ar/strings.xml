@@ -43,14 +43,10 @@
   <string name="remove_photo">حذف</string>
   <!-- Title of the file picker activity, after "select photo" (not shown everytime) -->
   <string name="select_file">حدد الصورة</string>
-  <!-- Text button besides the FAB shown after a certain period of inactivity in the main screen -->
-  <string name="add_contact">اضافة شخص</string>
   <!-- Shown when the user hasn't selected any contacts for an action that requires a number of them -->
   <string name="no_contacts_selected">لم يتم اختيار أشخاص.</string>
   <!-- Dialog title for the contacts deletion screen -->
   <string name="delete_contacts">حذف أشخاص</string>
-  <!-- Confirmation message after a successful contacts deletion -->
-  <string name="contacts_deleted">تم الحذف.</string>
   <!-- Confirmation message shown in the contacts deletion dialog -->
   <string name="delete_contacts_approval">هل أنت متأكد من أنك تريد حذف الأشخاص المحددين؟</string>
   <!-- Title of the contacts display format setting -->

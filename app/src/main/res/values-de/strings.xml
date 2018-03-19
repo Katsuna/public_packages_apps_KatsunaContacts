@@ -43,14 +43,10 @@
   <string name="remove_photo">Entfernen</string>
   <!-- Title of the file picker activity, after "select photo" (not shown everytime) -->
   <string name="select_file">Datei auswählen</string>
-  <!-- Text button besides the FAB shown after a certain period of inactivity in the main screen -->
-  <string name="add_contact">Kontakt hinzufügen</string>
   <!-- Shown when the user hasn't selected any contacts for an action that requires a number of them -->
   <string name="no_contacts_selected">Keine Kontakte ausgewählt.</string>
   <!-- Dialog title for the contacts deletion screen -->
   <string name="delete_contacts">Kontakte löschen</string>
-  <!-- Confirmation message after a successful contacts deletion -->
-  <string name="contacts_deleted">Löschung erfolgreich.</string>
   <!-- Confirmation message shown in the contacts deletion dialog -->
   <string name="delete_contacts_approval">Sind Sie sicher, dass Sie die ausgewählten Kontakte löschen möchten?</string>
   <!-- Title of the contacts display format setting -->
