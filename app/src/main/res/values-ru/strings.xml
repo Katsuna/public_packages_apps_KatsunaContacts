@@ -83,4 +83,12 @@
   <string name="contacts_display_format">Contacts display format</string>
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
   <string name="no_camera_app">There is no camera application to handle your request.</string>
+  <!-- No free telephone fields while adding number to existing contact -->
+  <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
+  <string name="missing_name">Please enter Name</string>
+  <string name="missing_telephone">Please enter Telephone</string>
+  <string name="next_field">Next field</string>
+  <string name="missing_field">Missing field</string>
+  <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
+  <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
 </resources>
