@@ -113,10 +113,6 @@ public class MainActivity extends ContactsActivity implements IContactsGroupList
 
     @Override
     protected void setupFab() {
-        mButtonsContainer2 = findViewById(com.katsuna.commons.R.id.new_contact_buttons_container);
-        mButtonsContainer2.setVisibility(View.VISIBLE);
-        mButtonsContainer1 = findViewById(com.katsuna.commons.R.id.search_buttons_container);
-
         mFab2 = findViewById(R.id.new_contact_fab);
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +126,29 @@ public class MainActivity extends ContactsActivity implements IContactsGroupList
             @Override
             public void onClick(View v) {
                 showFabToolbar(true);
+            }
+        });
+    }
+
+    @Override
+    protected void setupPopupButtons() {
+        mButtonsContainer1 = findViewById(com.katsuna.commons.R.id.search_buttons_container);
+        mButtonsContainer2 = findViewById(com.katsuna.commons.R.id.new_contact_buttons_container);
+        mButtonsContainer2.setVisibility(View.VISIBLE);
+
+        mPopupButton1 = findViewById(R.id.search_button);
+        mPopupButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFabToolbar(true);
+            }
+        });
+
+        mPopupButton2 = findViewById(R.id.new_contact_button);
+        mPopupButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createContact();
             }
         });
     }
