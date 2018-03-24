@@ -84,11 +84,14 @@
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
   <string name="no_camera_app">Δεν υπάρχει εφαρμογή κάμερας για το αιτημά σου</string>
   <!-- No free telephone fields while adding number to existing contact -->
-  <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
-  <string name="missing_name">Please enter Name</string>
-  <string name="missing_telephone">Please enter Telephone</string>
-  <string name="next_field">Next field</string>
-  <string name="missing_field">Missing field</string>
-  <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
-  <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
+  <string name="no_free_telephone_fields">Και τα τρία τηλεφωνικά πεδία είναι κατειλημμένα.
+</string>
+  <string name="missing_name">Παρακαλώ εισαγάγετε όνομα</string>
+  <string name="missing_telephone">Παρακαλώ εισαγάγετε τηλέφωνο</string>
+  <string name="next_field">Επόμενο πεδίο</string>
+  <string name="missing_field">Πεδίο που λείπει</string>
+  <string name="missing_required_contact_name_fields">Το όνομα και το επώνυμο δεν μπορούν να μείνουν κενά.
+</string>
+  <string name="missing_required_contact_telephone_field">Το τηλέφωνο δεν μπορεί να μείνει κενό.
+</string>
 </resources>
