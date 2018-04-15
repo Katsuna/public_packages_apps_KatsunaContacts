@@ -2,11 +2,11 @@
 
 buildscript {
     repositories {
-        google()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath 'com.google.gms:google-services:3.1.1' // google-services plugin
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -17,13 +17,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven {
-            url "https://maven.google.com" // Google's Maven repository
-        }
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        google()
     }
 }
 
@@ -35,12 +29,12 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     compileSdkVersion = 27
-    buildToolsVersion = '27.0.2'
+    buildToolsVersion = '27.0.3'
 
     minSdkVersion = 23
     targetSdkVersion = 27
 
     // App dependencies
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.1.1'
     firebaseVersion = '11.8.0'
 }
