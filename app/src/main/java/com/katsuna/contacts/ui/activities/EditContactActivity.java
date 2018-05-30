@@ -38,6 +38,7 @@ import com.katsuna.commons.data.ContactsInfoCache;
 import com.katsuna.contacts.ui.controls.KatsunaWizardText;
 import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -414,7 +415,8 @@ public class EditContactActivity extends PhotoActivity {
 
     @Override
     void loadPhoto(Uri uri) {
-        Picasso.with(this).load(uri).fit().centerCrop().into(mPhoto);
+        Picasso.with(this).load(uri).memoryPolicy(MemoryPolicy.NO_CACHE).fit().centerCrop()
+                .into(mPhoto);
         showAddPhotoInstructions(false);
     }
 

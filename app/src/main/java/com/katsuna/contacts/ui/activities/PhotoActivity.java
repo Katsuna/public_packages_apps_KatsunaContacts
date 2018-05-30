@@ -33,6 +33,7 @@ public abstract class PhotoActivity extends KatsunaActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_FILE = 2;
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 3;
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 4;
 
     private Uri mUri;
 
@@ -48,10 +49,7 @@ public abstract class PhotoActivity extends KatsunaActivity {
                 if (items[item].equals(getString(R.string.take_photo))) {
                     dispatchTakePictureIntent();
                 } else if (items[item].equals(getString(R.string.choose_from_gallery))) {
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, getString(R.string.select_file)), SELECT_FILE);
+                    dispatchSelectPictureIntent();
                 } else if (items[item].equals(getString(R.string.remove_photo))) {
                     removePhoto();
                 } else if (items[item].equals(getString(android.R.string.cancel))) {
@@ -60,6 +58,22 @@ public abstract class PhotoActivity extends KatsunaActivity {
             }
         });
         builder.show();
+    }
+
+    private void dispatchSelectPictureIntent() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_file)),
+                SELECT_FILE);
     }
 
     private void dispatchTakePictureIntent() {
@@ -154,6 +168,12 @@ public abstract class PhotoActivity extends KatsunaActivity {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     dispatchTakePictureIntent();
+                }
+                break;
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    dispatchSelectPictureIntent();
                 }
                 break;
             default:
