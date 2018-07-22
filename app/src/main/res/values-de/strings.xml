@@ -22,13 +22,13 @@
   <!-- Title of the address field (contact details screen) -->
   <string name="address">Adresse</string>
   <!-- Title of the first name field (contact details screen) -->
-  <string name="name">Name</string>
+  <string name="name">Vorname</string>
   <!-- Title of the surname field (contact details screen) -->
   <string name="surname">Nachname</string>
   <!-- Title of the description field (contact details screen) -->
   <string name="description">Beschreibung</string>
   <!-- Warning shown when the user doesn't input a name or a surname of the contact (contact details screen) -->
-  <string name="name_validation">Name oder Nachname ist erforderlich</string>
+  <string name="name_validation">Vorname oder Nachname ist erforderlich</string>
   <!-- Warning shown when the user doesn't input a telephone number (contact details screen) -->
   <string name="number_validation">Telefon ist erforderlich</string>
   <!-- Dialog title shown when the user tries to add a photo to a contact (add new contact screen) -->
@@ -70,15 +70,15 @@
   <!-- Dialog shown when the user starts a contact export -->
   <string name="exporting_contacts">Exportieren von Kontakten. Bitte warten...</string>
   <!-- Confirmation/Information message shown after a sucessful contact import, notifying the user of the exported file's location -->
-  <string name="contacts_export_completed">Exportierte Kontakte gespeichert im Ordner: \"%1$s\".</string>
+  <string name="contacts_export_completed">Exportierte Kontakte gespeichert im Ordner: \'%1$s\'.</string>
   <!-- Text button inside the "import contacts" dialog screen, used to create a new folder in the device's storage -->
   <string name="new_folder">In neuen Ordner exportieren</string>
   <!-- Dialog title of the dialog shown when the user taps the "New folder" button -->
-  <string name="new_folder_name">Neuer Ordnernamen</string>
+  <string name="new_folder_name">Neuer Ordnername</string>
   <!-- Error message shown when the app didn't manage to create the folder necessary for the contact export -->
-  <string name="folder_creation_failed">Fehler beim Erstellen des \"%1$s\" Ordners.</string>
+  <string name="folder_creation_failed">Fehler beim Erstellen des \'%1$s\' Ordners.</string>
   <!-- Error message shown when the user tries to import contacts using a bad/corrupt .vcf file -->
-  <string name="invalid_vcf">Ungültige Vcf.</string>
+  <string name="invalid_vcf">Ungültige Datei.</string>
   <!-- Setting label for contacts display format -->
   <string name="contacts_display_format">Anzeigeformat der Kontakte</string>
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->

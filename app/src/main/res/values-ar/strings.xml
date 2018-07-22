@@ -84,11 +84,11 @@
   <!-- Warning shown at photo activity when no camera app is installed and enabled -->
   <string name="no_camera_app">لا يوجد أي تطبيق كاميرا لتنفيذ الطلب الخاص بك.</string>
   <!-- No free telephone fields while adding number to existing contact -->
-  <string name="no_free_telephone_fields">All three telephone fields are occupied.</string>
-  <string name="missing_name">Please enter Name</string>
-  <string name="missing_telephone">Please enter Telephone</string>
-  <string name="next_field">Next field</string>
-  <string name="missing_field">Missing field</string>
-  <string name="missing_required_contact_name_fields">First Name and Surname can not be left empty.</string>
-  <string name="missing_required_contact_telephone_field">Telephone can not be left empty.</string>
+  <string name="no_free_telephone_fields">لا يمكن اضافة أكثر من ثلاثة أرقام هاتفية لنفس الشخص.</string>
+  <string name="missing_name">الرجاء إدخال الاسم</string>
+  <string name="missing_telephone">الرجاء إدخال رقم الهاتف</string>
+  <string name="next_field">البند التالي</string>
+  <string name="missing_field">بند ناقص</string>
+  <string name="missing_required_contact_name_fields">يجب ادخال الاسم الأول و اسم العائلة.</string>
+  <string name="missing_required_contact_telephone_field">يجب ادخال رقم الهاتف.</string>
 </resources>
