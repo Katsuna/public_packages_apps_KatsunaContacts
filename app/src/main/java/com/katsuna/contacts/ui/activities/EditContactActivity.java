@@ -201,6 +201,12 @@ public class EditContactActivity extends PhotoActivity {
 
         mContact = contactProvider.getContact(contactId);
 
+        if (mContact.isEmpty()) {
+            Toast.makeText(this, R.string.common_no_contact, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         //set data on fields
         mName.setText(mContact.getName().getName());
         mSurname.setText(mContact.getName().getSurname());
