@@ -42,4 +42,5 @@ ext {
     supportLibraryVersion = '27.1.1'
     firebaseVersion = '16.0.1'
     crashlyticsVersion = '2.9.4'
+    constraintLayoutVersion = '1.1.2'
 }
