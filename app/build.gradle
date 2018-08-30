@@ -14,8 +14,8 @@ android {
         applicationId "com.katsuna.contacts"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 10
-        versionName "2.2.2"
+        versionCode 11
+        versionName "2.3.0"
         project.ext.set("archivesBaseName", "Contacts-" + defaultConfig.versionName)
         manifestPlaceholders = [providers_auth:"com.katsuna"]
     }
