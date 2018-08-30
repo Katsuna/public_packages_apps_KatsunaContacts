@@ -39,3 +39,7 @@
 -keep class com.squareup.** { *; }
 -keep class com.konifar.** { *; }
 -keep class com.google.** { *; }
+
+# keep crashlytics
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
