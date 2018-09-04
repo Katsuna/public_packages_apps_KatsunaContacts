@@ -61,6 +61,12 @@ public class MainActivity extends ContactsActivity implements IContactsGroupList
                 return true;
             }
         });
+        mKatsunaNavigationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawers();
+            }
+        });
         mKatsunaNavigationView.setVisibility(View.VISIBLE);
     }
 
