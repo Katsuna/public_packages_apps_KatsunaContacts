@@ -33,7 +33,7 @@
 
                 <TextView
                     android:id="@+id/import_contacts"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:layout_marginEnd="8dp"
@@ -41,7 +41,7 @@
                     android:layout_marginTop="4dp"
                     android:drawablePadding="12dp"
                     android:drawableStart="@drawable/ic_import"
-                    android:gravity="center"
+                    android:gravity="start|center"
                     android:minHeight="48dp"
                     android:text="@string/import_contacts"
                     android:textColor="@color/common_black54"
@@ -54,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/export_contacts"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:layout_marginEnd="8dp"
@@ -62,7 +62,7 @@
                     android:layout_marginTop="4dp"
                     android:drawablePadding="12dp"
                     android:drawableStart="@drawable/ic_export"
-                    android:gravity="center"
+                    android:gravity="start|center"
                     android:minHeight="48dp"
                     android:text="@string/export_contacts"
                     android:textColor="@color/common_black54"
