@@ -123,6 +123,7 @@ public class MainActivity extends ContactsActivity implements IContactsGroupList
 
     @Override
     protected void setupFab() {
+        mFabsTopContainer = findViewById(R.id.fabs_top_container);
         mFab2 = findViewById(R.id.new_contact_fab);
         mFab2.setOnClickListener(new View.OnClickListener() {
             @Override
