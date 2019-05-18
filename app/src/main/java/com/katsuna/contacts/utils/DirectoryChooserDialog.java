@@ -36,13 +36,13 @@ import java.util.List;
  */
 public class DirectoryChooserDialog extends DirectoryDialogBase {
     private boolean m_isNewFolderEnabled = true;
-    private String m_sdcardDirectory = "";
+    private String m_sdcardDirectory;
 
     private TextView m_titleView;
 
     private String m_dir = "";
     private List<String> m_subdirs = null;
-    private ChosenDirectoryListener m_chosenDirectoryListener = null;
+    private ChosenDirectoryListener m_chosenDirectoryListener;
     private ArrayAdapter<String> m_listAdapter = null;
 
     //////////////////////////////////////////////////////

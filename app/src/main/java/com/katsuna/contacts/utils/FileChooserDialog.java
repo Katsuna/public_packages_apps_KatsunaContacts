@@ -24,12 +24,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class FileChooserDialog extends DirectoryDialogBase {
-    private String m_sdcardDirectory = "";
+    private String m_sdcardDirectory;
     private TextView m_titleView;
 
     private String m_dir = "";
     private List<String> m_subdirs = null;
-    private ChosenFileListener m_chosenFileListener = null;
+    private ChosenFileListener m_chosenFileListener;
     private ArrayAdapter<String> m_listAdapter = null;
 
     private AlertDialog mDialog;
